@@ -14,5 +14,4 @@ This application will focus on helping students organize and manage their course
 
 ## Important Components
 
-* Classes act as folders to store sets of data such as documents or images in.
-* Tags can be added on data such as documents or image to be more easily able to search and exclude sets of data. Data can have multiple tags for greater flexibility.
+Important components of this include classes, tags, and the aforementioned educational features such as flashcards. Classes are folders that can store sets of data such as documents or images in. Users can add and remove classes. Within these classes, tags can be added on data such as documents or images to be more easily able to search and exclude sets of data. Data can have multiple tags for greater flexibility. For example, homework can be tagged as homework and the material it covers. Automatic tags based on file types will also be included to be able to filter out certain data types.
