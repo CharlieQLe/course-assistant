@@ -13,3 +13,7 @@
 ## Wireframes
 
 todo
+
+## Division of Labor
+
+todo
