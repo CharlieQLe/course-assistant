@@ -1,0 +1,12 @@
+.center {
+    display: block;
+    margin: auto;
+}
+
+.upload-form {
+    display: flex;
+}
+
+.uploaded-file-info {
+    font-style: italic;
+}
