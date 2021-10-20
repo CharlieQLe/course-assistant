@@ -15,19 +15,41 @@
 </head>
 
 <body>
-	<nav class="navbar sticky-top navbar-dark bg-dark navbar-expand-lg">
+	<nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
 		<div class="container-fluid">
 			<a class="navbar-brand" href="#">
-				<img src="./course assistant logo-cropped.png" alt="" width="30" height="30"
-					class="d-inline-block align-top">
+				<img src="./course assistant logo-cropped.png" alt="" width="24" height="24"
+				class="d-inline-block align-middle">
 				CourseAssistant
 			</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			  </button>
 
-			<!-- user profile placeholder -->
-			<a class="navbar-brand" href="#">
-				<img src="./course assistant logo-cropped.png" alt="" width="30" height="30"
-					class="d-inline-block">
-			</a>
+			  <!-- more buttons if needed -->
+			  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+				  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					  <li class="nav-item">
+						  <a class="nav-link active" href="#">placeholder</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#">placeholder</a>
+						</li>
+					</ul>
+				</div>
+				
+				<!-- user profile placeholder -->
+				<div class="dropdown" id="user-account">
+					<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+					data-bs-toggle="dropdown" aria-expanded="false">
+					<img src="./course assistant logo-cropped.png" alt="" width="24" height="24" class="d-inline-block">
+				</button>
+				<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+					<li><a class="dropdown-item" href="#">Action</a></li>
+					<li><a class="dropdown-item" href="#">Another action</a></li>
+					<li><a class="dropdown-item" href="#">Something else here</a></li>
+				</ul>
+			</div>
 
 		</div>
 
