@@ -1,12 +1,24 @@
-.center {
-    display: block;
+.modal {
+    display: block; /* Forces the pop-up to be open on page load. Remove when adding JS! */
+}
+
+.modal-title {
     margin: auto;
 }
 
-.upload-form {
-    display: flex;
+#dragAndDropLabel, #locateFileGroup, #addTagsGroup {
+    text-align: center;
 }
 
-.uploaded-file-info {
+#locateFileLabel, #addedTagList {
     font-style: italic;
+}
+
+#locateFileLabel {
+    line-height: 40px;
+    padding-right: 5%;
+}
+
+#addTagInput {
+    height: 35px;
 }
