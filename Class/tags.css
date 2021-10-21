@@ -1,0 +1,15 @@
+.modal {
+    display: block; /* Forces the pop-up to be open on page load. Remove when adding JS! */
+}
+
+.modal-title, #addTagsGroup {
+    margin: auto;
+}
+
+#tagList, #addTagsGroup {
+    text-align: center;
+}
+
+#addTagInput {
+    margin-right: 10px;
+}
