@@ -6,6 +6,11 @@
     margin: auto;
 }
 
+.modal-body {
+    width: 75%;
+    margin: auto;
+}
+
 #dragAndDropLabel, #locateFileGroup, #addTagsGroup, #uploadButtonGroup {
     text-align: center;
 }
