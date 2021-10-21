@@ -1,0 +1,3 @@
+.modal {
+    display: block; /* Forces the pop-up to be open on page load. Remove when adding JS! */
+}
