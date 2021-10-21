@@ -30,34 +30,30 @@
             
             <div class="modal-body">
               <form>
-                  <br><br>
-
-                  <!-- Drag and drop -->
-                  <div id="dragAndDropLabel">You can also drag and drop files here to upload them!</div>
-                  <br><br>
-
                   <!-- Locate file group -->
-                  <div id="locateFileGroup">
-                    <label for="locateFileButton" id="locateFileLabel">no file selected</label>
-                    <input type="button" class="btn btn-primary" id="locateFileButton" value="Locate File">
-                  </div>
-                  <br><hr><br>
-                  
+                  <input type="file" class="form-control" id="formFile">
+                  <br>
                   <!-- Add tags group -->
                   <div id="addTagsGroup">
                     <h5>Add Tags</h5>
                     <br>
                     <div id="addedTagList">added tags here</div>
                     <br>
-                    <input type="text" id="addTagInput">
-                    <input type="button" class="btn btn-primary" id="addTagButton" value="Add Tag">
+                    <div class="row">
+                      <div class="col">
+                        <input type="text" id="addTagInput" class="form-control">
+                      </div>
+                      <div class="col-sm-3">
+                        <input type="button" class="btn btn-primary" id="addTagButton" value="Add Tag">
+                      </div>
+                    </div>
                   </div>
                   <br>
               </form>
             </div>
 
             <div class="modal-footer">
-              <form>
+              <form id="uploadButtonGroup">
                 <input type="button" class="btn btn-primary" id="uploadFileButton" value="Upload">
                 <input type="button" class="btn btn-secondary" id="uploadFileButton" value="Cancel">
               </form>
