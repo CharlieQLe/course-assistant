@@ -7,3 +7,8 @@
 .px400 {
     height: 400px;
 }
+
+/* junk text in index.html */
+#temporary-text {
+    font-size: 100px;
+}
