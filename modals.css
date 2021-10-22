@@ -1,0 +1,20 @@
+/* Forces the pop-up to be open on page load. Remove when adding JS! */
+.modal {
+    display: block;
+}
+
+#class-desc-input {
+    resize: vertical;
+}
+
+.label-no-count, .center-group {
+    text-align: center;
+}
+
+.label-no-count {
+    font-style: italic;
+}
+
+.center-group {
+    margin: auto;
+}

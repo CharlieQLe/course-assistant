@@ -11,7 +11,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="../modals.css">
 
-    <title>Manage Class Modal</title>
+    <title>Login Modal</title>
   </head>
   <body>
     <!-- Bootstrap Bundle with Popper -->
@@ -21,30 +21,46 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             
-            <!-- Header -->
+            <!-- Pop-up Header -->
             <div class="modal-header">
               <!-- Title -->
-              <h5 class="modal-title">Manage Class</h5>
-
+              <h5 class="modal-title">Log in</h5>
+              
               <!-- Close button -->
               <button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
-            <!-- Body -->
+            <!-- Pop-up Body -->
             <div class="modal-body">
               <form>
-                <!-- Class description input -->
-                <label for="class-desc-input" class="form-label">Description</label>
-                <textarea id="class-desc-input" class="form-control" placeholder="description"></textarea>
+
+                <!-- Email -->
+                <div class="form-group">
+                  <label for="emailInput" class="form-label">Email Address</label>
+                  <input type="email" class="form-control" id="emailInput" placeholder="example@email.com">
+                </div>
+                <br>
+
+                <!-- Password -->
+                <div class="form-group">
+                  <label for="passwordInput" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="passwordInput" placeholder="password">
+                </div>
+                <br>
+                
+                <!-- Remember me -->
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                  <label class="form-check-label text-black" for="exampleCheck1">Remember Me!</label>
+                </div>
+                
               </form>
+    
             </div>
 
-            <!-- Footer -->
+            <!-- Pop-up Footer -->
             <div class="modal-footer">
-              <form>
-                <input type="button" class="btn btn-primary" id="addClassButton" value="Add Class">
-                <input type="button" class="btn btn-danger" id="removeClassButton" value="Remove Class">
-              </form>
+              <button type="button" class="btn btn-primary" id="loginButton">Log In</button>
             </div>
 
           </div>
