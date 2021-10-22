@@ -12,74 +12,71 @@
 		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
     <link rel="stylesheet" href="homepage-logged-in.css" />
+    <link rel="stylesheet" href="../header.css" />
+    <link rel="stylesheet" href="../index.css" />
     <script src="homepage-logged-in.js"></script>
 	<title>Course Assistant Homepage</title>
 
 </head>
 
 <body>
-	<nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
-		<div class="container-fluid">
-			<a class="navbar-brand" href="#">
-				<img src="./course assistant logo-cropped.png" alt="" width="24" height="24"
-				class="d-inline-block align-middle">
-				CourseAssistant
-			</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			  </button>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
 
-			  <!-- more buttons if needed -->
-			  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-				  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-					  <li class="nav-item">
-						  <a class="nav-link active" href="#">Home</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">Class 1</a>
-						</li>
-                        <li class="nav-item">
-							<a class="nav-link" href="#">Class 2</a>
-						</li>
-                        <li class="nav-item">
-							<a class="nav-link" href="#">Class 3</a>
-						</li>
-                        <li class="nav-item">
-							<a class="nav-link" href="#">etc.</a>
-						</li>
-                        <li class="nav-item">
-							<a class="nav-link text-success" href="#">Add Class</a>
-						</li>
-					</ul>
-				</div>
-				
-				<!-- user profile placeholder -->
-				<div class="dropdown" id="user-account">
-					<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-					data-bs-toggle="dropdown" aria-expanded="false">
-					<img src="./course assistant logo-cropped.png" alt="" width="24" height="24" class="d-inline-block">
-				</button>
-				<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-					<li><a class="dropdown-item" href="#">Edit Profile</a></li>
-					<li><a class="dropdown-item" href="#">Log Out</a></li>
-					<!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
-				</ul>
-			</div>
+      <div class="logo-icon-padded">
+        <img src="../logo.png" alt="" width="24" height="24" class="logo-icon-padded">
+      </div>
+      <div class="navbar-brand">Course Assistant</div>
 
-		</div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
 
-	</nav>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="">Home</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="#class-1">Class 1</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="#class-2">Class 2</a>
+          </li>
+        </ul>
+
+          <form class="d-flex ms-auto logo-icon-padded">
+            <button class="btn btn-outline-success" type="button">Add Class</button>
+          </form>
+          
+          <!-- user profile placeholder -->
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Name
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#">Edit Profile</a></li>
+            <li><a class="dropdown-item" href="#">Log Out</a></li>
+          </ul>
+        
+
+
+      </div>
+    </div>
+  </nav>
 
 
     <div class="container-fluid">
 
         <div class="row">
             <div class="col-sm text-center">
-              <br>
-              <br>
-              <br>
+              <div class = px180></div>
               <div class="elegant-calendar">
-                <p id="reset">reset</p>
+                <p id="reset" class  = "invisible">reset</p>
+                
                  <div id="header" class="clearfix">
                     <div class="pre-button"></div>
                      <div class="head-info">
@@ -167,6 +164,7 @@
             
             
 
+            <br>
             <br>
             <br>
             <br>
