@@ -11,14 +11,14 @@
 	border: 1px solid black;
 } */
 
-.edit-flashcard {
+#edit-flashcard {
 	width: 100%;
 	height: 80%;
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
 
-#edit-flashcard-buttons {
+#edit-flashcard-btns {
 	bottom: 0;
 	margin-left: auto;
 	margin-right: auto;
