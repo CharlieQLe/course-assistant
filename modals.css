@@ -3,7 +3,7 @@
     display: block;
 }
 
-#class-desc-input {
+.multitext-lock-vertical {
     resize: vertical;
 }
 
