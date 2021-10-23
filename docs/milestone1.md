@@ -32,6 +32,10 @@ Upon logging in, users will arive at the homepage.  On the top of the homepage t
 
 ## Class Homepage, File Upload, and Tag System
 
+The class homepage includes an interface that shows all files assigned to that class.  From there, the user is able to upload files and assign them with tags such as "lecture notes" for better organization.  They can also search for individual files by tag name and directly create note or flashcard files from this class homepage.  The ability to search is done via a search modal that allows the user to enter file name or what tags it includes.  The tag system is also accessed from this class homepage and has a modal that pops up displaying all current created tags along with the ability to add more.
+
+(Insert Images Here)
+
 ## Notepad Tool
 
 Under the class page, users have the ability to create new note files.  Upon selecting this, the user will be taken to the notepad page which includes a toolbar for formatting and the ability to type out notes and easily store them by class and topic using the tag system.
