@@ -17,3 +17,7 @@ todo  - ADD IMAGES SOON
 ## Division of Labor
 
 For dividing the labor, everyone will be working on different parts of the project. Everyone will be working on the class section of the webpage, with Charlie Le handling the bulk of the search and tag systems as well as the uploading system. Matthew Ferrara will work on the normal home page as well as the logged-in home page. He will also work on the add and manage class systems. Jia Hui Yu (Jerry) will be working on the flashcards- adding and editing flashcards and studying- as well as the note editor.
+
+## Homepage and Log In/Sign Up Popups
+
+Here is what users will see when they first go to the website.  They will be presented with a homepage that prompts them to either sign in or sign up.  Depending on their selection, a modal will pop up allowing them to either sign up and make an account or log in.  Upon completion, they will be taken to the site homepage.
