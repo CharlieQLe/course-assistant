@@ -12,7 +12,7 @@
 
 document.getElementById("addclass").addEventListener('click', () => {
 
-    //popup add task modal
+    //popup add task modal --> already taken care of via bootstrap
     //create task
     //add to calendar
 
@@ -22,7 +22,7 @@ document.getElementById("addclass").addEventListener('click', () => {
 
 document.getElementById("editclass").addEventListener('click', () => {
 
-    //pop up edit task modal
+    //pop up edit task modal --> already taken care of via bootstrap
     //read task data into edit task modal
     //update task data when update is clicked
 
