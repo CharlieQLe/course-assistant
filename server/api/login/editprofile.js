@@ -1,18 +1,36 @@
 //On user settings page
 
-//if name is edited, update that in server
+//EDIT NAME CLICKED 
+
+document.getElementById("editname").addEventListener('click', () => {
+
+    //update name in server (get value of field)
+
+})
 
 
+//EDIT EMAIL CLICKED
+
+document.getElementById("editemail").addEventListener('click', () => {
+
+    //update email in server
+
+})
 
 
-//if email is edited, update that in server
+//EDIT PASSWORD CLICKED
+
+document.getElementById("editpassword").addEventListener('click', () => {
+
+    //update password in server
+
+})
 
 
+//DELETE PROFILE CLICKED
 
+document.getElementById("deleteprofile").addEventListener('click', () => {
 
-//if password is edited, update that in server
+    //delete profile from server
 
-
-
-
-//if delete profile is selected --> delete account?
+})
