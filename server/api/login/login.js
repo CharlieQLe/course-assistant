@@ -8,19 +8,28 @@
 
 //LOG IN CLICKED
 
-document.getElementById("login").addEventListener('click', () => {
+//FUNCTION FOR READING USERS PROFILE ON LOGIN
 
-    //popup login modal
+function readProfile(name, res) {
+    reload(filename)
+    res.write("<h1> counter [" + name + "] = " + counter[name] + " </h1>");
+}
+
+document.getElementById("loginButton").addEventListener('click', () => {
+
+    //popup login modal --> already taken care of via bootstrap
     //Then send a GET request to server for user's profile and read their profile's data
     //If remember me is clicked, stay logged in?
+
+    
 
 })
 
 //SIGN UP CLICKED
 
-document.getElementById("signup").addEventListener('click', () => {
+document.getElementById("signupButton").addEventListener('click', () => {
 
-    // popup sign up modal
+    // popup sign up modal --> already taken care of via bootstrap
     //CREATE new user on sign up
 
 })
