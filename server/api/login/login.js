@@ -15,6 +15,17 @@ function readProfile(name, res) {
     res.write("<h1> counter [" + name + "] = " + counter[name] + " </h1>");
 }
 
+//FUNCTION FOR CREATING USERS PROFILE ON SIGN UP
+
+function createProfile(name, res) {
+    reload(filename)
+    counter[name] = 0;
+    res.write("<h1> counter " + name + " created </h1>");
+    res.end();
+    let strIn = JSON.stringify(counter);
+    fs.writeFileSync(filename, strIn);
+}
+
 document.getElementById("loginButton").addEventListener('click', () => {
 
     //popup login modal --> already taken care of via bootstrap

@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<!-- Bootstrap CSS -->
+	<!-- <link href="./bootstrap-5.1.3-dist/css/bootstrap.min.css" rel="stylesheet"> -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="homepage-logged-in.css" />
+    <link rel="stylesheet" href="../header.css" />
+    <link rel="stylesheet" href="../index.css" />
+    <script src="homepage-logged-in.js"></script>
+	<title>Course Assistant Homepage</title>
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+
+      <div class="logo-icon-padded">
+        <img src="../logo.png" alt="" width="24" height="24" class="logo-icon-padded">
+      </div>
+      <div class="navbar-brand">Course Assistant</div>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="">Home</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="#class-1">Class 1</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="#class-2">Class 2</a>
+          </li>
+        </ul>
+
+          <form class="d-flex ms-auto logo-icon-padded">
+            <button class="btn btn-outline-success" data-toggle="modal" data-target = "#addclass" type="button">
+                Add Class
+            </button>
+          </form>
+          
+          <!-- user profile placeholder -->
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Name
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#">Edit Profile</a></li>
+            <li><a class="dropdown-item" href="#">Log Out</a></li>
+          </ul>
+        
+
+
+      </div>
+    </div>
+  </nav>
+
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm text-center">
+              <div class = px180></div>
+              <div class="elegant-calendar">
+                <p id="reset" class  = "invisible">reset</p>
+                
+                 <div id="header" class="clearfix">
+                    <div class="pre-button"></div>
+                     <div class="head-info">
+                         <div class="head-day"></div>
+                         <div class="head-month"></div>
+                     </div>
+                     <div class="next-button">></div>
+                 </div>
+                 <table id="calendar">
+                     <thead>
+                         <tr>
+                             <th>Sun</th>
+                             <th>Mon</th>
+                             <th>Tue</th>
+                             <th>Wed</th>
+                             <th>Thu</th>
+                             <th>Fri</th>
+                             <th>Sat</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         <tr>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                         </tr>
+                         <tr>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                         </tr>
+                         <tr>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                         </tr>
+                         <tr>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                         </tr>
+                         <tr>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                         </tr>
+                         <tr>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                             <td></td>
+                         </tr>
+                     </tbody>
+                 </table>
+             </div>
+                
+            </div>
+            
+
+        
+        <div class="col-sm">
+            
+            
+
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <h1>Tasks for Selected Day:</h1>
+            <br>
+           
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Task 1
+                  <li class="list-inline-item">
+                    <button class="btn btn-outline-light btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i>Edit</button>
+                  </li>
+                  </button>
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Task 2
+                  <li class="list-inline-item">
+                    <button class="btn btn-outline-light btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i>Edit</button>
+                  </li>
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Task 3
+                  <li class="list-inline-item">
+                    <button class="btn btn-outline-light btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i>Edit</button>
+                  </li>
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Task 4
+                  <li class="list-inline-item">
+                    <button class="btn btn-outline-light btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i>Edit</button>
+                  </li>
+                </label>
+            </div>
+
+            <br>
+            <h1>Future Tasks:</h1>
+            <br>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Task 1
+                  <li class="list-inline-item">
+                    <button class="btn btn-outline-light btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i>Edit</button>
+                  </li>
+                  </button>
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Task 2
+                  <li class="list-inline-item">
+                    <button class="btn btn-outline-light btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i>Edit</button>
+                  </li>
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Task 3
+                  <li class="list-inline-item">
+                    <button class="btn btn-outline-light btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i>Edit</button>
+                  </li>
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Task 4
+                  <li class="list-inline-item">
+                    <button class="btn btn-outline-light btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i>Edit</button>
+                  </li>
+                </label>
+            </div>
+
+
+            <br>
+            <br>
+            
+            <div class = "text-center">
+            <li class="list-inline-item">
+                <button class="btn btn-primary btn-lg rounded-2" type="button" data-toggle="modal" data-target = "#addtask" data-placement="top" title="Add"><i class="fa fa-table"></i>
+                    Add New Task
+                </button>
+            </li>
+            </div>
+            
+
+            
+            
+
+            
+        </div>
+        
+    </div>
+
+ <!-- Add task modal -->
+
+ <div class="modal fade" id = "addtask" tabindex="-1" role="dialog" >
+    <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+    
+    <!-- Pop-up Header -->
+    <div class="modal-header">
+      <h5 class="modal-title">Add a Task</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    
+    <!-- Pop-up Body -->
+    <div class="modal-body">
+        <div class="row">
+
+            <div class="col-md-6">
+                <form>
+
+                <div class="form-group">
+                    <label for="exampleName" class = "text-black">Name</label>
+                    <input type="name" class="form-control" id="taskName" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label for="exampleDate" class = "text-black">Date</label>
+                    <input type="date" class="form-control" id="taskDate" placeholder="Date">
+
+                    <label for="exampleTime" class = "text-black">Time</label>
+                    <input type="time" class="form-control" id="taskTime" placeholder="Time">
+                </div>
+
+                <br>
+
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Select Class
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="#">Class 1</a>
+                      <a class="dropdown-item" href="#">Class 2</a>
+                      <a class="dropdown-item" href="#">Class 3</a>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="form-group">
+                    <label for="exampleDescription" class = "text-black">Description</label>
+                    <input type="paragraph-text" class="form-control" id="descriptionName" placeholder="Description">
+                </div>
+                
+                
+                </form>
+            </div>
+
+          <div class="col-md-6">
+            
+            <h3>Current Tasks</h3>
+            
+            <table class="table mb-4">
+                <thead>
+                  <tr>
+                    <th scope="col">Class</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Class 1</th>
+                    <td>HW5</td>
+                    <td>
+                        <input type="date" class="form-control" id="task1Date" placeholder="Date">
+                    </td>
+                    <td>
+                        <input type="time" class="form-control" id="task1Time" placeholder="Time">
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Class 2</th>
+                    <td>Midterm</td>
+                    <td>
+                        <input type="date" class="form-control" id="task2Date" placeholder="Date">
+                    </td>
+                    <td>
+                        <input type="time" class="form-control" id="task2Time" placeholder="Time">
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Class 3</th>
+                    <td>Project Milestone Due</td>
+                    <td>
+                        <input type="date" class="form-control" id="task3Date" placeholder="Date">
+                    </td>
+                    <td>
+                        <input type="time" class="form-control" id="task3Time" placeholder="Time">
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Class 4</th>
+                    <td>HW6</td>
+                    <td>
+                        <input type="date" class="form-control" id="task4Date" placeholder="Date">
+                    </td>
+                    <td>
+                        <input type="time" class="form-control" id="task4Time" placeholder="Time">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Pop-up Footer -->
+    <div class="modal-footer">
+      <button type="button" class="btn btn-success">Add</button>
+    </div>
+
+  </div>
+</div>
+</div>
+
+
+
+<!-- Edit task modal -->
+
+  <div class="modal text-center" id = "edittask" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        
+        <!-- Pop-up Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Task</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        
+        <!-- Pop-up Body -->
+        <div class="modal-body">
+            <div class="row">
+
+                <div class="col-md-6">
+                    <form>
+
+                    <div class="form-group">
+                        <label for="exampleName" class = "text-black">Name</label>
+                        <input type="name" class="form-control" id="taskName" placeholder="Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleDate" class = "text-black">Date</label>
+                        <input type="date" class="form-control" id="taskDate" placeholder="Date">
+
+                        <label for="exampleTime" class = "text-black">Time</label>
+                        <input type="time" class="form-control" id="taskTime" placeholder="Time">
+                    </div>
+
+                    <br>
+
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Select Class
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="#">Class 1</a>
+                          <a class="dropdown-item" href="#">Class 2</a>
+                          <a class="dropdown-item" href="#">Class 3</a>
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div class="form-group">
+                        <label for="exampleDescription" class = "text-black">Description</label>
+                        <input type="paragraph-text" class="form-control" id="descriptionName" placeholder="Description">
+                    </div>
+                    
+                    
+                    </form>
+                </div>
+
+              <div class="col-md-6">
+                
+                <h3>Current Tasks</h3>
+                
+                <table class="table mb-4">
+                    <thead>
+                      <tr>
+                        <th scope="col">Class</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Time</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">Class 1</th>
+                        <td>HW5</td>
+                        <td>
+                            <input type="date" class="form-control" id="task1Date" placeholder="Date">
+                        </td>
+                        <td>
+                            <input type="time" class="form-control" id="task1Time" placeholder="Time">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Class 2</th>
+                        <td>Midterm</td>
+                        <td>
+                            <input type="date" class="form-control" id="task2Date" placeholder="Date">
+                        </td>
+                        <td>
+                            <input type="time" class="form-control" id="task2Time" placeholder="Time">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Class 3</th>
+                        <td>Project Milestone Due</td>
+                        <td>
+                            <input type="date" class="form-control" id="task3Date" placeholder="Date">
+                        </td>
+                        <td>
+                            <input type="time" class="form-control" id="task3Time" placeholder="Time">
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Class 4</th>
+                        <td>HW6</td>
+                        <td>
+                            <input type="date" class="form-control" id="task4Date" placeholder="Date">
+                        </td>
+                        <td>
+                            <input type="time" class="form-control" id="task4Time" placeholder="Time">
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                
+              </div>
+
+            </div>
+      </div>
+
+        <!-- Pop-up Footer -->
+        <div class="modal-footer">
+            <button type="button" class="btn btn-warning">Submit Edit</button>
+            <button type="button" class="btn btn-danger">Delete Task</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Add class modal -->
+
+  <div class="modal fade" id="addclass" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        
+        <!-- Header -->
+        <div class="modal-header">
+          <!-- Title -->
+          <h5 class="modal-title">Add Class</h5>
+
+          <!-- Close button -->
+          <button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        
+        <!-- Body -->
+        <div class="modal-body">
+          <form>
+            <!-- Class name input -->
+            <label for="classNameInput" class="form-label">Name</label>
+            <input type="text" id="classNameInput" class="form-control" placeholder="class name">
+            <br>
+
+            <!-- Class description input -->
+            <label for="classDescInput" class="form-label">Description</label>
+            <textarea id="classDescInput" class="form-control multitext-lock-vertical" placeholder="description"></textarea>
+          </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+          <form>
+            <!-- Add class button -->
+            <input type="button" class="btn btn-primary" id="addClassButton" value="Add Class">
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+	<!-- Option 1: Bootstrap Bundle with Popper -->
+	<!-- <script src="./bootstrap-5.1.3-dist/js/bootstrap.bundle.min.js"></script> -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>
