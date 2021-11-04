@@ -1,5 +1,7 @@
 'use strict'
 
+const fs = require('fs');
+
 /**
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
@@ -7,13 +9,15 @@
 function classGet(request, response) {
     const name = request.query.name;
     if (name !== undefined) {
+
+        // todo: write more specific data- file names, description, etc.
+
         response.end(JSON.stringify({ result: `found ${name}` }));
-
-        // todo: send user new class data
     } else {
-        response.end(JSON.stringify({ result: 'class not found' }));
 
-        // todo: redirect user to default home page
+        // todo: write a better error message
+
+        response.end(JSON.stringify({ result: 'class not found' }));
     }
 }
 
@@ -53,6 +57,8 @@ function classAdd(request, response) {
     if (name !== undefined && description !== undefined) {
 
         // todo: add class
+        // If the class folder and description already exists, respond with an error
+        // Otherwise, make the folder, description, and respond with success
 
         response.end(JSON.stringify({ result: `Add class ${name} with description "${description}"` }));
     } else {
@@ -70,6 +76,8 @@ function classEdit(request, response) {
     if (name !== undefined && description !== undefined) {
 
         // todo: edit class
+        // If the class folder and description exist, replace the description
+        // Otherwise, respond with an error
 
         response.end(JSON.stringify({ result: `Edit class ${name} description to "${description}"` }));
     } else {
@@ -86,6 +94,8 @@ function classRemove(request, response) {
     if (name !== undefined) {
 
         // todo: remove class
+        // If the class folder exists, delete it
+        // Otherwise, respond with an error
 
         response.end(JSON.stringify({ result: `Remove class ${name}` }));
     } else {
