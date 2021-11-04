@@ -24,9 +24,10 @@ function classGet(request, response) {
 function classPost(request, response) {
     const action = request.body['action'];
     switch (action) {
-        case 'add':
+        case 'add': {
             classAdd(request, response);
             break;
+        }
         case 'edit': {
             classEdit(request, response);
             break;
