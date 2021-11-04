@@ -1,11 +1,17 @@
 'use strict';
 
+const classApi = require('./api/class/class.js');
 const express = require('express');
 const app = express();
 const port = 8080;
-app.use(express.json());
+
+app.use(express.json()); // process json 
+app.use(express.static('./html')); // serve html files
 
 // TODO: Do gets and posts
+
+app.get("/class", classApi.classGet);
+app.post("/class", classApi.classPost);
 
 app.get("*", defaultHandler); // fall through
 
