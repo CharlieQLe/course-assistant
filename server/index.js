@@ -1,6 +1,6 @@
 'use strict';
 
-const classApi = require('./api/class/class.js');
+const classApi = require('./api/class.js');
 const express = require('express');
 const app = express();
 const port = 8080;
