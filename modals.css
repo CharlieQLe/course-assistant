@@ -1,7 +1,7 @@
 /* Forces the pop-up to be open on page load. Remove when adding JS! */
-.modal {
+/*.modal {
     display: block;
-}
+}*/
 
 .multitext-lock-vertical {
     resize: vertical;
