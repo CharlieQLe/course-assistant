@@ -1,20 +1,20 @@
 'use strict';
-import http from 'http';
-import url from 'url';
-import fs from 'fs';
+
+const express = require('express');
+const app = express();
+const port = 8080;
+app.use(express.json());
+
+// TODO: Do gets and posts
+
+app.get("*", defaultHandler); // fall through
+
+app.listen(port, () => console.log(`Server listening on http://localhost:${port}`));
 
 /**
- * @param {http.IncomingMessage} req 
- * @param {*} res 
+ * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
+ * @param {Response<any, Record<string, any>, number>} response 
  */
-function serverLogic(req, res) {
-    let body = '';
-    req.on('data', data => body += data);
-    req.on('end', () => {
-        
-        // todo: perform logic based on apis
-        
-    });
+function defaultHandler(request, response) {
+    response.end(JSON.stringify({ result: 'error' }));
 }
-
-http.createServer(serverLogic).listen(8080);
