@@ -1,6 +1,9 @@
 'use strict';
 
+const loginAPI = require('./api/login.js')
+const tasksAPI = require('./api/tasks.js')
 const classApi = require('./api/class.js');
+
 const express = require('express');
 const app = express();
 const port = 8080;
@@ -12,6 +15,12 @@ app.use(express.static('./public')); // serve public files
 
 app.get("/class", classApi.classGet);
 app.post("/class", classApi.classPost);
+
+app.get("/login", loginAPI.profileGet)
+app.get("/login", loginAPI.profilePost)
+
+app.get("/home", tasksAPI.taskGet)
+app.get("/home", tasksAPI.taskPost)
 
 app.get("*", defaultHandler); // fall through
 
