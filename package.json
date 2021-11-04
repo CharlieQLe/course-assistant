@@ -1,5 +1,26 @@
 {
   "dependencies": {
-    "bootstrap": "^5.1.3"
-  }
+    "bootstrap": "^5.1.3",
+    "express": "^4.17.1"
+  },
+  "name": "cs326-final-kappa",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CharlieQLe/cs326-final-kappa.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CharlieQLe/cs326-final-kappa/issues"
+  },
+  "homepage": "https://github.com/CharlieQLe/cs326-final-kappa#readme",
+  "description": ""
 }
