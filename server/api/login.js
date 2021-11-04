@@ -10,14 +10,14 @@
 
 //FUNCTION FOR READING USERS PROFILE ON LOGIN
 
-function readProfile(name, res) {
+function profileGet(name, res) {
     reload(filename)
     res.write("<h1> counter [" + name + "] = " + counter[name] + " </h1>");
 }
 
 //FUNCTION FOR CREATING USERS PROFILE ON SIGN UP
 
-function createProfile(name, res) {
+function profilePost(name, res) {
     reload(filename)
     counter[name] = 0;
     res.write("<h1> counter " + name + " created </h1>");

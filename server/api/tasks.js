@@ -5,6 +5,14 @@
 // -Delete for removing a specific task
 
 
+function taskGet () {
+
+}
+
+function taskPost () {
+    
+}
+
 //somehow have to sort events by recency and add first 4/5 to future tasks
 //Maybe do this onload?
 
