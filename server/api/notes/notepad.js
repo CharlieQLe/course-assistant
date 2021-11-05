@@ -18,14 +18,14 @@ function get(req, res) {
 
 	// console.log(fs.existsSync(`./users/${user}/${userClass}/${title}.txt`))
 
-	// check if note already exists in file path
+	// check if note exists in file path
 	if (fs.existsSync(`./users/${user}/${userClass}/${title}.txt`)) {
 		
 		// return JSON file with notes in body
 		// res.sendFile(path.join(__dirname, '../../public/notepad.html'));
 		// res.end('html sent successfully');
 		
-		res.end(`received GET request from client. note already exists!: ${user}, ${userClass}, title of note: ${title}`);
+		res.end(`received GET request from client. note exists!: ${user}, ${userClass}, title of note: ${title}`);
 		return;
 	}
 	res.end('GET request received incorrect, user, class or title')
@@ -43,8 +43,11 @@ function get(req, res) {
 
 
 /**
- * receives a JSON file and parse accordingly
- * to action given in JSON file
+ * receives a JSON file and create, update or delete
+ * the flashcard depending on the action in the JSON file
+ * JSON file: {action: 'create', path: './path', title:'title'}
+ *            {action: 'update', path: './path', body: 'body12345678'}
+ * 			  {action: 'delete', path: './path'}
  */
 function post(req, res) {
 	const action = req.body['action'];
