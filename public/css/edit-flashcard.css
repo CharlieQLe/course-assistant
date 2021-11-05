@@ -5,6 +5,11 @@
 	position: relative;
 }
 
+.word-wrap {
+	/* border: 1px solid blue; */
+	word-wrap: break-word;
+}
+
 .hov {
 	width: 3px;
 	height: 3px;
