@@ -64,11 +64,20 @@ function taskPost () {
     
     if (name !== undefined && description !== undefined && date !== undefined && time !== undefined && classname !== undefined) {
 
-        // todo: create task
-        // If any fields are left blank, respond with an error
-        // Otherwise, create the task with entered conditions, and respond with success
+        if(fs.existsSync(`/users/${name}`)) {
+            response.end(JSON.stringify({result: "Task already exists."}));
+        }
+        else{
+            fs.mkdir(`/users/${name}`, (err) => {
+                if(err) {
+                    response.end(JSON.stringify({result: "Failed to create task"}));
+                }
+                else{
+                    response.end(JSON.stringify({result: "Successfully created task"}));
+                }
+            })
+        }
 
-        response.end(JSON.stringify({ result: `Added task ${name} with description "${description}"` }));
     } else {
         response.end(JSON.stringify({ result: 'Add task failed.  Please check no fields were left blank and try again.' }));
     }
@@ -87,11 +96,17 @@ function taskEdit(request, response) {
     
     if (name !== undefined && description !== undefined && date !== undefined && time !== undefined && classname !== undefined) {
 
-        // todo: edit task --> do this with a bunch of if conditions?
-        // If the task exists, make the desired edit
-        // Otherwise, respond with an error
-
-        response.end(JSON.stringify({ result: `Edit task ${name} description to "${description}"` }));
+        if (fs.existsSync(`./users/${user}/${className}/`)) {
+            fs.writeFile(`./users/${user}/${className}/.description`, description, (err) => {
+                if (err) { // Error when unable to write the description.
+                    response.end(JSON.stringify({ result: `Failed to add description for class ${className}` }));
+                } else { // Success on writing the description
+                    response.end(JSON.stringify({ result: `Edited description for class ${className}` }));
+                }
+            });
+        } else {
+            response.end(JSON.stringify({ result: `Class ${className} doesn't exist` }));
+        }
     } else {
         response.end(JSON.stringify({ result: 'edit task failed' }));
     }
@@ -110,9 +125,12 @@ function taskDelete(request, response) {
     
     if (name !== undefined && description !== undefined && date !== undefined && time !== undefined && classname !== undefined) {
 
-        // todo: remove task
-        // If the task exists, delete it
-        // Otherwise, respond with an error
+        if (fs.existsSync(`./users/${user}/${className}/`)) {
+            fs.rmSync(`./users/${user}/${className}/`, { recursive: true, force: true });
+            response.end(JSON.stringify({ result: `Removed class ${className}` }));
+        } else {
+            response.end(JSON.stringify({ result: `Class ${className} doesn't exist` }));
+        }
 
         response.end(JSON.stringify({ result: `Removed task ${name}` }));
     } else {
