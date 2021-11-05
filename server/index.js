@@ -3,6 +3,8 @@
 const loginAPI = require('./api/login.js')
 const taskAPI = require('./api/tasks.js')
 const classApi = require('./api/class.js');
+const noteApi = require('./api/notepad.js');
+const flashcardApi = require('./api/flashcard.js');
 
 const express = require('express');
 const app = express();
@@ -21,6 +23,13 @@ app.post("/login", loginAPI.profilePost)
 
 app.get("/home", taskAPI.taskGet)
 app.post("/home", taskAPI.taskPost)
+
+app.get("/:user/:class/note", noteApi.get)
+app.post("/note", noteApi.post)
+
+app.get("/:user/:class/flashcard", flashcardApi.get)
+app.post("/flashcard", flashcardApi.post)
+
 
 app.get("*", defaultHandler); // fall through
 
