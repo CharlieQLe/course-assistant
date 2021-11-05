@@ -16,14 +16,11 @@ function taskGet () {
     const name = request.query.name; //name would be the primary key for identifying tasks
     if (name !== undefined) {
 
-        // todo: write more specific data- file names, description, etc.
+        //figure out how to read in task data
 
-        response.end(JSON.stringify({ result: `found ${name}` }));
+        response.end(JSON.stringify({ result: `Found task ${name}` }));
     } else {
-
-        // todo: write a better error message
-
-        response.end(JSON.stringify({ result: 'class not found' }));
+        response.end(JSON.stringify({ result: 'Task not found.  Check name and try again.' }));
     }
 
 }
@@ -71,9 +68,9 @@ function taskPost () {
         // If any fields are left blank, respond with an error
         // Otherwise, create the task with entered conditions, and respond with success
 
-        response.end(JSON.stringify({ result: `Add task ${name} with description "${description}"` }));
+        response.end(JSON.stringify({ result: `Added task ${name} with description "${description}"` }));
     } else {
-        response.end(JSON.stringify({ result: 'add task failed' }));
+        response.end(JSON.stringify({ result: 'Add task failed.  Please check no fields were left blank and try again.' }));
     }
 }
 
@@ -117,9 +114,9 @@ function taskDelete(request, response) {
         // If the task exists, delete it
         // Otherwise, respond with an error
 
-        response.end(JSON.stringify({ result: `Remove task ${name}` }));
+        response.end(JSON.stringify({ result: `Removed task ${name}` }));
     } else {
-        response.end(JSON.stringify({ result: 'remove task failed' }));
+        response.end(JSON.stringify({ result: 'Remove task failed.  Please check the name exists and try again.' }));
     }
 }
 

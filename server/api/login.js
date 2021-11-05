@@ -17,17 +17,16 @@ const fs = require('fs');
 //Need to use this to retrieve a profile
 
  function profileGet(request, response) {
-    const name = request.query.name;
-    if (name !== undefined) {
+    ///const name = request.query.name; probably don't need the name for login purposes, would just need to check email and password --> I think we learn authentication soon
+    const email = request.query.email;
+    const password = request.query.password;
+    if (email !== undefined && password !== undefined) {
 
-        // todo: write more specific data- file names, description, etc.
+        // todo: figure out how to authenticate login and load in profile
 
-        response.end(JSON.stringify({ result: `found ${name}` }));
+        response.end(JSON.stringify({ result: `Found account with email ${email} and password ${password}` }));
     } else {
-
-        // todo: write a better error message
-
-        response.end(JSON.stringify({ result: 'class not found' }));
+        response.end(JSON.stringify({ result: 'User not found. Please check email and password and try again.  No account? Sign up below.' }));
     }
 }
 
@@ -76,13 +75,15 @@ function profilePost(request, response) {
     
     if (name !== undefined && email !== undefined && password !== undefined && confirmedpassword !== undefined) {
 
+        //user.name = name; user.email = email; user.password = password;
+
         // todo: create profile
         // If the email already exists, respond with an error
         // Otherwise, create the profile with entered conditions, and respond with success
 
-        response.end(JSON.stringify({ result: `Add profile ${name} with email "${email}" and with password "${password}"` }));
+        response.end(JSON.stringify({ result: `Added profile ${name} with email "${email}" and password "${password}"` }));
     } else {
-        response.end(JSON.stringify({ result: 'add class failed' }));
+        response.end(JSON.stringify({ result: 'Add profile failed.  Please check that all fields are entered and passwords match and try again.' }));
     }
 }
 
@@ -103,7 +104,7 @@ function profileEdit(request, response) {
 
         response.end(JSON.stringify({ result: `Edit profile ${name} password to "${password}"` }));
     } else {
-        response.end(JSON.stringify({ result: 'edit profile failed' }));
+        response.end(JSON.stringify({ result: 'Edit profile failed. Please check conditions and try again.' }));
     }
 }
 
@@ -121,9 +122,9 @@ function profileDelete(request, response) {
         // If the user exists (via email?), delete it
         // Otherwise, respond with an error
 
-        response.end(JSON.stringify({ result: `Remove profile ${email}` }));
+        response.end(JSON.stringify({ result: `Deleted profile with name ${name} and email ${email}` }));
     } else {
-        response.end(JSON.stringify({ result: 'remove profile failed' }));
+        response.end(JSON.stringify({ result: 'Delete profile failed' }));
     }
 }
 
