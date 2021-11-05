@@ -14,12 +14,6 @@
 	color:darkred;
 }
 
-/* used to see the outlines of the grid(from bootstrap).
- * comment this out when pushing */
-/* .box {
-	border: 1px solid black;
-} */
-
 #edit-flashcard {
 	width: 100%;
 	height: 80%;
@@ -37,3 +31,6 @@
 	position: absolute;
 
 }
+
+
+
