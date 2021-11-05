@@ -7,9 +7,10 @@ const fs = require('fs');
  * @param {Response<any, Record<string, any>, number>} response 
  */
 async function get(request, response) {
-    const user = request.body['user'];
+    const user = request.params['user'];
     const className = request.query.class;
     if (user !== undefined && className !== undefined) {
+        // If a class exists, read the files and send their names to the user.
         if (fs.existsSync(`./users/${user}/${className}/`)) {
             fs.readdir(`./users/${user}/${className}/`, (err, files) => {
                 if (err) {
@@ -31,7 +32,7 @@ async function get(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function post(request, response) {
-    const user = request.body['user'];
+    const user = request.params['user'];
     const action = request.body['action'];
     if (user === undefined) {
         response.end(JSON.stringify({ result: 'user unknown' }));
