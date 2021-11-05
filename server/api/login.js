@@ -14,23 +14,6 @@ const fs = require('fs');
  * @param {Response<any, Record<string, any>, number>} response 
  */
 
-//Need to use this to retrieve a profile
-
- function profileGet(request, response) {
-    ///const name = request.query.name; probably don't need the name for login purposes, would just need to check email and password --> I think we learn authentication soon
-    const email = request.query.email;
-    const password = request.query.password;
-    if (email !== undefined && password !== undefined) {
-
-        // todo: figure out how to authenticate login and load in profile
-
-        response.end(JSON.stringify({ result: `Found account with email ${email} and password ${password}` }));
-    } else {
-        response.end(JSON.stringify({ result: 'User not found. Please check email and password and try again.  No account? Sign up below.' }));
-    }
-}
-
-
 //Need to for variety of actions
 
 /**
@@ -45,7 +28,7 @@ function profilePost(request, response) {
             break;
         }
         case 'login': {
-            profileGet(request, response);
+            profileLogin(request, response);
             break;
         }
         case 'remove': {
@@ -63,25 +46,47 @@ function profilePost(request, response) {
     }
 }
 
+function profileLogin(request, response) {
+    
+    const email = request.params.email;
+    const password = request.params.password;
+
+    if (email !== undefined && password !== undefined) {
+        //if a user exists, read the
+
+        // todo: figure out how to authenticate login and load in profile
+
+        response.end(JSON.stringify({ result: `Found account with email ${email} and password ${password}` }));
+    } else {
+        response.end(JSON.stringify({ result: 'User not found. Please check email and password and try again.  No account? Sign up below.' }));
+    }
+}
+
 /**
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
- function profileAdd(request, response) {
+ async function profileAdd(request, response) {
     const name = request.body['name'];
     const email = request.body['email']; //email would have to be primary key
     const password = request.body['password'];
-    const confirmedpassword = request.body['confirmpassword'];
     
-    if (name !== undefined && email !== undefined && password !== undefined && confirmedpassword !== undefined) {
+    if (name !== undefined && email !== undefined && password !== undefined) {
 
-        //user.name = name; user.email = email; user.password = password;
+        if(fs.existsSync(`/users/${name}`)) {
+            response.end(JSON.stringify({result: "Profile already exists."}));
+        }
+        else{
+            fs.mkdir(`/users/${name}`, (err) => {
+                if(err) {
+                    response.end(JSON.stringify({result: "Failed to create user"}));
+                }
+                else{
+                    response.end(JSON.stringify({result: "Successfully created user"}));
+                }
+            })
 
-        // todo: create profile
-        // If the email already exists, respond with an error
-        // Otherwise, create the profile with entered conditions, and respond with success
-
-        response.end(JSON.stringify({ result: `Added profile ${name} with email "${email}" and password "${password}"` }));
+        }
     } else {
         response.end(JSON.stringify({ result: 'Add profile failed.  Please check that all fields are entered and passwords match and try again.' }));
     }
@@ -118,18 +123,21 @@ function profileDelete(request, response) {
     
     if (name !== undefined && email !== undefined) {
 
-        // todo: remove class
-        // If the user exists (via email?), delete it
+         // If the class folder exists, delete it
         // Otherwise, respond with an error
-
-        response.end(JSON.stringify({ result: `Deleted profile with name ${name} and email ${email}` }));
+        if (fs.existsSync(`./users/${name}`)) {
+            fs.rmSync(`./users/${name}`, { recursive: true, force: true });
+            response.end(JSON.stringify({ result: `Removed user ${name}` }));
+        } else {
+            response.end(JSON.stringify({ result: `User ${name} doesn't exist` }));
+        }
     } else {
         response.end(JSON.stringify({ result: 'Delete profile failed' }));
     }
 }
 
 
-module.exports = { profileGet, profilePost };
+module.exports = {profilePost };
 
 
 // COMMENTED LOGIC THAT MIGHT BE HELPFUL FOR NEXT MILESTONE

@@ -20,7 +20,6 @@ app.use(express.static('./public/js')); // serve public files
 app.get("/:user/class", classApi.get);
 app.post("/:user/class", classApi.post);
 
-app.get("/", loginAPI.profileGet)
 app.post("/", loginAPI.profilePost)
 
 app.get("/home", taskAPI.taskGet)
