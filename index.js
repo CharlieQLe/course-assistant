@@ -33,7 +33,7 @@ app.post("/flashcard", flashcardApi.post)
 
 app.get("*", defaultHandler); // fall through
 
-app.listen(process.env.PORT || 8080, () => console.log(`Server listening on http://localhost:${port}`));
+app.listen(process.env.PORT || 8080, () => console.log(`Server listening on http://localhost:${process.env.PORT || 8080}`));
 
 /**
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
