@@ -92,5 +92,5 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
 
 document.getElementById('study-btn').addEventListener('click', () => {
     // TODO
-    document.location.href = '../public/study-flashcard.html';
+    document.location.href = './study-flashcard.html';
 })
