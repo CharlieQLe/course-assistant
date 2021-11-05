@@ -8,7 +8,6 @@ const flashcardApi = require('./api/flashcard.js');
 
 const express = require('express');
 const app = express();
-const port = 8080;
 
 app.use(express.json()); // process json 
 app.use(express.static('./public')); // serve public files
@@ -34,7 +33,7 @@ app.post("/flashcard", flashcardApi.post)
 
 app.get("*", defaultHandler); // fall through
 
-app.listen(port, () => console.log(`Server listening on http://localhost:${port}`));
+app.listen(process.env.PORT || 8080, () => console.log(`Server listening on http://localhost:${port}`));
 
 /**
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
