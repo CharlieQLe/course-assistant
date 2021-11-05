@@ -9,16 +9,23 @@ const fs = require('fs');
 // -Update for updating a specific task
 // -Delete for removing a specific task
 
-//use this for reading a task?
+//check if task exists, send it over
 
-function taskGet () {
-
-    const name = request.query.name; //name would be the primary key for identifying tasks
-    if (name !== undefined) {
-
-        //figure out how to read in task data
-
-        response.end(JSON.stringify({ result: `Found task ${name}` }));
+async function taskGet () {
+    const user = request.params['user'];
+    const taskid = request.body['taskid']; //primary key; //name would be the primary key for identifying tasks
+    if (user !== undefined && taskid !== undefined) {
+        if (fs.existsSync(`./users/${user}/task.json`)) {
+            fs.readFile(`./users/${user}/task.json`, (err, data) => {
+                if (err) {
+                    response.end(JSON.stringify({ result: `Unable to find task at ID ${taskid}` }));
+                } else {
+                    response.end(JSON.stringify(data));
+                }
+            });    
+        } else {
+            response.end(JSON.stringify({ result: `User ${user} tasks not found` }));    
+        }
     } else {
         response.end(JSON.stringify({ result: 'Task not found.  Check name and try again.' }));
     }
@@ -30,6 +37,13 @@ function taskGet () {
 function taskPost () {
 
     const action = request.body['action'];
+    const user = request.params['user'];
+
+    if (user === undefined) {
+        response.end(JSON.stringify({ result: 'user unknown' }));
+        return;
+    }
+
     switch (action) {
         case 'add': {
             taskAdd(request, response);
@@ -56,19 +70,21 @@ function taskPost () {
  * @param {Response<any, Record<string, any>, number>} response 
  */
  function taskAdd(request, response) {
-    const name = request.body['name']; //primary key
+    const user = request.params['user']; 
+    const taskid = request.body['taskid']; //primary key
+    const taskname = request.body['taskname']; 
     const description = request.body['description'];
     const date = request.body['date'];
     const time = request.body['time'];
     const classname = request.body['classname'];
     
-    if (name !== undefined && description !== undefined && date !== undefined && time !== undefined && classname !== undefined) {
+    if (user !== undefined && taskid !== undefined && description !== undefined && date !== undefined && time !== undefined && classname !== undefined && taskname !== undefined) {
 
-        if(fs.existsSync(`/users/${name}`)) {
+        if(fs.existsSync(`/users/${user}/task.json/${taskid}`)) {
             response.end(JSON.stringify({result: "Task already exists."}));
         }
         else{
-            fs.mkdir(`/users/${name}`, (err) => {
+            fs.mkdir(`/users/${user}/task.json/${taskid}`, (err) => {
                 if(err) {
                     response.end(JSON.stringify({result: "Failed to create task"}));
                 }
@@ -88,24 +104,34 @@ function taskPost () {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function taskEdit(request, response) {
-    const name = request.body['name']; //primary key
+    const user = request.params['user']; 
+    const taskid = request.body['taskid']; //primary key
+    const taskname = request.body['taskname']; 
     const description = request.body['description'];
     const date = request.body['date'];
     const time = request.body['time'];
     const classname = request.body['classname'];
     
-    if (name !== undefined && description !== undefined && date !== undefined && time !== undefined && classname !== undefined) {
+    if (user !== undefined && taskid !== undefined && taskname !== undefined && description !== undefined && date !== undefined && time !== undefined && classname !== undefined) {
 
-        if (fs.existsSync(`./users/${user}/${className}/`)) {
-            fs.writeFile(`./users/${user}/${className}/.description`, description, (err) => {
+        if (fs.existsSync(`./users/${user}/task.json/${taskid}`)) {
+            fs.readFileSync(`./users/${user}/task.json/${taskid}`, (err, data) => {
                 if (err) { // Error when unable to write the description.
-                    response.end(JSON.stringify({ result: `Failed to add description for class ${className}` }));
+                    response.end(JSON.stringify({ result: `Failed to edit for ${taskid}` }));
                 } else { // Success on writing the description
-                    response.end(JSON.stringify({ result: `Edited description for class ${className}` }));
+                    const parsed = JSON.parse(data);
+                    const tasktoedit = parsed[parseInt(taskid)];
+                    tasktoedit.taskname = taskname;
+                    tasktoedit.description = description;
+                    tasktoedit.date = date;
+                    tasktoedit.time = time;
+                    tasktoedit.classname = classname;
+                    
+                    response.end(JSON.stringify({ result: `Edit successful for ${taskid}` }));
                 }
             });
         } else {
-            response.end(JSON.stringify({ result: `Class ${className} doesn't exist` }));
+            response.end(JSON.stringify({ result: `Task ${taskid} doesn't exist` }));
         }
     } else {
         response.end(JSON.stringify({ result: 'edit task failed' }));
@@ -117,22 +143,19 @@ function taskEdit(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function taskDelete(request, response) {
-    const name = request.body['name']; //primary key
-    const description = request.body['description'];
-    const date = request.body['date'];
-    const time = request.body['time'];
-    const classname = request.body['classname'];
+    const user = request.params['user']; 
+    const taskid = request.body['taskid']; //primary key
     
-    if (name !== undefined && description !== undefined && date !== undefined && time !== undefined && classname !== undefined) {
+    if (user !== undefined && taskid !== undefined) {
 
-        if (fs.existsSync(`./users/${user}/${className}/`)) {
-            fs.rmSync(`./users/${user}/${className}/`, { recursive: true, force: true });
-            response.end(JSON.stringify({ result: `Removed class ${className}` }));
+        if (fs.existsSync(`./users/${user}/task.json`)) {
+            const task = fs.readFileSync(`./users/${user}/task.json`);
+            const parsed = JSON.parse(task);
+            parsed.remove(parseInt(taskid));
+            response.end(JSON.stringify({ result: `Removed task ${taskid}` }));
         } else {
-            response.end(JSON.stringify({ result: `Class ${className} doesn't exist` }));
+            response.end(JSON.stringify({ result: `Task ${taskid} doesn't exist` }));
         }
-
-        response.end(JSON.stringify({ result: `Removed task ${name}` }));
     } else {
         response.end(JSON.stringify({ result: 'Remove task failed.  Please check the name exists and try again.' }));
     }
