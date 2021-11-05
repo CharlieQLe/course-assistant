@@ -5,11 +5,14 @@
 	position: relative;
 }
 
-/* used to see the outlines of the grid(from bootstrap).
- * comment this out when pushing */
-/* .box {
-	border: 1px solid black;
-} */
+.hov {
+	width: 3px;
+	height: 3px;
+}
+
+.hov:hover {
+	color:darkred;
+}
 
 #edit-flashcard {
 	width: 100%;
@@ -28,3 +31,6 @@
 	position: absolute;
 
 }
+
+
+

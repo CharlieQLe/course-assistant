@@ -1,0 +1,15 @@
+.multitext-lock-vertical {
+    resize: vertical;
+}
+
+.label-no-count, .center-group {
+    text-align: center;
+}
+
+.label-no-count {
+    font-style: italic;
+}
+
+.center-group {
+    margin: auto;
+}
