@@ -26,11 +26,11 @@ function render(element) {
             main.classList.add('d-flex', 'justify-content-center', 'flex-nowrap', 'p-4');
             
             const term = document.createElement('div');
-            term.classList.add('col-3', 'text-center');
+            term.classList.add('col-3', 'text-center', 'word-wrap');
             term.innerText = flashcards[i].term;
             
             const desc = document.createElement('div');
-            desc.classList.add('col-3', 'text-center');
+            desc.classList.add('col-3', 'text-center', 'word-wrap');
             desc.innerText = flashcards[i].desc;
 
             const xButton = document.createElement('div');
