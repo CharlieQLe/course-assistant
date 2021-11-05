@@ -1,7 +1,7 @@
 'use strict';
 
 const loginAPI = require('./api/login.js')
-const tasksAPI = require('./api/tasks.js')
+const taskAPI = require('./api/tasks.js')
 const classApi = require('./api/class.js');
 
 const express = require('express');
@@ -17,10 +17,10 @@ app.get("/class", classApi.classGet);
 app.post("/class", classApi.classPost);
 
 app.get("/login", loginAPI.profileGet)
-app.get("/login", loginAPI.profilePost)
+app.post("/login", loginAPI.profilePost)
 
-app.get("/home", tasksAPI.taskGet)
-app.get("/home", tasksAPI.taskPost)
+app.get("/home", taskAPI.taskGet)
+app.post("/home", taskAPI.taskPost)
 
 app.get("*", defaultHandler); // fall through
 
