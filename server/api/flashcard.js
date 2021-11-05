@@ -17,7 +17,6 @@ function get(req, res) {
 
 	// check if flashcard exists in file path
 	if (fs.existsSync(`./users/${user}/${userClass}/${title}.json`)) {
-		
 		res.end(`received GET request from client. flashcard exists!: ${user}, ${userClass}, title of flashcard: ${title}`);
 		return;
 	}
@@ -122,46 +121,4 @@ function post(req, res) {
 */
 
 
-function render(element) {
-    console.log('hi')
-    element.innerHTML = '';
-
-        for (let i = 0; i < flashcards.length; i++) {
-            const main = document.createElement('div');
-            main.classList.add('d-flex, justify-content-center, flex-nowrap, p-4');
-            
-            const term = document.createElement('div');
-            term.classList.add('col-3, text-center');
-            term.innerText = flashcards[i].term;
-            
-            const desc = document.createElement('div');
-            desc.classList.add('col-3, text-center');
-            desc.innerText = flashcards[i].desc;
-
-            const xButton = document.createElement('div');
-            xButton.classList.add('col-1, text-center');
-
-            const x = document.createElement('i');
-            x.classList.add('bi, bi-x, hov');
-            xButton.appendChild(x);
-
-            main.appendChild(term, desc, xButton);
-
-            element.appendChild(main);
-        }
-}
-
-
-document.getElementById('add-flashcard-btn').addEventListener('click', () => {
-    console.log('btn clicked');
-    const term = document.getElementById('term-input').value;
-    const desc = parseInt(document.getElementById('flashcard-desc-input').value);
-    flashcards.push({term: term, desc: desc});
-
-    render(document.getElementById('edit-flashcard'));
-});
-
-
-
-
-module.exports = { get, post };
+module.exports = { get, post }
