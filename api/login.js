@@ -137,7 +137,7 @@ function profileDelete(request, response) {
 }
 
 
-module.exports = {profilePost };
+module.exports = {profilePost};
 
 
 // COMMENTED LOGIC THAT MIGHT BE HELPFUL FOR NEXT MILESTONE
