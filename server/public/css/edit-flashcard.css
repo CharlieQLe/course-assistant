@@ -5,6 +5,15 @@
 	position: relative;
 }
 
+.hov {
+	width: 3px;
+	height: 3px;
+}
+
+.hov:hover {
+	color:darkred;
+}
+
 /* used to see the outlines of the grid(from bootstrap).
  * comment this out when pushing */
 /* .box {
