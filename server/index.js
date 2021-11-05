@@ -15,8 +15,8 @@ app.use(express.static('./public')); // serve public files
 
 // TODO: Do gets and posts
 
-app.get("/class", classApi.classGet);
-app.post("/class", classApi.classPost);
+app.get("/:user/class", classApi.get);
+app.post("/:user/class", classApi.post);
 
 app.get("/login", loginAPI.profileGet)
 app.post("/login", loginAPI.profilePost)
