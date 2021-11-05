@@ -12,6 +12,8 @@ const port = 8080;
 
 app.use(express.json()); // process json 
 app.use(express.static('./public')); // serve public files
+app.use(express.static('./public/css')); // serve public files
+app.use(express.static('./public/js')); // serve public files
 
 // TODO: Do gets and posts
 
