@@ -15,6 +15,7 @@
 </div>
 */
 
+let flashcards = [];
 
 
 function render(element) {
