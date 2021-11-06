@@ -21,7 +21,7 @@ app.post("/:user/class", classApi.post);
 
 app.post("/", loginAPI.profilePost)
 
-app.get("/home", taskAPI.taskGet)
+app.get("/:user/task", taskAPI.taskGet)
 app.post("/home", taskAPI.taskPost)
 
 app.get("/:user/:class/note", noteApi.get)
