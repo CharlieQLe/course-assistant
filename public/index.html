@@ -11,11 +11,12 @@
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
   <link rel="stylesheet" href="./css/modals.css">
-
+  <script src="./js/signUpLogin.js"></script>
+  
   <title>Course Assistant</title>
 </head>
 
-<body>
+<body onload="initialize()">
   <h1 class="text-center">Welcome to Course Assistant!</h1>
   <div class="container-fluid text-center p-5 px200"></div>
   <div class="container-fluid text-center p-5 px400">
@@ -48,29 +49,29 @@
 
             <!-- Name -->
             <div class="form-group">
-              <label for="nameInput" class="form-label">Name</label>
-              <input type="text" class="form-control" id="nameInput" placeholder="John Doe">
+              <label for="signUpNameInput" class="form-label">Name</label>
+              <input type="text" class="form-control" id="signUpNameInput" placeholder="John Doe">
             </div>
             <br>
 
             <!-- Email -->
             <div class="form-group">
-              <label for="emailInput" class="form-label">Email Address</label>
-              <input type="email" class="form-control" id="emailInput" placeholder="example@email.com">
+              <label for="signUpEmailInput" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="signUpEmailInput" placeholder="example@email.com">
             </div>
             <br>
 
             <!-- Password -->
             <div class="form-group">
-              <label for="passwordInput" class="form-label">Password</label>
-              <input type="password" class="form-control" id="passwordInput">
+              <label for="signUpPasswordInput" class="form-label">Password</label>
+              <input type="password" class="form-control" id="signUpPasswordInput">
             </div>
             <br>
 
             <!-- Confirm Password -->
             <div class="form-group">
-              <label for="confirmPasswordInput" class="form-label">Confirm Password</label>
-              <input type="password" class="form-control" id="confirmPasswordInput">
+              <label for="signUpConfirmPasswordInput" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="signUpConfirmPasswordInput">
             </div>
             <br>
 
@@ -107,22 +108,22 @@
 
             <!-- Email -->
             <div class="form-group">
-              <label for="emailInput" class="form-label">Email Address</label>
-              <input type="email" class="form-control" id="emailInput" placeholder="example@email.com">
+              <label for="logInEmailInput" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="logInEmailInput" placeholder="example@email.com">
             </div>
             <br>
 
             <!-- Password -->
             <div class="form-group">
-              <label for="passwordInput" class="form-label">Password</label>
-              <input type="password" class="form-control" id="passwordInput" placeholder="password">
+              <label for="logInPasswordInput" class="form-label">Password</label>
+              <input type="password" class="form-control" id="logInPasswordInput" placeholder="password">
             </div>
             <br>
 
             <!-- Remember me -->
             <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="exampleCheck1">
-              <label class="form-check-label text-black" for="exampleCheck1">Remember Me!</label>
+              <input type="checkbox" class="form-check-input" id="rememberMeToggle">
+              <label class="form-check-label text-black" for="rememberMeToggle">Remember Me!</label>
             </div>
 
           </form>

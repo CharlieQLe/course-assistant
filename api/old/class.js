@@ -11,12 +11,12 @@ function getAll(request, response) {
 }
 
 /**
- * Process a post request to create a class.
+ * Process a post request to add a class.
  * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
-function postCreate(request, response) {
+function postAdd(request, response) {
     response.end(JSON.stringify({ result: "Add a class received!" }));
 }
 
@@ -36,7 +36,7 @@ function getClass(request, response) {
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
-function postEdit(request, response) {
+ function postEdit(request, response) {
     response.end(JSON.stringify({ result: "Edit class received!" }));
 }
 
@@ -46,19 +46,8 @@ function postEdit(request, response) {
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
-function postRemove(request, response) {
+ function postRemove(request, response) {
     response.end(JSON.stringify({ result: "Remove class received!" }));
 }
 
-
-/**
- * Process a get request to search for files with tags.
- * 
- * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
- * @param {Response<any, Record<string, any>, number>} response 
- */
-function getSearch(request, response) {
-    response.end(JSON.stringify({ result: "Search received!" }));
-}
-
-module.exports = { getAll, postCreate, getClass, postEdit, postRemove, getSearch };
+module.exports = { getAll, postAdd, getClass, postEdit, postRemove };

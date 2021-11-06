@@ -2,52 +2,52 @@
 
 const fs = require('fs');
 
-
-// User data for log in - {name, email, password}
-// -Create for making new user
-// -Read for displaying current user data
-// -Update for editing user profile
-// -Delete for potential deletion of account?
-
 /**
+ * Process a post request to sign up.
+ * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
+function postSignup(request, response) {
+    response.end(JSON.stringify({ result: "Sign up received!" }));
 
-//Need to for variety of actions
+    /*
+    const name = request.body['name'];
+    const email = request.body['email']; //email would have to be primary key
+    const password = request.body['password'];
 
-/**
- * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
- * @param {Response<any, Record<string, any>, number>} response 
- */
-function profilePost(request, response) {
-    const action = request.body['action'];
-    switch (action) {
-        case 'signup': {
-            profileAdd(request, response);
-            break;
+    if (name !== undefined && email !== undefined && password !== undefined) {
+
+        if (fs.existsSync(`/users/${name}`)) {
+            response.end(JSON.stringify({ result: "Profile already exists." }));
         }
-        case 'login': {
-            profileLogin(request, response);
-            break;
+        else {
+            fs.mkdir(`/users/${name}`, (err) => {
+                if (err) {
+                    response.end(JSON.stringify({ result: "Failed to create user" }));
+                }
+                else {
+                    response.end(JSON.stringify({ result: "Successfully created user" }));
+                }
+            })
+
         }
-        case 'remove': {
-            profileDelete(request, response);
-            break;
-        }
-        case 'edit': {
-            profileEdit(request, response);
-            break;
-        }
-        default: {
-            response.end(JSON.stringify({ result: 'command unknown' }));
-            break;
-        }
+    } else {
+        response.end(JSON.stringify({ result: 'Add profile failed.  Please check that all fields are entered and passwords match and try again.' }));
     }
+    */
 }
 
-function profileLogin(request, response) {
-    
+/**
+ * Process a post request to log in.
+ * 
+ * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
+ * @param {Response<any, Record<string, any>, number>} response 
+ */
+function postLogin(request, response) {
+    response.end(JSON.stringify({ result: "Log in received!" }));
+
+    /*
     const email = request.params.email;
     const password = request.params.password;
 
@@ -60,47 +60,38 @@ function profileLogin(request, response) {
     } else {
         response.end(JSON.stringify({ result: 'User not found. Please check email and password and try again.  No account? Sign up below.' }));
     }
+    */
 }
 
 /**
+ * Process a get request to retrieve user data.
+ * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
- async function profileAdd(request, response) {
-    const name = request.body['name'];
-    const email = request.body['email']; //email would have to be primary key
-    const password = request.body['password'];
-    
-    if (name !== undefined && email !== undefined && password !== undefined) {
-
-        if(fs.existsSync(`/users/${name}`)) {
-            response.end(JSON.stringify({result: "Profile already exists."}));
-        }
-        else{
-            fs.mkdir(`/users/${name}`, (err) => {
-                if(err) {
-                    response.end(JSON.stringify({result: "Failed to create user"}));
-                }
-                else{
-                    response.end(JSON.stringify({result: "Successfully created user"}));
-                }
-            })
-
-        }
+function getData(request, response) {
+    const user = request.body['user'];
+    if (user) {
+        response.end(JSON.stringify({ result: `Get data for user ${user} received!` }));
     } else {
-        response.end(JSON.stringify({ result: 'Add profile failed.  Please check that all fields are entered and passwords match and try again.' }));
+        response.end(JSON.stringify({ result: `Error, user is not defined!` }));
     }
 }
 
 /**
+ * Process a post request for editing a user.
+ * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
-function profileEdit(request, response) {
+function postEdit(request, response) {
+    response.end(JSON.stringify({ result: "Edit user received!" }));
+
+    /*
     const name = request.body['name'];
     const email = request.body['email']; //primary key
     const password = request.body['password'];
-    
+
     if (name !== undefined && email !== undefined && password !== undefined) {
 
         // todo: edit profile --> do this with a bunch of if conditions?
@@ -111,19 +102,25 @@ function profileEdit(request, response) {
     } else {
         response.end(JSON.stringify({ result: 'Edit profile failed. Please check conditions and try again.' }));
     }
+    */
 }
 
 /**
+ * Process a post request for deleting a user.
+ * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
-function profileDelete(request, response) {
+function postDelete(request, response) {
+    response.end(JSON.stringify({ result: "Delete user received!" }));
+
+    /*
     const name = request.body['name'];
     const email = request.body['email']; //primary key
-    
+
     if (name !== undefined && email !== undefined) {
 
-         // If the class folder exists, delete it
+        // If the class folder exists, delete it
         // Otherwise, respond with an error
         if (fs.existsSync(`./users/${name}`)) {
             fs.rmSync(`./users/${name}`, { recursive: true, force: true });
@@ -134,10 +131,11 @@ function profileDelete(request, response) {
     } else {
         response.end(JSON.stringify({ result: 'Delete profile failed' }));
     }
+    */
 }
 
 
-module.exports = {profilePost};
+module.exports = { postSignup, postLogin, getData, postEdit, postDelete };
 
 
 // COMMENTED LOGIC THAT MIGHT BE HELPFUL FOR NEXT MILESTONE
