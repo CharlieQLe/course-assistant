@@ -59,7 +59,7 @@ function render(element) {
             }
             flashcards.splice(deleteAtIndex, 1);
             console.log(flashcards)
-            render(document.getElementById('edit-flashcard'));
+            render(document.getElementById('flashcard'));
         })
 
         element.appendChild(main);
@@ -88,7 +88,7 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
     document.getElementById('flashcard-desc-input').value = '';
 
 
-    render(document.getElementById('edit-flashcard'));
+    render(document.getElementById('flashcard'));
 
 });
 
