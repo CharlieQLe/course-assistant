@@ -25,6 +25,9 @@ app.get("/home", taskAPI.taskGet)
 app.post("/home", taskAPI.taskPost)
 
 app.get("/:user/:class/note", noteApi.get)
+app.get("/notepad.html", (req, res) => {
+    res.sendFile('./notepad.html')
+})
 app.post("/note", noteApi.post)
 
 app.get("/:user/:class/flashcard", flashcardApi.get)
@@ -40,5 +43,6 @@ app.listen(process.env.PORT || 8080, () => console.log(`Server listening on http
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function defaultHandler(request, response) {
-    response.end(JSON.stringify({ result: 'error' }));
+
+    response.end(JSON.stringify({ result: 'error', path: __dirname, request: request.path }));
 }

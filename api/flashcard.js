@@ -4,7 +4,8 @@ const fs = require('fs');
 const path = require('path');
 
 /**
- *  return existing flashcard
+ *  @returns flashcard JSON object
+ * JSON object is in the form of { flashcards: [{ term: t1, desc: d1}, ..., {}] }
  */
 function get(req, res) {
 	const user = req.params.user;
@@ -26,10 +27,9 @@ function get(req, res) {
 /**
  * receives a JSON file and create, update or delete
  * the flashcard depending on the action in the JSON file
- * JSON file: {action: 'create', path: './path', title:'title'}
- * 			  {action: 'update', path: './path', operation: 'add|delete', flashcard: {term: 't1', desc: 'desc1'} }
- * 			  {action: 'delete', path: './path'}
- * path for create and delete should include the title 
+ * JSON request obj: {action: 'create', path: './path', title:'title'}
+ * 			         {action: 'update', path: './path', operation: 'add|delete', flashcard: {term: 't1', desc: 'desc1'} }
+ * 		             {action: 'delete', path: './path'}
  */
 function post(req, res) {
 	const action = req.body['action'];
@@ -60,7 +60,7 @@ function post(req, res) {
     const path = req.body['path'];
     const title = req.body['title'];
 
-    if (fs.existsSync(`./users/${path}`)) {
+    if (fs.existsSync(`./${path}`)) {
 
 		// TODO: create flashcard in given path
 
@@ -76,7 +76,7 @@ function post(req, res) {
  function updateFlashcard(req, res) {
     const path = req.body['path'];
 
-    if (fs.existsSync(`./users/${path}`)) {
+    if (fs.existsSync(`./${path}`)) {
 
 		// TODO: update flashcard in given path
 
@@ -93,7 +93,7 @@ function post(req, res) {
  function deleteFlashcard(req, res) {
     const path = req.body['path'];
 
-    if (fs.existsSync(`./users/${path}`)) {
+    if (fs.existsSync(`./${path}`)) {
 
 		// TODO: delete flashcard in given path
 
@@ -102,21 +102,6 @@ function post(req, res) {
         res.end(`failed to delete flashcard at ${path}`);
     }
 }
-
-
-/* DOM SURGERY
-<div class="row d-flex justify-content-center flex-nowrap p-4">
-    <div class="col-3 text-center">
-        1 of 3
-    </div>
-    <div class="col-3 text-center">
-        2 of 3
-    </div>
-    <div class="col-1 text-center">
-        <i class="bi bi-x hov"></i>
-    </div>
-</div>
-*/
 
 
 module.exports = { get, post }
