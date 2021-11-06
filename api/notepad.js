@@ -5,27 +5,24 @@ const path = require('path');
 
 
 /**
- *  return existing note
+ *  @returns html file back to client
+ * 
  */
 function get(req, res) {
 	const user = req.params.user;
 	const userClass = req.params.class;
 	const title = req.query.title;
 
-	// console.log(req.params.user);
-	// console.log(req.params.class);
-	// console.log(req.query.title);
-
-	// console.log(fs.existsSync(`./users/${user}/${userClass}/${title}.txt`))
-
 	// check if note exists in file path
 	if (fs.existsSync(`./users/${user}/${userClass}/${title}.txt`)) {
 		
 		// return JSON file with notes in body
-		// res.sendFile(path.join(__dirname, '../../public/notepad.html'));
-		// res.end('html sent successfully');
-		
-		res.end(`received GET request from client. note exists!: ${user}, ${userClass}, title of note: ${title}`);
+        console.log(__dirname)
+        console.log(req.path)
+
+        res.redirect('/notepad.html')
+
+		// res.end(`received GET request from client. note exists!: ${user}, ${userClass}, title of note: ${title}`);
 		return;
 	}
 	res.end('GET request received incorrect, user, class or title')
@@ -45,9 +42,9 @@ function get(req, res) {
 /**
  * receives a JSON file and create, update or delete
  * the flashcard depending on the action in the JSON file
- * JSON file: {action: 'create', path: './path', title:'title'}
- *            {action: 'update', path: './path', body: 'body12345678'}
- * 			  {action: 'delete', path: './path'}
+ * JSON request obj: {action: 'create', path: './path', title:'title'}
+ *                   {action: 'update', path: './path', body: 'body12345678'}
+ *          		 {action: 'delete', path: './path'} 
  */
 function post(req, res) {
 	const action = req.body['action'];
@@ -78,7 +75,7 @@ function post(req, res) {
     const path = req.body['path'];
     const title = req.body['title'];
 
-    if (fs.existsSync(`./users/${path}`)) {
+    if (fs.existsSync(`./${path}`)) {
 
 		// TODO: create note in given path
 
@@ -94,7 +91,7 @@ function post(req, res) {
  function updateNote(req, res) {
     const path = req.body['path'];
 
-    if (fs.existsSync(`./users/${path}`)) {
+    if (fs.existsSync(`./${path}`)) {
 
 		// TODO: update note in given path
 
@@ -111,7 +108,7 @@ function post(req, res) {
  function deleteNote(req, res) {
     const path = req.body['path'];
 
-    if (fs.existsSync(`./users/${path}`)) {
+    if (fs.existsSync(`./${path}`)) {
 
 		// TODO: delete note in given path
 
