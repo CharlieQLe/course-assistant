@@ -24,9 +24,9 @@ app.post("/api/users/:user/delete", userAPI.postDelete);
 
 app.get("/api/users/:user/tasks", taskAPI.getAll);
 app.post("/api/users/:user/tasks/create", taskAPI.postCreate);
-app.post("/api/users/:user/tasks/:task", taskAPI.getTask);
-app.post("/api/users/:user/tasks/:task/edit", taskAPI.postEdit);
-app.post("/api/users/:user/tasks/:task/remove", taskAPI.postRemove);
+app.post("/api/users/:user/tasks/:taskid", taskAPI.getTask);
+app.post("/api/users/:user/tasks/:taskid/edit", taskAPI.postEdit);
+app.post("/api/users/:user/tasks/:taskid/remove", taskAPI.postRemove);
 
 app.get("/api/users/:user/class/", classAPI.getAll);
 app.get("/api/users/:user/class/:class", classAPI.getClass);
