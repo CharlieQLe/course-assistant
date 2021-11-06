@@ -17,7 +17,6 @@
 
 let flashcards = [];
 
-
 function render(element) {
     element.innerHTML = '';
 
@@ -78,6 +77,10 @@ document.getElementById('add-flashcard-modal').addEventListener('shown.bs.modal'
 document.getElementById('add-flashcard-btn').addEventListener('click', () => {
     const t = document.getElementById('term-input').value;
     const d = document.getElementById('flashcard-desc-input').value;
+    
+    if (t.length === 0 || d.length === 0) {
+        return;
+    }
     flashcards.push({term: t, desc: d});
     
     // clear term and description input box after every added term
@@ -89,8 +92,15 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
 
 });
 
-
 document.getElementById('study-btn').addEventListener('click', () => {
     // TODO
-    document.location.href = './study-flashcard.html';
+    document.getElementById('study-and-flashcard').classList.toggle("invisible");
+    document.getElementById('review-missed-term').classList.toggle("invisible");
 })
+
+document.getElementById('edit-btn').addEventListener('click', () => {
+    // TODO
+    document.getElementById('study-and-flashcard').classList.toggle("invisible");
+    document.getElementById('review-missed-term').classList.toggle("invisible");
+})
+
