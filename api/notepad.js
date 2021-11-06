@@ -5,7 +5,7 @@ const path = require('path');
 
 
 /**
- *  @returns html file back to client
+ *  @returns JSON obj back to client
  * 
  */
 function get(req, res) {
@@ -17,12 +17,10 @@ function get(req, res) {
 	if (fs.existsSync(`./users/${user}/${userClass}/${title}.txt`)) {
 		
 		// return JSON file with notes in body
-        console.log(__dirname)
-        console.log(req.path)
+        // console.log(__dirname)
+        // console.log(req.path)
 
-        res.redirect('/notepad.html')
-
-		// res.end(`received GET request from client. note exists!: ${user}, ${userClass}, title of note: ${title}`);
+		res.end(`received GET request from client. note exists!: ${user}, ${userClass}, title of note: ${title}`);
 		return;
 	}
 	res.end('GET request received incorrect, user, class or title')

@@ -25,9 +25,6 @@ app.get("/home", taskAPI.taskGet)
 app.post("/home", taskAPI.taskPost)
 
 app.get("/:user/:class/note", noteApi.get)
-app.get("/notepad.html", (req, res) => {
-    res.sendFile('./notepad.html')
-})
 app.post("/note", noteApi.post)
 
 app.get("/:user/:class/flashcard", flashcardApi.get)
