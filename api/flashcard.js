@@ -178,4 +178,6 @@ function postRemoveFlashcard(request, response) {
     response.end(JSON.stringify({ result: "Remove flashcard received!" }));
 }
 
-module.exports = { postCreate, getFlashcards, getDescription, postEdit, postRemove, postAddTerm, postEditTerm, postRemoveTerm };
+module.exports = { getFlashcards, getDescription, getTags, getDefinition, getTerm, 
+                    postCreate, postRemove, postEditDescription, postAddTags, postRemoveTags,
+                    postAddFlashcard, postRemoveFlashcard};
