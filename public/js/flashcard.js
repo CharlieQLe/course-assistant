@@ -138,8 +138,8 @@ async function addFlashcard(toAddFlashcard) {
     //     }
     // })
 
-    fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/flashcards/FLASHCARD/addFlashcard', {
-        method: 'post', 
+    fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/addFlashcard', {
+        method: 'POST', 
         body: JSON.stringify(toAddFlashcard), 
         headers: {
             'Content-Type': 'application/json',
