@@ -39,23 +39,23 @@ app.get("/api/users/:user/tags", tagAPI.getAll);
 app.post("/api/users/:user/tags/:tag/create", tagAPI.postCreate);
 app.post("/api/users/:user/tags/:tag/remove", tagAPI.postRemove);
 
-app.get("/api/users/:user/:class/notes/:note", noteAPI.getNote);
-app.post("/api/users/:user/:class/notes/:note/create", noteAPI.postCreate);
-app.post("/api/users/:user/:class/notes/:note/edit", noteAPI.postEdit);
-app.post("/api/users/:user/:class/notes/:note/remove", noteAPI.postRemove);
+app.get("/api/users/:user/class/:class/notes/:note", noteAPI.getNote);
+app.post("/api/users/:user/class/:class/notes/:note/create", noteAPI.postCreate);
+app.post("/api/users/:user/class/:class/notes/:note/edit", noteAPI.postEdit);
+app.post("/api/users/:user/class/:class/notes/:note/remove", noteAPI.postRemove);
 
-app.get("/api/users/:user/:class/flashcards/:flashcard", flashcardAPI.getFlashcards);
-app.get("/api/users/:user/:class/flashcards/:flashcard/description", flashcardAPI.getDescription);
-app.get("/api/users/:user/:class/flashcards/:flashcard/tags", flashcardAPI.getTags);
-app.get("/api/users/:user/:class/flashcards/:flashcard/:term", flashcardAPI.getDefinition);
-app.get("/api/users/:user/:class/flashcards/:flashcard/:definition", flashcardAPI.getTerm);
-app.post("/api/users/:user/:class/flashcards/:flashcard/create", flashcardAPI.postCreate);
-app.post("/api/users/:user/:class/flashcards/:flashcard/remove", flashcardAPI.postRemove);
-app.post("/api/users/:user/:class/flashcards/:flashcard/editDescription", flashcardAPI.postEditDescription);
-app.post("/api/users/:user/:class/flashcards/:flashcard/addTags", flashcardAPI.postAddTags);
-app.post("/api/users/:user/:class/flashcards/:flashcard/removeTags", flashcardAPI.postRemoveTags);
-app.post("/api/users/:user/:class/flashcards/:flashcard/addFlashcard", flashcardAPI.postAddFlashcard);
-app.post("/api/users/:user/:class/flashcards/:flashcard/removeFlashcard", flashcardAPI.postRemoveFlashcard);
+app.get("/api/users/:user/class/:class/flashcards/:flashcard", flashcardAPI.getFlashcards);
+app.get("/api/users/:user/class/:class/flashcards/:flashcard/description", flashcardAPI.getDescription);
+app.get("/api/users/:user/class/:class/flashcards/:flashcard/tags", flashcardAPI.getTags);
+app.get("/api/users/:user/class/:class/flashcards/:flashcard/:term", flashcardAPI.getDefinition);
+app.get("/api/users/:user/class/:class/flashcards/:flashcard/:definition", flashcardAPI.getTerm);
+app.post("/api/users/:user/class/:class/flashcards/:flashcard/create", flashcardAPI.postCreate);
+app.post("/api/users/:user/class/:class/flashcards/:flashcard/remove", flashcardAPI.postRemove);
+app.post("/api/users/:user/class/:class/flashcards/:flashcard/editDescription", flashcardAPI.postEditDescription);
+app.post("/api/users/:user/class/:class/flashcards/:flashcard/addTags", flashcardAPI.postAddTags);
+app.post("/api/users/:user/class/:class/flashcards/:flashcard/removeTags", flashcardAPI.postRemoveTags);
+app.post("/api/users/:user/class/:class/flashcards/:flashcard/addFlashcard", flashcardAPI.postAddFlashcard);
+app.post("/api/users/:user/class/:class/flashcards/:flashcard/removeFlashcard", flashcardAPI.postRemoveFlashcard);
 
 app.get("*", defaultHandler);
 
