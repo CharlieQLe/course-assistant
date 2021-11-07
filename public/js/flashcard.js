@@ -30,7 +30,7 @@ function render(element) {
 
         const desc = document.createElement('div');
         desc.classList.add('col-3', 'text-center', 'word-wrap');
-        desc.innerText = flashcards[i].desc;
+        desc.innerText = flashcards[i].definition;
 
         const xButton = document.createElement('div');
         xButton.classList.add('col-1', 'text-center');
@@ -81,7 +81,30 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
     if (t.length === 0 || d.length === 0) {
         return;
     }
-    flashcards.push({ term: t, desc: d });
+
+
+    // const person = {
+    //     name: 'hi', 
+    //     age: 45
+    // }
+
+
+    // fetch('url', {
+    //     method: 'post', 
+    //     body: JSON.stringify(person), 
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     }
+    // })
+
+    let temp = {
+        term: t,
+        definition: d
+    }
+
+    addFlashcard(temp);
+
+    flashcards.push(temp);
 
     // clear term and description input box after every added term
     document.getElementById('term-input').value = '';
@@ -103,4 +126,31 @@ document.getElementById('edit-btn').addEventListener('click', () => {
     document.getElementById('study-and-flashcard').classList.toggle("invisible");
     document.getElementById('review-missed-term').classList.toggle("invisible");
 })
+
+async function addFlashcard(toAddFlashcard) {
+    // send a post request to server that the client
+    // added a flashcard to the set of flashcards
+    // let response = await fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/flashcards/FLASHCARD/addFlashcard', {
+    //     method: 'post', 
+    //     body: JSON.stringify(toAddFlashcard), 
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     }
+    // })
+
+    fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/flashcards/FLASHCARD/addFlashcard', {
+        method: 'post', 
+        body: JSON.stringify(toAddFlashcard), 
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(function(response) {
+        return response.text()
+    }).then(function(text) {
+        console.log(text)
+    }).catch(function(error) {
+        console.log(error)
+    })
+
+}
 
