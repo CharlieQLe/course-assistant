@@ -48,18 +48,31 @@ function render(element) {
             let main = x.parentNode.parentNode;
 
             let obj = { term: main.childNodes[0].innerHTML, desc: main.childNodes[1].innerHTML }
-            console.log(obj);
+            // console.log(obj);
 
             let deleteAtIndex = -1;
             for (let i = 0; i < flashcards.length; i++) {
                 if (flashcards[i].term === obj.term && flashcards[i].desc === obj.desc) {
                     deleteAtIndex = i;
-                    console.log(i);
+                    // console.log(i);
                 }
             }
             flashcards.splice(deleteAtIndex, 1);
-            console.log(flashcards)
+            // console.log(flashcards)
             render(document.getElementById('flashcard'));
+            fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/removeFlashcard', {
+                method: 'POST', 
+                body: JSON.stringify(toAddFlashcard), 
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }).then(function(response) {
+                return response.text()
+            }).then(function(text) {
+                console.log(text)
+            }).catch(function(error) {
+                console.log(error)
+            })
         })
 
         element.appendChild(main);
@@ -154,3 +167,33 @@ async function addFlashcard(toAddFlashcard) {
 
 }
 
+
+
+// TEMPORARY CRUD OPERATIONS FOR DISPLAY FOR MILESTONE 2
+document.getElementById('crudc').addEventListener('click', () => {
+    fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD')
+    .then(response => response.text())
+    .then(text => console.log(text))
+    .catch(error => console.log(error))
+
+})
+    
+document.getElementById('crudr').addEventListener('click', () => {
+    fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/addFlashcard', {
+        method: 'POST', 
+        body: JSON.stringify(toAddFlashcard), 
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(response => response.text())
+    .then(text => console.log(text))
+    .catch(error => console.log(error))
+})
+
+document.getElementById('crudd').addEventListener('click', () => {
+    fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/remove')
+    .then(response => response.text())
+    .then(text => console.log(text))
+    .catch(error => console.log(error))
+
+})
