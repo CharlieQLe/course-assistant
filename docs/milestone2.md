@@ -235,3 +235,7 @@ Update Example - Adding flashcard
 
 Delete Example - Deleting set
 ![delete](./Milestone%202%20Screenshots/Delete.png)
+
+## Division of Labor
+
+As in the previously mentioned division of labor, it remained mostly the same. However, we all referenced and modified parts that were part in each other's work.
