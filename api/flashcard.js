@@ -18,7 +18,7 @@ const path = require('path');
 
 /**
  * Process a get request to retrieve the data of a set of flashcards.
- * /api/users/:user/:class/flashcards/:flashcard
+ * /api/users/:user/class/:class/flashcards/:flashcard
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
@@ -39,7 +39,7 @@ function getFlashcards(request, response) {
 
 /**
  * Process a get request to retrieve the description for the set of flashcards.
- * /api/users/:user/:class/flashcards/:flashcard/description
+ * /api/users/:user/class/:class/flashcards/:flashcard/description
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
@@ -59,7 +59,7 @@ function getDescription(request, response) {
 
 /**
  * Process a get request to retrieve the tags for the set of flashcards.
- * /api/users/:user/:class/flashcards/:flashcard/tags
+ * /api/users/:user/class/:class/flashcards/:flashcard/tags
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
@@ -69,7 +69,7 @@ function getDescription(request, response) {
 
 /**
  * Process a get request to retrieve the deinfition for a term.
- * /api/users/:user/:class/flashcards/:flashcard/:term
+ * /api/users/:user/class/:class/flashcards/:flashcard/:term
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
@@ -78,7 +78,7 @@ function getDefinition(request, response) {
 }
 /**
  * Process a get request to retrieve the term for a definition.
- * /api/users/:user/:class/flashcards/:flashcard/:definition
+ * /api/users/:user/class/:class/flashcards/:flashcard/:definition
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
@@ -89,7 +89,7 @@ function getTerm(request, response) {
 
 /**
  * Process a post request to create a set of flashcards.
- * /api/users/:user/:class/flashcards/:flashcard/create
+ * /api/users/:user/class/:class/flashcards/:flashcard/create
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
@@ -120,7 +120,7 @@ function postCreate(request, response) {
 
 /**
  * Process a post request to remove a set of flashcards.
- * /api/users/:user/:class/flashcards/:flashcard/remove
+ * /api/users/:user/class/:class/flashcards/:flashcard/remove
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
@@ -130,7 +130,7 @@ function postRemove(request, response) {
 
 /**
  * Process a post request to edit the description of the set of flashcards.
- * /api/users/:user/:class/flashcards/:flashcard/editDescription
+ * /api/users/:user/class/:class/flashcards/:flashcard/editDescription
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
@@ -140,7 +140,7 @@ function postEditDescription(request, response) {
 
 /**
  * Process a post request to add tags.
- * /api/users/:user/:class/flashcards/:flashcard/addTags
+ * /api/users/:user/class/:class/flashcards/:flashcard/addTags
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
@@ -150,7 +150,7 @@ function postAddTags(request, response) {
 
 /**
  * Process a post request to remove tags.
- * /api/users/:user/:class/flashcards/:flashcard/removeTags
+ * /api/users/:user/class/:class/flashcards/:flashcard/removeTags
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
@@ -160,7 +160,7 @@ function postRemoveTags(request, response) {
 
 /**
  * Process a post request to add a flash card.
- * /api/users/:user/:class/flashcards/:flashcard/addFlashcard
+ * /api/users/:user/class/:class/flashcards/:flashcard/addFlashcard
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
@@ -170,7 +170,7 @@ function postAddFlashcard(request, response) {
 
 /**
  * Process a post request to remove a flash card.
- * /api/users/:user/:class/flashcards/:flashcard/removeFlashcard
+ * /api/users/:user/class/:class/flashcards/:flashcard/removeFlashcard
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
