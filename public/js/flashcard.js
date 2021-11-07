@@ -62,7 +62,7 @@ function render(element) {
             render(document.getElementById('flashcard'));
             fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/removeFlashcard', {
                 method: 'POST', 
-                body: JSON.stringify(toAddFlashcard), 
+                body: JSON.stringify(obj), 
                 headers: {
                     'Content-Type': 'application/json',
                 }
