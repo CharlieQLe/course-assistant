@@ -195,8 +195,9 @@ document.getElementById('crudr').addEventListener('click', () => {
 })
 
 document.getElementById('crudd').addEventListener('click', () => {
-    fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/remove')
-    .then(response => response.text())
+    fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/create', {
+        method: 'POST', 
+    }).then(response => response.text())
     .then(text => console.log(text))
     .catch(error => console.log(error))
 
