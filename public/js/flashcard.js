@@ -171,21 +171,25 @@ async function addFlashcard(toAddFlashcard) {
 
 // TEMPORARY CRUD OPERATIONS FOR DISPLAY FOR MILESTONE 2
 document.getElementById('crudc').addEventListener('click', () => {
-    fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD')
-    .then(response => response.text())
-    .then(text => console.log(text))
-    .catch(error => console.log(error))
+    fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/create', {
+        method: 'POST', 
+        body: JSON.stringify({ tags: [], description: "aaaaaaa" }), 
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }).then(function(response) {
+        return response.text()
+    }).then(function(text) {
+        console.log(text)
+    }).catch(function(error) {
+        console.log(error)
+    })
 
 })
     
 document.getElementById('crudr').addEventListener('click', () => {
-    fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/addFlashcard', {
-        method: 'POST', 
-        body: JSON.stringify(toAddFlashcard), 
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    }).then(response => response.text())
+    fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD')
+    .then(response => response.text())
     .then(text => console.log(text))
     .catch(error => console.log(error))
 })
