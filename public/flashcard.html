@@ -79,12 +79,12 @@
 	</nav>
 
 	<!-- temporary buttons to show create, read and delete the set of flashcard -->
-	<div><p>temporary showcase for CRUD operations</p></div>
+	<!-- <div><p>temporary showcase for CRUD operations</p></div>
 	<form>
 		<button type="button" class="btn btn-primary" id="crudc">create</button>
 		<button type="button" class="btn btn-primary" id="crudr">read</button>
 		<button type="button" class="btn btn-primary" id="crudd">delete</button>
-	</form>
+	</form> -->
 
 	<!-- add flashcard modal -->
 	<div id='add-flashcard-modal' class="modal fade" tabindex="-1" role="dialog">
@@ -131,13 +131,12 @@
 	</div>
 
 
-
-	<!-- edit flashcards webapge -->
+	<!-- flashcards webapge -->
 	<div class="container">
+		<p>TITLE OF FLASHCARDS</p>
 		<div id="flashcard">
 
 		</div>
-
 
 		<!-- STUDY AND ADD FLASHCARD BUTTON -->
 		<div class="row d-flex justify-content-center flex-nowrap p-4 flashcard-btns" id="study-and-flashcard">
@@ -153,6 +152,7 @@
 		<!-- REVIEW MISSED TERMS BUTTON -->
 		<div class="row d-flex justify-content-center flex-nowrap p-4 flashcard-btns invisible" id="review-missed-term">
 			<form>
+				<button type="button" class="btn btn-dark" id="reset-btn">Reset</button>
 				<button type="button" class="btn btn-primary" id="review-missed-term-btn">Review Missed Terms</button>
 				<button type="button" class="btn btn-danger" id="edit-btn">Edit</button>
 			</form>
