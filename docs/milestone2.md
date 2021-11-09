@@ -221,3 +221,21 @@ Add a term and definition to the set of flashcards.
 curl -X POST '{ "term: "", "definition": "" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/removeFlashcard
 ```
 Remove a term and definition to the set of flashcards.
+
+## CRUD Example
+
+Create Example - Creating set
+![create](./Milestone%202%20Screenshots/Create.png)
+
+Read Example - Reading set
+![read](./Milestone%202%20Screenshots/Read.png)
+
+Update Example - Adding flashcard
+![update](./Milestone%202%20Screenshots/Update.png)
+
+Delete Example - Deleting set
+![delete](./Milestone%202%20Screenshots/Delete.png)
+
+## Division of Labor
+
+As in the previously mentioned division of labor, it remained mostly the same. However, we all referenced and modified parts that were part in each other's work.
