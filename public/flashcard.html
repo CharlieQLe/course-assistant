@@ -27,6 +27,7 @@
 </head>
 
 <body>
+	
 
 	<!-- NAVBAR -->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -77,6 +78,14 @@
 		</div>
 	</nav>
 
+	<!-- temporary buttons to show create, read and delete the set of flashcard -->
+	<!-- <div><p>temporary showcase for CRUD operations</p></div>
+	<form>
+		<button type="button" class="btn btn-primary" id="crudc">create</button>
+		<button type="button" class="btn btn-primary" id="crudr">read</button>
+		<button type="button" class="btn btn-primary" id="crudd">delete</button>
+	</form> -->
+
 	<!-- add flashcard modal -->
 	<div id='add-flashcard-modal' class="modal fade" tabindex="-1" role="dialog">
 		<div class="modal-dialog" role="document">
@@ -122,13 +131,12 @@
 	</div>
 
 
-
-	<!-- edit flashcards webapge -->
+	<!-- flashcards webapge -->
 	<div class="container">
+		<p>TITLE OF FLASHCARDS</p>
 		<div id="flashcard">
 
 		</div>
-
 
 		<!-- STUDY AND ADD FLASHCARD BUTTON -->
 		<div class="row d-flex justify-content-center flex-nowrap p-4 flashcard-btns" id="study-and-flashcard">
@@ -144,6 +152,7 @@
 		<!-- REVIEW MISSED TERMS BUTTON -->
 		<div class="row d-flex justify-content-center flex-nowrap p-4 flashcard-btns invisible" id="review-missed-term">
 			<form>
+				<button type="button" class="btn btn-dark" id="reset-btn">Reset</button>
 				<button type="button" class="btn btn-primary" id="review-missed-term-btn">Review Missed Terms</button>
 				<button type="button" class="btn btn-danger" id="edit-btn">Edit</button>
 			</form>
@@ -152,6 +161,10 @@
 
 
 	</div>
+
+
+
+
 	<!-- Option 1: Bootstrap Bundle with Popper -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
