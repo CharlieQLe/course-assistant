@@ -1,3 +1,224 @@
+'use strict';
+
+/*DOM SURGERY
+need dom surgery for creating tasks and adding them to the array --> then sort them by date --> somehow check date and add tasks on current date to todayTasks
+        create and outside div with id=tasks for dom surgery to insert tasks
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+              Task 1
+              <li class="list-inline-item">
+                <button class="btn btn-outline-light btn-sm rounded-0" type="button" data-bs-toggle="modal" data-bs-target = "#edittask" data-placement="top" title="Add"><i class="fa fa-table"></i>Edit</button>
+              </li>
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+            <label class="form-check-label" for="flexCheckDefault">
+              Task 2
+              <li class="list-inline-item">
+                <button class="btn btn-outline-light btn-sm rounded-0" type="button" data-bs-toggle="modal" data-bs-target = "#edittask" data-placement="top" title="Add"><i class="fa fa-table"></i>Edit</button>
+              </li>
+            </label>
+          </div>
+*/
+let allTasks = []; //where do these get appended? via post?
+let todayTasks = [];
+
+//renders a new task on side bar when added
+
+function createTask() { //taskName, taskDate, taskTime, taskClass, taskDesc maybe pass these in using getElementById.value?
+
+    
+    const taskHolder = document.createElement('div');
+    taskHolder.classList.add("form-check");
+    taskHolder.setAttribute('id', 'task')
+
+    const taskInput = document.createElement('input');
+    taskInput.classList.add("form-check-input");
+    taskInput.setAttribute('type', 'checkbox');
+    taskInput.setAttribute('value', '');
+    //taskInput.innerHTML = '';
+    taskInput.setAttribute('id', 'flexCheckDefault');
+
+    const task = document.createElement('label');
+    task.classList.add("form-check-label");
+    task.setAttribute('for', 'flexCheckDefault');
+    task.innerHTML = document.getElementById("taskName").value;
+
+    const li = document.createElement('li');
+    li.classList.add("list-inline-item");
+
+    const editButton = document.createElement('button')
+    editButton.classList.add("btn btn-outline-light btn-sm rounded-0");
+    editButton.setAttribute('id', 'editbutton');
+    editButton.setAttribute('type', 'button');
+    editButton.setAttribute('data-bs-toggle', 'modal');
+    editButton.setAttribute('data-bs-target', '#edittask');
+    editButton.setAttribute('title', 'Edit');
+    editButton.innerHTML = "Edit"
+
+    const i = document.createElement('i');
+    i.classList.add("fa fa-table");
+
+    editButton.appendChild(i); //append i to edit button
+    li.appendChild(editButton); //append edit button to li
+
+    taskHolder.appendChild(taskInput); //append taskInput, task, and li to the taskHolder parent div
+    taskHolder.appendChild(task);
+    taskHolder.appendChild(li);
+    return taskHolder;
+}
+
+function editTask() {
+
+}
+
+function deleteTask() {
+
+}
+
+function renderTask(element) {
+    element.innerHTML = '';
+
+    for (let i = 0; i < todayTasks.length; i++) {
+        let taskHolder = createTask(todayTasks[i]);
+    }
+
+    taskHolder.appendChild(element);
+}
+
+function renderFutureTask(element) {
+    
+    element.innerHTML = '';
+
+    for (let i = 0; i < allTasks.length; i++) {
+        const main = createTask(allTasks[i]);
+        //need to sort by recency
+
+        // main.childNodes[2].firstChild.addEventListener('click', () => {
+        //     const temp = flashcards[i];
+        //     flashcards.splice(i, 1);    // removes this flashcard from array
+
+        //     // rerenders flashcards after client deletes the flashcard in the edit screen
+        //     renderFlashcards(document.getElementById('flashcard'));
+            
+        //     // post to server. tell server to delete this flashcard
+        //     fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/removeFlashcard', {
+        //         method: 'POST', 
+        //         body: JSON.stringify(temp), 
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         }
+        //     }).then(function(response) {
+        //         return response.text()
+        //     }).then(function(text) {
+        //         console.log(text)
+        //     }).catch(function(error) {
+        //         console.log(error)
+        //     })
+        // })
+        element.appendChild(main);
+
+    }
+
+}
+// // //ADD TASK CLICKED
+
+document.getElementById("addtask").addEventListener('click', () => {
+    //renderTask();
+    //renderTaskCalendar();
+    //popup add task modal --> already taken care of via bootstraps
+    //add task to the side (using renderTask?)
+    //add to calendar
+
+    const n = document.getElementById('taskName').value;
+    const d = document.getElementById('taskDate').value;
+    const t = document.getElementById('taskTime').value;
+    const c = document.getElementById('taskClass').value;
+    const desc = document.getElementById('taskDescription').value;
+
+    if (n.length === 0 || d.length === 0 || t.length === 0 || c.length === 0 || desc.length === 0) {
+        return;
+    }
+
+    let temp = {
+        name: n,
+        date: d,
+        time: t,
+        class: c,
+        description: desc
+    }
+
+    fetch('https://cs326-final-kappa.herokuapp.com/api/users/:user/tasks/create', {
+        method: 'POST', 
+        body: JSON.stringify(temp), 
+        headers: {
+            'Content-Type': 'application/json',
+        }
+        
+    }).then(function(response) {
+        return response.text()
+    }).then(function(text) {
+        console.log(text)
+    }).catch(function(error) {
+        console.log(error)
+    });
+
+    // TODO GRAB TASKS FROM SERVER
+    // FETCH 
+
+    // client side storage
+    allTasks.push(temp);
+
+
+    // clear name, time, date, class, description input box after every added term
+    document.getElementById('taskName').value = '';
+    document.getElementById('taskDate').value = '';
+    document.getElementById('taskTime').value = '';
+    document.getElementById('taskClass').value = '';
+    document.getElementById('taskDescription').value = '';
+
+    
+    
+    renderTask(document.getElementById('task'));
+    
+});
+
+
+// // //EDIT BUTTON NEXT TO TASK CLICKED
+
+document.getElementById("editbutton").addEventListener('click', () => {
+
+    //pop up edit task modal --> already taken care of via bootstrap
+    //read task data into edit task modal
+    //update task data when update is clicked
+
+
+})
+
+// // //DELETE TASK CLICKED
+
+// document.getElementById("deletetask").addEventListener('click', () => {
+
+//     //delete task from tasks on side
+
+// })
+
+// // //DAY ON CALENDER CLICKED
+
+// document.getElementById("day").addEventListener('click', () => {
+
+//     //read events from selected day
+//     //update list events on side under events for selected day
+
+// })
+
+
+
+
+//GETTING CALENDAR TO RENDER AND RESPOND TO CLICKS
+
 document.addEventListener('DOMContentLoaded', function(){
     var today = new Date(),
         year = today.getFullYear(),
