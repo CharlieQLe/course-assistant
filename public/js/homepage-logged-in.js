@@ -23,7 +23,7 @@ need dom surgery for creating tasks and adding them to the array --> then sort t
           </div>
 */
 let allTasks = []; //where do these get appended? via post?
-let todayTasks = [];
+//let todayTasks = [];
 
 //renders a new task on side bar when added
 
@@ -32,7 +32,7 @@ function createTask() { //taskName, taskDate, taskTime, taskClass, taskDesc mayb
     
     const taskHolder = document.createElement('div');
     taskHolder.classList.add("form-check");
-    taskHolder.setAttribute('id', 'task')
+    taskHolder.setAttribute('id', 'task') //CREATE THE TASK FOR THE SIDEBAR
 
     const taskInput = document.createElement('input');
     taskInput.classList.add("form-check-input");
@@ -67,70 +67,48 @@ function createTask() { //taskName, taskDate, taskTime, taskClass, taskDesc mayb
     taskHolder.appendChild(taskInput); //append taskInput, task, and li to the taskHolder parent div
     taskHolder.appendChild(task);
     taskHolder.appendChild(li);
+
+    taskHolderParent = document.getElementById('taskholdercol'); //set parent equal to col-sm div that holds all tasks
+    taskHolderParent.appendChild(taskHolder);
     return taskHolder;
 }
 
-function editTask() {
+// function editTask() {
 
-}
+// }
 
-function deleteTask() {
+// function deleteTask() {
 
-}
+// }
 
 function renderTask(element) {
     element.innerHTML = '';
 
     for (let i = 0; i < todayTasks.length; i++) {
         let taskHolder = createTask(todayTasks[i]);
+        taskHolder.appendChild(element);
     }
-
-    taskHolder.appendChild(element);
 }
 
-function renderFutureTask(element) {
+// function renderTodayTask(element) { //USE THIS TO RENDER TOP DIV, SORTING BY RECENCY (5 OR 6 MOST RECENT OR JUST BY DAY)
     
-    element.innerHTML = '';
+//     element.innerHTML = '';
 
-    for (let i = 0; i < allTasks.length; i++) {
-        const main = createTask(allTasks[i]);
-        //need to sort by recency
+//     for (let i = 0; i < allTasks.length; i++) {
+//         const main = createTask(allTasks[i]);
+//         element.appendChild(main);
 
-        // main.childNodes[2].firstChild.addEventListener('click', () => {
-        //     const temp = flashcards[i];
-        //     flashcards.splice(i, 1);    // removes this flashcard from array
+//     }
 
-        //     // rerenders flashcards after client deletes the flashcard in the edit screen
-        //     renderFlashcards(document.getElementById('flashcard'));
-            
-        //     // post to server. tell server to delete this flashcard
-        //     fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/removeFlashcard', {
-        //         method: 'POST', 
-        //         body: JSON.stringify(temp), 
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         }
-        //     }).then(function(response) {
-        //         return response.text()
-        //     }).then(function(text) {
-        //         console.log(text)
-        //     }).catch(function(error) {
-        //         console.log(error)
-        //     })
-        // })
-        element.appendChild(main);
-
-    }
-
-}
+// }
 // // //ADD TASK CLICKED
 
-document.getElementById("addtask").addEventListener('click', () => {
-    //renderTask();
-    //renderTaskCalendar();
+document.getElementById("addtaskbutton").addEventListener('click', () => {
     //popup add task modal --> already taken care of via bootstraps
     //add task to the side (using renderTask?)
     //add to calendar
+
+    //TODO NEED TO FIGURE OUT HOW TO INDEX THEM (TASKID) / OR IF IT WILL JUST BE AUTOMATIC
 
     const n = document.getElementById('taskName').value;
     const d = document.getElementById('taskDate').value;
@@ -157,12 +135,12 @@ document.getElementById("addtask").addEventListener('click', () => {
             'Content-Type': 'application/json',
         }
         
-    }).then(function(response) {
-        return response.text()
-    }).then(function(text) {
-        console.log(text)
-    }).catch(function(error) {
-        console.log(error)
+    // }).then(function(response) {
+    //     return response.text()
+    // }).then(function(text) {
+    //     console.log(text)
+    // }).catch(function(error) {
+    //     console.log(error)
     });
 
     // TODO GRAB TASKS FROM SERVER
@@ -178,10 +156,8 @@ document.getElementById("addtask").addEventListener('click', () => {
     document.getElementById('taskTime').value = '';
     document.getElementById('taskClass').value = '';
     document.getElementById('taskDescription').value = '';
-
     
-    
-    renderTask(document.getElementById('task'));
+    renderTask(document.getElementById('task')); //RENDER THE TASKS ON THE SIDEBAR
     
 });
 
@@ -194,16 +170,74 @@ document.getElementById("editbutton").addEventListener('click', () => {
     //read task data into edit task modal
     //update task data when update is clicked
 
+    //post the server edit endpoint with all the values from the edit task modal
 
-})
+    const n = document.getElementById('taskName').value;
+    const d = document.getElementById('taskDate').value;
+    const t = document.getElementById('taskTime').value;
+    const c = document.getElementById('taskClass').value;
+    const desc = document.getElementById('taskDescription').value;
+
+    if (n.length === 0 || d.length === 0 || t.length === 0 || c.length === 0 || desc.length === 0) {
+        return;
+    }
+
+    let temp = {
+        name: n,
+        date: d,
+        time: t,
+        class: c,
+        description: desc
+    }
+
+    fetch('https://cs326-final-kappa.herokuapp.com/api/users/:user/tasks/:taskid/edit', {
+        method: 'POST', 
+        body: JSON.stringify(temp), 
+        headers: {
+            'Content-Type': 'application/json',
+        }
+        
+    // }).then(function(response) {
+    //     return response.text()
+    // }).then(function(text) {
+    //     console.log(text)
+    // }).catch(function(error) {
+    //     console.log(error)
+    });
+
+    renderTask(document.getElementById('task')); //RE-RENDER THE TASKS ON THE SIDEBAR TO TAKE INTO ACCOUNT EDIT
+
+
+
+});
 
 // // //DELETE TASK CLICKED
 
-// document.getElementById("deletetask").addEventListener('click', () => {
+document.getElementById("deletetask").addEventListener('click', () => {
 
-//     //delete task from tasks on side
+//delete task from tasks on side
 
-// })
+//post the server endpoint with the values from the delete task modal
+//HAVE TO PASS IN TASKID --> STILL FIGURING OUT WHERE TO ASSIGN THAT
+    fetch('https://cs326-final-kappa.herokuapp.com/api/users/:user/tasks/:taskid/remove', {
+        method: 'POST', 
+        body: JSON.stringify(temp), 
+        headers: {
+            'Content-Type': 'application/json',
+        }
+        
+    // }).then(function(response) {
+    //     return response.text()
+    // }).then(function(text) {
+    //     console.log(text)
+    // }).catch(function(error) {
+    //     console.log(error)
+    });
+
+    renderTask(document.getElementById('task')); //RE-RENDER THE TASKS ON THE SIDEBAR TO TAKE INTO ACCOUNT DELETION
+
+
+});
 
 // // //DAY ON CALENDER CLICKED
 
