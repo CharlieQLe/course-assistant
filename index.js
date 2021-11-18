@@ -8,6 +8,7 @@ const noteAPI = require('./api/notepad.js');
 const flashcardAPI = require('./api/flashcard.js');
 
 const express = require('express');
+const mongoDB = require('mongodb');
 const app = express();
 
 app.use(express.json()); // process json 
@@ -66,6 +67,5 @@ app.listen(process.env.PORT || 8080, () => console.log(`Server listening on http
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function defaultHandler(request, response) {
-
     response.end(JSON.stringify({ result: 'error', path: __dirname, request: request.path }));
 }
