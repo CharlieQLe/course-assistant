@@ -21,11 +21,13 @@ task {
 }
 
 note {
+    "name": "",
     "tags": [],
     "body": ""
 }
 
 flashcards {
+    "name": "",
     "tags": [],
     "description": "",
     "flashcards": []
@@ -168,24 +170,9 @@ curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcar
 Get the flashcards within a set of flashcards.
 
 ```
-curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/description
-```
-Get the description of the set of flashcards.
-
-```
 curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/tags
 ```
 Get the tags of the set of flashcards.
-
-```
-curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/TERM
-```
-Get the definition of the specified term within the set of flashcards.
-
-```
-curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/DEFINITION
-```
-Get the term of the specified term within the set of flashcards.
 
 ```
 curl -X POST '{ "tags": "[]", "description": "" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/create
@@ -196,11 +183,6 @@ Create a set of flashcards with the given description and tags.
 curl -x POST https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/remove
 ```
 Remove a set of flashcards.
-
-```
-curl -X POST '{ "description": "" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/editDescription
-```
-Edit the description of the set of flashcards
 
 ```
 curl -X POST '{ "tags": "[]" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/addTags
