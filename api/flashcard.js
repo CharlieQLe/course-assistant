@@ -59,39 +59,20 @@ function getFlashcards(request, response) {
     const userClass = req.params.class;
     const flashcardSet = req.params.flashcard;
 
-
     // somehow access get to the user and the user's class, 
     // then access the set of flashcards
     // client.db(db)
     // .collection(col)
-    // .find({}).toArray().then(users => {
-    //     // users
+    // .findOne({user: user}).then(doc => {
+    //     const queryInUserClasses = doc.classes.filter(cl => cl.name === userClass);
+    //     // const flashcards = (queryInUserClasses.length === 0) ? 
+    //     doc.classes.filter(cl => cl.name === userClass);
+    //     response.end(JSON.stringify({ result: "Get flashcard received" }));
     // })
-
-    // client.db('scoreDB').collection('wordScores').find({}).toArray().then(docs => {
-
+    
     response.end(JSON.stringify({ result: "Get flashcard received" }));
 }
 
-/**
- * Process a get request to retrieve the description for the set of flashcards.
- * /api/users/:user/class/:class/flashcards/:flashcard/description
- * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
- * @param {Response<any, Record<string, any>, number>} response 
- */
-function getDescription(request, response) {
-    // const user = req.params.user;
-    // const userClass = req.params.class;
-    // const filename = req.params.flashcard + '.json';
-
-    // if (fs.existsSync(`../users/${user}/${userClass}/${filename}.json`)) {
-    //     response.end(JSON.stringify({ result: "Get description received!" }));
-    //     return;
-    // }
-
-    // response.end(JSON.stringify({ result: "Get description error!" }));
-    response.end(JSON.stringify({ result: "Get description received!" }));
-}
 
 /**
  * Process a get request to retrieve the tags for the set of flashcards.
@@ -101,25 +82,6 @@ function getDescription(request, response) {
  */
  function getTags(request, response) {
     response.end(JSON.stringify({ result: "Get tags received!" }));
-}
-
-/**
- * Process a get request to retrieve the deinfition for a term.
- * /api/users/:user/class/:class/flashcards/:flashcard/:term
- * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
- * @param {Response<any, Record<string, any>, number>} response 
- */
-function getDefinition(request, response) {
-    response.end(JSON.stringify({ result: "Get definition received!" }));
-}
-/**
- * Process a get request to retrieve the term for a definition.
- * /api/users/:user/class/:class/flashcards/:flashcard/:definition
- * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
- * @param {Response<any, Record<string, any>, number>} response 
- */
-function getTerm(request, response) {
-    response.end(JSON.stringify({ result: "Get term received!" }));
 }
 
 
@@ -165,16 +127,6 @@ function postRemove(request, response) {
 }
 
 /**
- * Process a post request to edit the description of the set of flashcards.
- * /api/users/:user/class/:class/flashcards/:flashcard/editDescription
- * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
- * @param {Response<any, Record<string, any>, number>} response 
- */
-function postEditDescription(request, response) {
-    response.end(JSON.stringify({ result: "Edit description received!" }));
-}
-
-/**
  * Process a post request to add tags.
  * /api/users/:user/class/:class/flashcards/:flashcard/addTags
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
@@ -214,6 +166,7 @@ function postRemoveFlashcard(request, response) {
     response.end(JSON.stringify({ result: "Remove flashcard received!" }));
 }
 
-module.exports = { getFlashcards, getDescription, getTags, getDefinition, getTerm, 
-                    postCreate, postRemove, postEditDescription, postAddTags, postRemoveTags,
+module.exports = { getFlashcards, getTags, 
+                    postCreate, postRemove, postAddTags, postRemoveTags,
                     postAddFlashcard, postRemoveFlashcard};
+
