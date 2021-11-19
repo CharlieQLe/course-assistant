@@ -1,5 +1,6 @@
 'use strict';
 
+const { MongoClient } = require('mongodb');
 const userAPI = require('./api/user.js');
 const taskAPI = require('./api/tasks.js');
 const classAPI = require('./api/class.js');
@@ -8,7 +9,6 @@ const noteAPI = require('./api/notepad.js');
 const flashcardAPI = require('./api/flashcard.js');
 
 const express = require('express');
-const mongoDB = require('mongodb');
 const app = express();
 
 app.use(express.json()); // process json 
@@ -61,6 +61,16 @@ app.post("/api/users/:user/class/:class/flashcards/:flashcard/removeFlashcard", 
 
 app.get("*", defaultHandler);
 
+let secrets;
+let uri;
+if (!process.env.URI) {
+    secrets = require('secrets.json');
+    uri = secrets.uri;
+} else {
+    uri = process.env.URI;
+}
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+client.connect(err => { });
 app.listen(process.env.PORT || 8080, () => console.log(`Server listening on http://localhost:${process.env.PORT || 8080}`));
 
 /**
