@@ -29,7 +29,6 @@ note {
 flashcards {
     "name": "",
     "tags": [],
-    "description": "",
     "flashcards": []
 }
 
