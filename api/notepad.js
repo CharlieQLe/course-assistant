@@ -27,6 +27,8 @@ function getNote(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postEdit(request, response) {
+    // console.log(request.body['Tags']);
+    // console.log(request.body['Body']);
     response.end(JSON.stringify({ result: "Edit note received!" }));
 }
 
