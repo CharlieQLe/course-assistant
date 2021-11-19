@@ -15,6 +15,38 @@ const path = require('path');
 //     "definition": ""
 // }
 
+// { tags: tags,
+//     description: description,
+//     flashcards: flashcards
+// }
+
+
+
+const db = 'db_name';
+const userCollection = 'users_collection';
+
+// function addToDB(collection, doc) {
+//     client.db(db)
+//     .collection(collection)
+//     .insertOne(doc);
+// }
+
+// function updateInDB(collection, doc) {
+//     client.db(db)
+//     .collection(userCollection)
+//     .updateOne()
+// }
+
+
+// db.collection.update({
+//     "title": "1984"
+//   },
+//   {
+//     $inc: {
+//       "available": 1
+//     }
+//   })
+
 
 /**
  * Process a get request to retrieve the data of a set of flashcards.
@@ -23,16 +55,20 @@ const path = require('path');
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function getFlashcards(request, response) {
-    // const user = req.params.user;
-    // const userClass = req.params.class;
-    // const filename = req.params.flashcard + '.json';
-    
-    // if (fs.existsSync(`../users/${user}/${userClass}/${filename}.json`)) {
-    //         response.end(JSON.stringify({ result: "Get flashcard received" }));
-    //         return;
-    //     }
-        
-    // response.end(JSON.stringify({ result: "flashcards does not exist" }));
+    const user = req.params.user;
+    const userClass = req.params.class;
+    const flashcardSet = req.params.flashcard;
+
+
+    // somehow access get to the user and the user's class, 
+    // then access the set of flashcards
+    // client.db(db)
+    // .collection(col)
+    // .find({}).toArray().then(users => {
+    //     // users
+    // })
+
+    // client.db('scoreDB').collection('wordScores').find({}).toArray().then(docs => {
 
     response.end(JSON.stringify({ result: "Get flashcard received" }));
 }

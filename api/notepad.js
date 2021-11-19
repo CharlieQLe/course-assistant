@@ -1,5 +1,9 @@
 'use strict';
 
+// import { client } from '../index.js'
+
+let client = {};
+
 /**
  * Process a post request to add a note.
  * 
@@ -21,6 +25,16 @@ function getNote(request, response) {
 }
 
 /**
+ * Process a get request to retrieve the tags of a note.
+ * 
+ * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
+ * @param {Response<any, Record<string, any>, number>} response 
+ */
+function getTags(request, response) {
+    response.end(JSON.stringify({ result: "Get tags received!" }));
+}
+
+/**
  * Process a post request to edit a note.
  * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
@@ -33,6 +47,18 @@ function postEdit(request, response) {
 }
 
 /**
+ * Process a post request to add tags to note.
+ * 
+ * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
+ * @param {Response<any, Record<string, any>, number>} response 
+ */
+function postAddTags(request, response) {
+    // console.log(request.body['Tags']);
+    // console.log(request.body['Body']);
+    response.end(JSON.stringify({ result: "add tags received!" }));
+}
+
+/**
  * Process a post request to remove a note.
  * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
@@ -42,4 +68,14 @@ function postRemove(request, response) {
     response.end(JSON.stringify({ result: "Remove note received!" }));
 }
 
-module.exports = { postCreate, getNote, postEdit, postRemove };
+/**
+ * Process a post request to remove tags in notes.
+ * 
+ * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
+ * @param {Response<any, Record<string, any>, number>} response 
+ */
+function postRemoveTags(request, response) {
+    response.end(JSON.stringify({ result: "Remove tag in notes received!" }));
+}
+
+module.exports = { postCreate, getNote, getTags, postEdit, postAddTags, postRemove, postRemoveTags };
