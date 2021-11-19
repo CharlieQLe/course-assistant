@@ -48,15 +48,12 @@ app.post("/api/users/:user/class/:class/notes/:note/addTags", noteAPI.postAddTag
 app.post("/api/users/:user/class/:class/notes/:note/remove", noteAPI.postRemove);
 app.post("/api/users/:user/class/:class/notes/:note/removeTags", noteAPI.postRemoveTags);
 
+
 app.get("/api/users/:user/class/:class/flashcards/:flashcard", flashcardAPI.getFlashcards);
-app.get("/api/users/:user/class/:class/flashcards/:flashcard/description", flashcardAPI.getDescription);
 app.get("/api/users/:user/class/:class/flashcards/:flashcard/tags", flashcardAPI.getTags);
-app.get("/api/users/:user/class/:class/flashcards/:flashcard/:term", flashcardAPI.getDefinition);       // delete method later
-app.get("/api/users/:user/class/:class/flashcards/:flashcard/:definition", flashcardAPI.getTerm);       // delete method later
 
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/create", flashcardAPI.postCreate);
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/remove", flashcardAPI.postRemove);
-app.post("/api/users/:user/class/:class/flashcards/:flashcard/editDescription", flashcardAPI.postEditDescription);
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/addTags", flashcardAPI.postAddTags);
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/removeTags", flashcardAPI.postRemoveTags);
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/addFlashcard", flashcardAPI.postAddFlashcard);
