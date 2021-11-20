@@ -8,6 +8,7 @@ const tagAPI = require('./api/tags.js');
 const noteAPI = require('./api/notepad.js');
 const flashcardAPI = require('./api/flashcard.js');
 
+const fs = require('fs');
 const express = require('express');
 const app = express();
 
@@ -69,13 +70,18 @@ app.get("*", defaultHandler);
 
 // Get the secrets
 let secrets;
-let uri;
+let uri = '';
 if (!process.env.URI) {
-    secrets = require('secrets.json');
-    uri = secrets.uri;
+    if (fs.existsSync('./secrets.json')) {
+        secrets = JSON.parse(fs.readFileSync('./secrets.json'));
+        uri = secrets.uri;
+    } else {
+        console.log('no secrets json found!');
+    }
 } else {
     uri = process.env.URI;
 }
+console.log(uri);
 
 // Connect to the database
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
