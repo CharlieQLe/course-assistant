@@ -1,5 +1,7 @@
 'use strict';
 
+const { client } = require('../index.js');
+
 /**
  * Process a get request to retrieve every class.
  * 
@@ -7,7 +9,16 @@
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function getAll(request, response) {
-    response.end(JSON.stringify({ result: "Get all classes received!" }));
+    client.db("final-kappa").collection(request.body["user"]).find({
+       type: "class" 
+    }).toArray((err, classes) => {
+        if (err) {
+            console.log(`Error on class.getAll: ${err}`);
+            response.end(JSON.stringify('[]'));
+        } else {
+            response.end(JSON.stringify(classes));
+        }
+    });
 }
 
 /**
@@ -17,7 +28,19 @@ function getAll(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postCreate(request, response) {
-    response.end(JSON.stringify({ result: "Add a class received!" }));
+    client.db("final-kappa").collection(request.body["user"]).findOne({
+        type: request.body["class"]
+    }, (error, result) => {
+        if (error) {
+            console.log(`Error on class.postCreate: ${err}`);
+        } else {
+
+            // todo: create a class
+
+            console.log(result);
+        }
+        response.end();
+    });
 }
 
 /**
@@ -27,7 +50,20 @@ function postCreate(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function getClass(request, response) {
-    response.end(JSON.stringify({ result: "Get class data received!" }));
+    client.db("final-kappa").collection(request.body["user"]).findOne({
+        class: request.body["class"],
+        type: "classData"
+    }, (error, result) => {
+        if (error) {
+            console.log(`Error on class.getClass: ${err}`);
+            response.end("ERROR ON CLASS DATA");
+        } else {
+
+            // todo: respond with class data
+
+            response.end("CLASS DATA HERE");
+        }
+    });
 }
 
 /**
@@ -37,7 +73,17 @@ function getClass(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postEdit(request, response) {
-    response.end(JSON.stringify({ result: "Edit class received!" }));
+    client.db("final-kappa").collection(request.body["user"]).updateOne({
+        class: request.body["class"],
+        type: "classData"
+    }, (error, result) => {
+        if (error) {
+            console.log(`Error on class.postEdit: ${err}`);
+        } else {
+            console.log(result);
+        }
+        response.end();
+    });
 }
 
 /**
@@ -47,7 +93,19 @@ function postEdit(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postRemove(request, response) {
-    response.end(JSON.stringify({ result: "Remove class received!" }));
+    client.db("final-kappa").collection(request.body["user"]).findOne({
+        type: request.body["class"]
+    }, (error, result) => {
+        if (error) {
+            console.log(`Error on class.postRemove: ${err}`);
+        } else {
+
+            // todo: remove class
+
+            console.log(result);
+        }
+        response.end();
+    });
 }
 
 
@@ -58,7 +116,30 @@ function postRemove(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function getSearch(request, response) {
-    response.end(JSON.stringify({ result: "Search received!" }));
+    let includeTags = (request.query.includeTags || '').split('+');
+    let excludeTags = (request.query.excludeTags || '').split('+');
+
+    client.db("final-kappa").collection(request.body["user"]).find({
+        $or: [
+            {
+                class: request.body["class"],
+                type: "note",
+                tags: {
+                    $all: includeTags,
+                    $ne: excludeTags
+                }
+            }
+
+            // todo: add more file types
+        ]
+    }).toArray((error, found) => {
+        if (error) {
+            console.log(`Error on class.postRemove: ${err}`);
+            response.end(JSON.stringify('[]'));
+        } else {
+            response.end(JSON.stringify(found));
+        }
+    });
 }
 
 module.exports = { getAll, postCreate, getClass, postEdit, postRemove, getSearch };
