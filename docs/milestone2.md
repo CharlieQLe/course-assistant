@@ -155,7 +155,7 @@ curl -X POST '{ "tags": "[]" }' -H 'Content-Type: application/json' https://cs32
 Create a note.
 
 ```
-curl -X POST '{ "tags": "[]", "body": "This is a note!" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/edit
+curl -X POST '{ "body": "This is a note!" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/edit
 ```
 Edit a note.
 
