@@ -21,13 +21,11 @@ task {
 }
 
 note {
-    "name": "",
     "tags": [],
     "body": ""
 }
 
 flashcards {
-    "name": "",
     "tags": [],
     "flashcards": []
 }
@@ -147,12 +145,17 @@ curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NO
 Retrieve the data of a note.
 
 ```
-curl -X POST '{ "Tags": "[]" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/create
+curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/tags
+```
+Retrieve the tags of a note
+
+```
+curl -X POST '{ "tags": "[]" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/create
 ```
 Create a note.
 
 ```
-curl -X POST '{ "Tags": "[]", "Body": "This is a note!" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/edit
+curl -X POST '{ "tags": "[]", "body": "This is a note!" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/edit
 ```
 Edit a note.
 
@@ -161,12 +164,22 @@ curl -X POST https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/
 ```
 Remove a note.
 
+```
+curl -X POST '{ "tags": "[]" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/addTags
+```
+Add tags to the notes
+
+```
+curl -X POST '{ "tags": "[]" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/removeTags
+```
+Remove tags to the notes
+
 ### Flashcards
 
 ```
 curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD
 ```
-Get the flashcards within a set of flashcards.
+Get the set of flashcards.
 
 ```
 curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/tags
@@ -174,9 +187,9 @@ curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcar
 Get the tags of the set of flashcards.
 
 ```
-curl -X POST '{ "tags": "[]", "description": "" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/create
+curl -X POST '{ "tags": "[]" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/create
 ```
-Create a set of flashcards with the given description and tags.
+Create a set of flashcards with the given tags.
 
 ```
 curl -x POST https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/remove
