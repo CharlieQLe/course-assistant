@@ -48,11 +48,11 @@ app.post("/api/users/:user/tags/:tag/remove", tagAPI.postRemove);
 
 // Set the note endpoints
 app.get("/api/users/:user/class/:class/notes/:note", noteAPI.getNote);
-app.post("/api/users/:user/class/:class/notes/:note/create", noteAPI.postCreate);
 app.get("/api/users/:user/class/:class/notes/:note/tags", noteAPI.getTags);
+app.post("/api/users/:user/class/:class/notes/:note/create", noteAPI.postCreate);
+app.post("/api/users/:user/class/:class/notes/:note/remove", noteAPI.postRemove);
 app.post("/api/users/:user/class/:class/notes/:note/edit", noteAPI.postEdit);
 app.post("/api/users/:user/class/:class/notes/:note/addTags", noteAPI.postAddTags);
-app.post("/api/users/:user/class/:class/notes/:note/remove", noteAPI.postRemove);
 app.post("/api/users/:user/class/:class/notes/:note/removeTags", noteAPI.postRemoveTags);
 
 // Set the flashcard endpoints

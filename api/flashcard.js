@@ -1,8 +1,6 @@
 'use strict'
 
-const fs = require('fs');
-const path = require('path');
-
+const { client } = require('../index.js');
 
 // flashcards {
 //     "tags": [],
@@ -14,38 +12,19 @@ const path = require('path');
 //     "term": "",
 //     "definition": ""
 // }
-
-// { tags: tags,
-//     description: description,
-//     flashcards: flashcards
-// }
+// ==============================================================
 
 
-
-const db = 'db_name';
-const userCollection = 'users_collection';
-
-// function addToDB(collection, doc) {
-//     client.db(db)
-//     .collection(collection)
-//     .insertOne(doc);
-// }
-
-// function updateInDB(collection, doc) {
-//     client.db(db)
-//     .collection(userCollection)
-//     .updateOne()
-// }
-
-
-// db.collection.update({
-//     "title": "1984"
-//   },
-//   {
-//     $inc: {
-//       "available": 1
-//     }
-//   })
+/**
+ * 
+ * @param {string} user the user to check in the database
+ * @returns if the user is in the database
+ */
+function findUser(user) {
+    client.db('final-kappa').listCollections().toArray().then(collection => {
+        return collection.filter(col => col.name === user).length === 1;
+    });
+}
 
 
 /**
@@ -55,22 +34,34 @@ const userCollection = 'users_collection';
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function getFlashcards(request, response) {
-    const user = req.params.user;
-    const userClass = req.params.class;
-    const flashcardSet = req.params.flashcard;
+    const user = request.params.user;
+    const userClass = request.params.class;
+    const flashcardSetName = request.params.flashcard;
 
-    // somehow access get to the user and the user's class, 
-    // then access the set of flashcards
-    // client.db(db)
-    // .collection(col)
-    // .findOne({user: user}).then(doc => {
-    //     const queryInUserClasses = doc.classes.filter(cl => cl.name === userClass);
-    //     // const flashcards = (queryInUserClasses.length === 0) ? 
-    //     doc.classes.filter(cl => cl.name === userClass);
-    //     response.end(JSON.stringify({ result: "Get flashcard received" }));
-    // })
-    
-    response.end(JSON.stringify({ result: "Get flashcard received" }));
+    // respond with an error if user does not exist
+    if (!findUser(user)) {
+        response.end(JSON.stringify({
+            status: 404,
+            result: `user(${user}), 
+                                class(${userClass}), or 
+                                flashcard(${flashcardSetName}) could not be found`
+        })
+        )
+        return;
+    }
+
+    // get the set of flashcards in the database
+    client.db('final-kappa').collection(user).find({
+        name: flashcardSetName,
+        class: userClass,
+        type: 'flashcard'
+    }).toArray().then(arr => {
+        response.end(JSON.stringify({ status: 200, result: arr[0].flashcards }));
+    }).catch(e => {
+        response.end(JSON.stringify({ status: 404, result: "GET flashcards: Error parsing for flashcards with mongodb" }));
+    });
+
+    return;
 }
 
 
@@ -80,8 +71,33 @@ function getFlashcards(request, response) {
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
- function getTags(request, response) {
-    response.end(JSON.stringify({ result: "Get tags received!" }));
+function getTags(request, response) {
+    const user = request.params.user;
+    const userClass = request.params.class;
+    const flashcardSetName = request.params.flashcard;
+
+    // respond with an error if user does not exist
+    if (!findUser(user)) {
+        response.end(JSON.stringify({
+            status: 404,
+            result: `user(${user}), 
+                                class(${userClass}), or 
+                                flashcard(${flashcardSetName}) could not be found`
+        })
+        )
+        return;
+    }
+
+    // get the tags in the set of flashcards in the database
+    client.db('final-kappa').collection(user).find({
+        name: flashcardSetName,
+        class: userClass,
+        type: 'flashcard'
+    }).toArray().then(arr => {
+        response.end(JSON.stringify({ status: 200, result: arr[0].tags }));
+    }).catch(e => {
+        response.end(JSON.stringify({ status: 404, result: "GET tags: Error parsing for flashcards with mongodb" }));
+    });
 }
 
 
@@ -92,28 +108,33 @@ function getFlashcards(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postCreate(request, response) {
-    // const user = req.params.user;
-    // const userClass = req.params.class;
-    // const filename = req.params.flashcard + '.json';
-    // const tags = req.body['tags'];
-    // const description = req.body['description'];
+    const user = request.params.user;
+    const userClass = request.params.class;
+    const flashcardSetName = request.params.flashcard;
+    const tags = request.body['tags'];
 
-    // if (fs.existsSync(`../users/${user}/${userClass}/${filename}`)) {
-    //     res.status(301).send("Your flashcards already exists");
-    //     return;
-    // }
+    // respond with an error if user does not exist
+    if (!findUser(user)) {
+        response.end(JSON.stringify({
+            status: 404,
+            result: `user(${user}), 
+                                class(${userClass}), or 
+                                flashcard(${flashcardSetName}) could not be found`
+        })
+        )
+        return;
+    }
+    
+    const query = {
+        name: flashcardSetName,
+        class: userClass,
+        type: 'flashcard',
+        tags: tags,
+        flashcards: []
+    };
+    client.db('final-kappa').collection(user).insertOne(query);
 
-    // let flashcards = {
-    //     tags: tags,
-    //     description: description,
-    //     flashcards: []
-    // }
-
-    // fs.writeFile(filename, JSON.stringify(flashcards), (err) => { });
-
-    // res.status(200).send("Create flashcards received!")
-
-    response.end(JSON.stringify({ result: "Create a set of flashcards received!" }));
+    response.end(JSON.stringify({ status: 200, result: "Create a set of flashcards received!" }));
 }
 
 /**
@@ -123,7 +144,30 @@ function postCreate(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postRemove(request, response) {
-    response.end(JSON.stringify({ result: "Remove set of flashcards received!" }));
+    const user = request.params.user;
+    const userClass = request.params.class;
+    const flashcardSetName = request.params.flashcard;
+
+    // respond with an error if user does not exist
+    if (!findUser(user)) {
+        response.end(JSON.stringify({
+            status: 404,
+            result: `user(${user}), 
+                                class(${userClass}), or 
+                                flashcard(${flashcardSetName}) could not be found`
+        })
+        )
+        return;
+    }
+    
+    const query = {
+        name: flashcardSetName,
+        class: userClass,
+        type: 'flashcard'
+    };
+    client.db('final-kappa').collection(user).deleteOne(query);
+
+    response.end(JSON.stringify({ status: 200, result: "Remove set of flashcards received!" }));
 }
 
 /**
@@ -133,7 +177,37 @@ function postRemove(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postAddTags(request, response) {
-    response.end(JSON.stringify({ result: "Add tags received!" }));
+    const user = request.params.user;
+    const userClass = request.params.class;
+    const flashcardSetName = request.params.flashcard;
+    const tags = request.body['tags'];
+
+    // respond with an error if user does not exist
+    if (!findUser(user)) {
+        response.end(JSON.stringify({
+            status: 404,
+            result: `user(${user}), 
+                                class(${userClass}), or 
+                                flashcard(${flashcardSetName}) could not be found`
+        })
+        )
+        return;
+    }
+
+    const query = {
+        name: flashcardSetName,
+        class: userClass, 
+        type: 'flashcard'
+    };
+    
+    for(let i = 0; i < tags.length; i++) {
+        const updateDocument = {
+            $push: { 'tags': tags[i] }
+        };
+        client.db('final-kappa').collection(user).updateOne(query, updateDocument);
+    }
+
+    response.end(JSON.stringify({ status: 200, result: "Add tags received!" }));
 }
 
 /**
@@ -143,7 +217,39 @@ function postAddTags(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postRemoveTags(request, response) {
-    response.end(JSON.stringify({ result: "remove tags received!" }));
+    const user = request.params.user;
+    const userClass = request.params.class;
+    const flashcardSetName = request.params.flashcard;
+    const tags = request.body['tags'];
+
+    // respond with an error if user does not exist
+    if (!findUser(user)) {
+        response.end(JSON.stringify({
+            status: 404,
+            result: `user(${user}), 
+                                class(${userClass}), or 
+                                flashcard(${flashcardSetName}) could not be found`
+        })
+        )
+        return;
+    }
+
+    const query = {
+        name: flashcardSetName,
+        class: userClass, 
+        type: 'flashcard'
+    };
+
+    client.db('final-kappa').collection(user).updateOne(query, updateDocument);
+    
+    for(let i = 0; i < tags.length; i++) {
+        const updateDocument = {
+            $push: { $pull: { 'tags': tags[i] } }
+        };
+        client.db('final-kappa').collection(user).updateOne(query, updateDocument);
+    }
+
+    response.end(JSON.stringify({ status: 200, result: "remove tags received!" }));
 }
 
 /**
@@ -153,7 +259,37 @@ function postRemoveTags(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postAddFlashcard(request, response) {
-    response.end(JSON.stringify({ result: "Add flashcard received!" }));
+    const user = request.params.user;
+    const userClass = request.params.class;
+    const flashcardSetName = request.params.flashcard;
+    const term = request.body['term'];
+    const definition = request.body['definition'];
+
+    // respond with an error if user does not exist
+    if (!findUser(user)) {
+        response.end(JSON.stringify({
+            status: 404,
+            result: `user(${user}), 
+                                class(${userClass}), or 
+                                flashcard(${flashcardSetName}) could not be found`
+        })
+        )
+        return;
+    }
+    
+    const query = {
+        name: flashcardSetName,
+        class: userClass, 
+        type: 'flashcard'
+    };
+
+    const updateDocument = {
+        $push: { "flashcards": {term: term, definition: definition} }
+    };
+
+    client.db('final-kappa').collection(user).updateOne(query, updateDocument);
+
+    response.end(JSON.stringify({ status: 200, result: "Add flashcard received!" }));
 }
 
 /**
@@ -163,10 +299,45 @@ function postAddFlashcard(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postRemoveFlashcard(request, response) {
-    response.end(JSON.stringify({ result: "Remove flashcard received!" }));
+    const user = request.params.user;
+    const userClass = request.params.class;
+    const flashcardSetName = request.params.flashcard;
+    const term = request.body['term'];
+    const definition = request.body['definition'];
+
+    // respond with an error if user does not exist
+    if (!findUser(user)) {
+        response.end(JSON.stringify({
+            status: 404,
+            result: `user(${user}), 
+                                class(${userClass}), or 
+                                flashcard(${flashcardSetName}) could not be found`
+        })
+        )
+        return;
+    }
+    
+    const query = {
+        name: flashcardSetName,
+        class: userClass, 
+        type: 'flashcard'
+    };
+
+    const updateDocument = {
+        $pull: { "flashcards": {term: term, definition: definition} }
+    };
+
+    client.db('final-kappa').collection(user).updateOne(query, updateDocument);
+
+    response.end(JSON.stringify({ status: 200, result: "Remove flashcard received!" }));
 }
 
-module.exports = { getFlashcards, getTags, 
-                    postCreate, postRemove, postAddTags, postRemoveTags,
-                    postAddFlashcard, postRemoveFlashcard};
+module.exports = {
+    getFlashcards, getTags,
+    postCreate, postRemove, 
+    postAddTags, postRemoveTags,
+    postAddFlashcard, postRemoveFlashcard
+};
+
+
 
