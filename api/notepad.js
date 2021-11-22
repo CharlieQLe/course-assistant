@@ -51,44 +51,6 @@ function getNote(request, response) {
 }
 
 /**
- * Process a get request to retrieve the tags of a note.
- * 
- * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
- * @param {Response<any, Record<string, any>, number>} response 
- */
-function getTags(request, response) {
-    const user = request.params.user;
-    const userClass = request.params.class;
-    const noteName = request.params.note;
-
-    // respond with an error if user does not exist
-    if (!findUser(user)) {
-        response.end(JSON.stringify({
-            status: 404,
-            result: `user(${user}), 
-                                class(${userClass}), or 
-                                flashcard(${noteName}) could not be found`
-        })
-        )
-        return;
-    }
-
-    // get the notes in the database
-    client.db('final-kappa').collection(user).find({
-        name: noteName,
-        class: userClass,
-        type: 'note'
-    }).toArray().then(arr => {
-        response.end(JSON.stringify({ status: 200, result: arr[0].tags }));
-    }).catch(e => {
-        response.end(JSON.stringify({ status: 404, result: "GET note tags: Error parsing for notes with mongodb" }));
-    });
-
-    return;
-}
-
-
-/**
  * Process a post request to add a note.
  * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
@@ -193,89 +155,9 @@ function postEdit(request, response) {
     response.end(JSON.stringify({ status: 200, result: "Edit note received!" }));
 }
 
-/**
- * Process a post request to add tags to note.
- * 
- * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
- * @param {Response<any, Record<string, any>, number>} response 
- */
-function postAddTags(request, response) {
-    const user = request.params.user;
-    const userClass = request.params.class;
-    const noteName = request.params.note;
-    const tags = request.body['tags'];
-
-    // respond with an error if user does not exist
-    if (!findUser(user)) {
-        response.end(JSON.stringify({
-            status: 404,
-            result: `user(${user}), 
-                                class(${userClass}), or 
-                                flashcard(${noteName}) could not be found`
-        })
-        )
-        return;
-    }
-
-    const query = {
-        name: noteName,
-        class: userClass, 
-        type: 'note'
-    };
-    
-    for(let i = 0; i < tags.length; i++) {
-        const updateDocument = {
-            $push: { 'tags': tags[i] }
-        };
-        client.db('final-kappa').collection(user).updateOne(query, updateDocument);
-    }
-
-    response.end(JSON.stringify({ status: 200, result: "Add tags received!" }));
-}
-
-/**
- * Process a post request to remove tags in notes.
- * 
- * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
- * @param {Response<any, Record<string, any>, number>} response 
- */
-function postRemoveTags(request, response) {
-    const user = request.params.user;
-    const userClass = request.params.class;
-    const noteName = request.params.note;
-    const tags = request.body['tags'];
-
-    // respond with an error if user does not exist
-    if (!findUser(user)) {
-        response.end(JSON.stringify({
-            status: 404,
-            result: `user(${user}), 
-                                class(${userClass}), or 
-                                flashcard(${noteName}) could not be found`
-        })
-        )
-        return;
-    }
-
-    const query = {
-        name: noteName,
-        class: userClass, 
-        type: 'note'
-    };
-    
-    for(let i = 0; i < tags.length; i++) {
-        const updateDocument = {
-            $pull: { 'tags': tags[i] }
-        };
-        client.db('final-kappa').collection(user).updateOne(query, updateDocument);
-    }
-
-    response.end(JSON.stringify({ status: 200, result: "Remove tag in notes received!" }));
-}
-
 module.exports = {
-    getNote, getTags,
-    postCreate, postRemove, postEdit,
-    postAddTags, postRemoveTags
+    getNote,
+    postCreate, postRemove, 
+    postEdit,
 };
 
