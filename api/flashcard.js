@@ -66,42 +66,6 @@ function getFlashcards(request, response) {
 
 
 /**
- * Process a get request to retrieve the tags for the set of flashcards.
- * /api/users/:user/class/:class/flashcards/:flashcard/tags
- * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
- * @param {Response<any, Record<string, any>, number>} response 
- */
-function getTags(request, response) {
-    const user = request.params.user;
-    const userClass = request.params.class;
-    const flashcardSetName = request.params.flashcard;
-
-    // respond with an error if user does not exist
-    if (!findUser(user)) {
-        response.end(JSON.stringify({
-            status: 404,
-            result: `user(${user}), 
-                                class(${userClass}), or 
-                                flashcard(${flashcardSetName}) could not be found`
-        })
-        )
-        return;
-    }
-
-    // get the tags in the set of flashcards in the database
-    client.db('final-kappa').collection(user).find({
-        name: flashcardSetName,
-        class: userClass,
-        type: 'flashcard'
-    }).toArray().then(arr => {
-        response.end(JSON.stringify({ status: 200, result: arr[0].tags }));
-    }).catch(e => {
-        response.end(JSON.stringify({ status: 404, result: "GET tags: Error parsing for flashcards with mongodb" }));
-    });
-}
-
-
-/**
  * Process a post request to create a set of flashcards.
  * /api/users/:user/class/:class/flashcards/:flashcard/create
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
@@ -170,87 +134,6 @@ function postRemove(request, response) {
     response.end(JSON.stringify({ status: 200, result: "Remove set of flashcards received!" }));
 }
 
-/**
- * Process a post request to add tags.
- * /api/users/:user/class/:class/flashcards/:flashcard/addTags
- * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
- * @param {Response<any, Record<string, any>, number>} response 
- */
-function postAddTags(request, response) {
-    const user = request.params.user;
-    const userClass = request.params.class;
-    const flashcardSetName = request.params.flashcard;
-    const tags = request.body['tags'];
-
-    // respond with an error if user does not exist
-    if (!findUser(user)) {
-        response.end(JSON.stringify({
-            status: 404,
-            result: `user(${user}), 
-                                class(${userClass}), or 
-                                flashcard(${flashcardSetName}) could not be found`
-        })
-        )
-        return;
-    }
-
-    const query = {
-        name: flashcardSetName,
-        class: userClass, 
-        type: 'flashcard'
-    };
-    
-    for(let i = 0; i < tags.length; i++) {
-        const updateDocument = {
-            $push: { 'tags': tags[i] }
-        };
-        client.db('final-kappa').collection(user).updateOne(query, updateDocument);
-    }
-
-    response.end(JSON.stringify({ status: 200, result: "Add tags received!" }));
-}
-
-/**
- * Process a post request to remove tags.
- * /api/users/:user/class/:class/flashcards/:flashcard/removeTags
- * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
- * @param {Response<any, Record<string, any>, number>} response 
- */
-function postRemoveTags(request, response) {
-    const user = request.params.user;
-    const userClass = request.params.class;
-    const flashcardSetName = request.params.flashcard;
-    const tags = request.body['tags'];
-
-    // respond with an error if user does not exist
-    if (!findUser(user)) {
-        response.end(JSON.stringify({
-            status: 404,
-            result: `user(${user}), 
-                                class(${userClass}), or 
-                                flashcard(${flashcardSetName}) could not be found`
-        })
-        )
-        return;
-    }
-
-    const query = {
-        name: flashcardSetName,
-        class: userClass, 
-        type: 'flashcard'
-    };
-
-    client.db('final-kappa').collection(user).updateOne(query, updateDocument);
-    
-    for(let i = 0; i < tags.length; i++) {
-        const updateDocument = {
-            $push: { $pull: { 'tags': tags[i] } }
-        };
-        client.db('final-kappa').collection(user).updateOne(query, updateDocument);
-    }
-
-    response.end(JSON.stringify({ status: 200, result: "remove tags received!" }));
-}
 
 /**
  * Process a post request to add a flash card.
@@ -333,9 +216,8 @@ function postRemoveFlashcard(request, response) {
 }
 
 module.exports = {
-    getFlashcards, getTags,
+    getFlashcards,
     postCreate, postRemove, 
-    postAddTags, postRemoveTags,
     postAddFlashcard, postRemoveFlashcard
 };
 
