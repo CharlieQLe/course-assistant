@@ -103,7 +103,7 @@ function renderTask(element) {
 // }
 // // //ADD TASK CLICKED
 
-document.getElementById("addtaskbutton").addEventListener('click', () => {
+document.getElementById("addtaskbutton").addEventListener('click', () => { //when add task is clicked inside add task modal
     //popup add task modal --> already taken care of via bootstraps
     //add task to the side (using renderTask?)
     //add to calendar
@@ -128,7 +128,7 @@ document.getElementById("addtaskbutton").addEventListener('click', () => {
         description: desc
     }
 
-    fetch('https://cs326-final-kappa.herokuapp.com/api/users/:user/tasks/create', {
+    fetch('/api/users/dummy/tasks/create', {
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
@@ -164,7 +164,7 @@ document.getElementById("addtaskbutton").addEventListener('click', () => {
 
 // // //EDIT BUTTON NEXT TO TASK CLICKED
 
-document.getElementById("editbutton").addEventListener('click', () => {
+document.getElementById("edittaskbutton").addEventListener('click', () => { //when edit task is clicked inside edit task modal
 
     //pop up edit task modal --> already taken care of via bootstrap
     //read task data into edit task modal
@@ -190,32 +190,27 @@ document.getElementById("editbutton").addEventListener('click', () => {
         description: desc
     }
 
-    fetch('https://cs326-final-kappa.herokuapp.com/api/users/:user/tasks/:taskid/edit', {
+    fetch('https://cs326-final-kappa.herokuapp.com/api/users/:user/tasks/:taskid/edit', { //send a post to edit endpoint to edit the task
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
             'Content-Type': 'application/json',
         }
-        
-    // }).then(function(response) {
-    //     return response.text()
-    // }).then(function(text) {
-    //     console.log(text)
-    // }).catch(function(error) {
-    //     console.log(error)
     });
 
     renderTask(document.getElementById('task')); //RE-RENDER THE TASKS ON THE SIDEBAR TO TAKE INTO ACCOUNT EDIT
-
-
 
 });
 
 // // //DELETE TASK CLICKED
 
-document.getElementById("deletetask").addEventListener('click', () => {
+document.getElementById("deletetaskbutton").addEventListener('click', () => { //when delete task is clicked inside edit task modal
 
 //delete task from tasks on side
+
+// for(let i = 0; i < allTasks.length; i++) {
+
+// }
 
 //post the server endpoint with the values from the delete task modal
 //HAVE TO PASS IN TASKID --> STILL FIGURING OUT WHERE TO ASSIGN THAT

@@ -69,9 +69,9 @@
 
   <div class="container-fluid">
 
-    <div class="row">
-      <div class="col-sm text-center">
-        <div class = px180></div>
+    <div class="row" id = "homepageholder">
+      <div class="col-sm text-center" id = "calendarholdercol">
+        <!-- <div class = px180></div> -->
         <div class="elegant-calendar">
           <p id="reset" class  = "invisible">reset</p>
               <div id="header" class="clearfix">
@@ -239,7 +239,7 @@
           <br>
           <div class = "text-center">
             <li class="list-inline-item">
-              <button class="btn btn-primary btn-lg rounded-2" id = "addtaskbutton" type="button" data-bs-toggle="modal" data-bs-target = "#addtask" data-placement="top" title="Add"><i class="fa fa-table"></i>
+              <button class="btn btn-primary btn-lg rounded-2" id = "addtaskopenmodal" type="button" data-bs-toggle="modal" data-bs-target = "#addtask" data-placement="top" title="Add"><i class="fa fa-table"></i>
                 Add New Task
               </button>
             </li>
@@ -371,14 +371,12 @@
 
     <!-- Pop-up Footer -->
     <div class="modal-footer">
-      <button type="button" class="btn btn-success">Add</button>
+      <button type="button" id = "addtaskbutton" class="btn btn-success">Add</button>
     </div>
 
   </div>
 </div>
-</div>
-
-
+ </div>
 
 <!-- Edit task modal -->
 
@@ -501,15 +499,15 @@
 
         <!-- Pop-up Footer -->
         <div class="modal-footer">
-            <button type="button" class="btn btn-warning">Submit Edit</button>
-            <button type="button" class="btn btn-danger">Delete Task</button>
+            <button type="button" id = "edittaskbutton" class="btn btn-warning">Submit Edit</button>
+            <button type="button" id = "deletetaskbutton" class="btn btn-danger">Delete Task</button>
         </div>
 
       </div>
     </div>
   </div>
 
-  <!-- Add class modal -->
+<!-- Add class modal -->
 
   <div class="modal fade" id="addclass" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
