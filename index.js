@@ -14,8 +14,6 @@ const app = express();
 
 app.use(express.json()); // process json 
 app.use(express.static('./public')); // serve public files
-app.use(express.static('./public/css')); // serve public files
-app.use(express.static('./public/js')); // serve public files
 
 // Set the signup and login endpoints
 app.post("/api/signup", userAPI.postSignup);
@@ -52,6 +50,21 @@ app.post("/api/users/:user/class/:class/notes/:note/create", noteAPI.postCreate)
 app.post("/api/users/:user/class/:class/notes/:note/remove", noteAPI.postRemove);
 app.post("/api/users/:user/class/:class/notes/:note/edit", noteAPI.postEdit);
 
+// serving flashcard files at the given url
+// user types this url or is sent to this url
+app.get("/users/:user/class/:class/flashcards/:flashcard", (req, res) => {
+    res.sendFile(process.cwd() + '/public/flashcard.html')
+});
+// the following 3 gets is to get css/js/png files
+app.get(/.*\.css$/, (req, res) => {
+    res.sendFile(process.cwd() + `/public/css${req.url.match(/(?:.(?!\/))+$/)}`)
+});
+app.get(/.*\.js$/, (req, res) => {
+    res.sendFile(process.cwd() + `/public/js/${req.url.match(/(?:.(?!\/))+$/)}`)
+});
+app.get(/.*\.png$/, (req, res) => {
+    res.sendFile(process.cwd() + `/public/images/${req.url.match(/(?:.(?!\/))+$/)}`)
+});
 // Set the flashcard endpoints
 app.get("/api/users/:user/class/:class/flashcards/:flashcard", flashcardAPI.getFlashcards);
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/create", flashcardAPI.postCreate);
