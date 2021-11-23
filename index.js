@@ -44,6 +44,11 @@ app.get("/api/users/:user/tags", tagAPI.getAll);
 app.post("/api/users/:user/tags/:tag/create", tagAPI.postCreate);
 app.post("/api/users/:user/tags/:tag/remove", tagAPI.postRemove);
 
+// serving note files at the given url
+// user types this url or is sent to this url
+app.get("/users/:user/class/:class/notes/:note", (req, res) => {
+    res.sendFile(process.cwd() + '/public/notepad.html')
+});
 // Set the note endpoints
 app.get("/api/users/:user/class/:class/notes/:note", noteAPI.getNote);
 app.post("/api/users/:user/class/:class/notes/:note/create", noteAPI.postCreate);
@@ -55,6 +60,14 @@ app.post("/api/users/:user/class/:class/notes/:note/edit", noteAPI.postEdit);
 app.get("/users/:user/class/:class/flashcards/:flashcard", (req, res) => {
     res.sendFile(process.cwd() + '/public/flashcard.html')
 });
+// Set the flashcard endpoints
+app.get("/api/users/:user/class/:class/flashcards/:flashcard", flashcardAPI.getFlashcards);
+app.post("/api/users/:user/class/:class/flashcards/:flashcard/create", flashcardAPI.postCreate);
+app.post("/api/users/:user/class/:class/flashcards/:flashcard/remove", flashcardAPI.postRemove);
+app.post("/api/users/:user/class/:class/flashcards/:flashcard/addFlashcard", flashcardAPI.postAddFlashcard);
+app.post("/api/users/:user/class/:class/flashcards/:flashcard/removeFlashcard", flashcardAPI.postRemoveFlashcard);
+
+
 // the following 3 gets is to get css/js/png files
 app.get(/.*\.css$/, (req, res) => {
     res.sendFile(process.cwd() + `/public/css${req.url.match(/(?:.(?!\/))+$/)}`)
@@ -65,12 +78,6 @@ app.get(/.*\.js$/, (req, res) => {
 app.get(/.*\.png$/, (req, res) => {
     res.sendFile(process.cwd() + `/public/images/${req.url.match(/(?:.(?!\/))+$/)}`)
 });
-// Set the flashcard endpoints
-app.get("/api/users/:user/class/:class/flashcards/:flashcard", flashcardAPI.getFlashcards);
-app.post("/api/users/:user/class/:class/flashcards/:flashcard/create", flashcardAPI.postCreate);
-app.post("/api/users/:user/class/:class/flashcards/:flashcard/remove", flashcardAPI.postRemove);
-app.post("/api/users/:user/class/:class/flashcards/:flashcard/addFlashcard", flashcardAPI.postAddFlashcard);
-app.post("/api/users/:user/class/:class/flashcards/:flashcard/removeFlashcard", flashcardAPI.postRemoveFlashcard);
 
 // Set the default handler
 app.get("*", defaultHandler);
