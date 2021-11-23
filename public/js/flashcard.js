@@ -176,6 +176,10 @@ function renderFlashcards(element) {
 
         main.childNodes[2].firstChild.addEventListener('click', () => {
             const temp = flashcards[i];
+            flashcards.splice(i, 1);    // removes this flashcard from array
+
+            // rerenders flashcards after client deletes the flashcard in the edit screen
+            renderFlashcards(document.getElementById('flashcard'));
             
             // post to server. tell server to delete this flashcard
             fetch('/api/users/USER/class/CLASS/flashcards/FLASHCARD/removeFlashcard', {
@@ -187,18 +191,14 @@ function renderFlashcards(element) {
             }).then(response => {
                 return response.json();
             }).then(obj => {
-                // TODO
-                console.log(obj.status);
-                if(obj.status === 200) {
-                    flashcards.splice(i, 1);    // removes this flashcard from array
-
-                    // rerenders flashcards after client deletes the flashcard in the edit screen
-                    renderFlashcards(document.getElementById('flashcard'));
+                if(obj.status !== 200) {
+                    
                 }
             }).catch(e => {
                 console.log(error);
             });
         })
+        
         element.appendChild(main);
 
     }
@@ -316,6 +316,30 @@ function shuffle(array) {
     return array;
 };
 
+window.addEventListener('load', async function() {
+    // grab flashcards from server
+    fetch('/api/users/USER/class/CLASS/flashcards/FLASHCARD')
+    .then(response => {
+        return response.json();
+    }).then(obj => {
+        // if we get a status code of 200, set the client-side flashcard set 
+        // with flashcard set from server
+        if (obj.status === 200) {
+            flashcards = obj.result;
+            renderFlashcards(document.getElementById('flashcard'));
+        }
+
+    }).catch(e => {
+        console.log(e);
+    });
+    // console.log(window.location.pathname);
+
+    // sets the file name of the flashcard
+    const url = window.location.pathname;       // reads url
+    const split = url.split('/');
+    document.getElementById('flashcard-title').innerHTML = split[split.length-1];
+});
+
 
 
 // when client clicks on the initial add flashcard button, it adds an attribute 
@@ -350,26 +374,12 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
     }).then(response => {
         return response.json();
     }).then(obj => {
-        // TODO 
-        console.log(obj.status);
-    }).catch(e => {
-        console.log(e);
-    });
+        if (obj.status !== 200) {
 
-    // grab flashcards from server
-    fetch('/api/users/USER/class/CLASS/flashcards/FLASHCARD')
-    .then(response => {
-        return response.json();
-    }).then(obj => {
-        // if we get a status code of 200, replace client-side flashcard set 
-        // with flashcard set from server
-        if (obj.status === 200) {
-            flashcards = obj.result;
         }
     }).catch(e => {
         console.log(e);
     });
-
 
     // clear term and description input box after every added term
     document.getElementById('term-input').value = '';
