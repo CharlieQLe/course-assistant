@@ -1,6 +1,5 @@
 'use strict';
 
-const { MongoClient } = require('mongodb');
 const userAPI = require('./api/user.js');
 const taskAPI = require('./api/tasks.js');
 const classAPI = require('./api/class.js');
@@ -8,7 +7,6 @@ const tagAPI = require('./api/tags.js');
 const noteAPI = require('./api/notepad.js');
 const flashcardAPI = require('./api/flashcard.js');
 
-const fs = require('fs');
 const express = require('express');
 const app = express();
 
@@ -68,25 +66,6 @@ app.post("/api/users/:user/class/:class/flashcards/:flashcard/removeFlashcard", 
 // Set the default handler
 app.get("*", defaultHandler);
 
-// Get the secrets
-let secrets;
-let uri = '';
-if (!process.env.URI) {
-    if (fs.existsSync('./secrets.json')) {
-        secrets = JSON.parse(fs.readFileSync('./secrets.json'));
-        uri = secrets.uri;
-    } else {
-        console.log('no secrets json found!');
-    }
-} else {
-    uri = process.env.URI;
-}
-console.log(uri);
-
-// Connect to the database
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-client.connect(err => { });
-
 // Start the server
 app.listen(process.env.PORT || 8080, () => console.log(`Server listening on http://localhost:${process.env.PORT || 8080}`));
 
@@ -97,5 +76,3 @@ app.listen(process.env.PORT || 8080, () => console.log(`Server listening on http
 function defaultHandler(request, response) {
     response.end(JSON.stringify({ result: 'error', path: __dirname, request: request.path }));
 }
-
-module.exports = { client }

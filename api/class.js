@@ -1,6 +1,6 @@
 'use strict';
 
-const { client } = require('../index.js');
+const { client } = require('./mongo.js');
 
 /**
  * Process a get request to retrieve every class.
