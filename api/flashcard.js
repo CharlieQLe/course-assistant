@@ -1,6 +1,6 @@
 'use strict'
 
-const { client } = require('../index.js');
+const { client } = require('./mongo.js');
 
 // flashcards {
 //     "tags": [],
@@ -18,13 +18,14 @@ const { client } = require('../index.js');
 /**
  * 
  * @param {string} user the user to check in the database
- * @returns if the user is in the database
+ * @returns a promise<boolean> that tells us if the user is in the database or not
  */
 function findUser(user) {
-    client.db('final-kappa').listCollections().toArray().then(collection => {
+    let found = client.db('final-kappa').listCollections().toArray().then(collection => {
         return collection.filter(col => col.name === user).length === 1;
     });
-}
+    return found;
+}  
 
 
 /**
@@ -39,16 +40,15 @@ function getFlashcards(request, response) {
     const flashcardSetName = request.params.flashcard;
 
     // respond with an error if user does not exist
-    if (!findUser(user)) {
-        response.end(JSON.stringify({
-            status: 404,
-            result: `user(${user}), 
-                                class(${userClass}), or 
-                                flashcard(${flashcardSetName}) could not be found`
-        })
-        )
-        return;
-    }
+    findUser(user).then(found => {
+        if(!found) {
+            response.end(JSON.stringify({
+                        status: 404,
+                        result: `user(${user}), class(${userClass}), or flashcard(${flashcardSetName}) could not be found`
+                    })
+            )
+        }
+    });
 
     // get the set of flashcards in the database
     client.db('final-kappa').collection(user).find({
@@ -78,16 +78,15 @@ function postCreate(request, response) {
     const tags = request.body['tags'];
 
     // respond with an error if user does not exist
-    if (!findUser(user)) {
-        response.end(JSON.stringify({
-            status: 404,
-            result: `user(${user}), 
-                                class(${userClass}), or 
-                                flashcard(${flashcardSetName}) could not be found`
-        })
-        )
-        return;
-    }
+    findUser(user).then(found => {
+        if(!found) {
+            response.end(JSON.stringify({
+                        status: 404,
+                        result: `user(${user}), class(${userClass}), or flashcard(${flashcardSetName}) could not be found`
+                    })
+            )
+        }
+    });
     
     const query = {
         name: flashcardSetName,
@@ -113,16 +112,15 @@ function postRemove(request, response) {
     const flashcardSetName = request.params.flashcard;
 
     // respond with an error if user does not exist
-    if (!findUser(user)) {
-        response.end(JSON.stringify({
-            status: 404,
-            result: `user(${user}), 
-                                class(${userClass}), or 
-                                flashcard(${flashcardSetName}) could not be found`
-        })
-        )
-        return;
-    }
+    findUser(user).then(found => {
+        if(!found) {
+            response.end(JSON.stringify({
+                        status: 404,
+                        result: `user(${user}), class(${userClass}), or flashcard(${flashcardSetName}) could not be found`
+                    })
+            )
+        }
+    });
     
     const query = {
         name: flashcardSetName,
@@ -149,16 +147,15 @@ function postAddFlashcard(request, response) {
     const definition = request.body['definition'];
 
     // respond with an error if user does not exist
-    if (!findUser(user)) {
-        response.end(JSON.stringify({
-            status: 404,
-            result: `user(${user}), 
-                                class(${userClass}), or 
-                                flashcard(${flashcardSetName}) could not be found`
-        })
-        )
-        return;
-    }
+    findUser(user).then(found => {
+        if(!found) {
+            response.end(JSON.stringify({
+                        status: 404,
+                        result: `user(${user}), class(${userClass}), or flashcard(${flashcardSetName}) could not be found`
+                    })
+            )
+        }
+    });
     
     const query = {
         name: flashcardSetName,
@@ -189,16 +186,15 @@ function postRemoveFlashcard(request, response) {
     const definition = request.body['definition'];
 
     // respond with an error if user does not exist
-    if (!findUser(user)) {
-        response.end(JSON.stringify({
-            status: 404,
-            result: `user(${user}), 
-                                class(${userClass}), or 
-                                flashcard(${flashcardSetName}) could not be found`
-        })
-        )
-        return;
-    }
+    findUser(user).then(found => {
+        if(!found) {
+            response.end(JSON.stringify({
+                        status: 404,
+                        result: `user(${user}), class(${userClass}), or flashcard(${flashcardSetName}) could not be found`
+                    })
+            )
+        }
+    });
     
     const query = {
         name: flashcardSetName,

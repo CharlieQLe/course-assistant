@@ -13,6 +13,7 @@ body {
 
 #notepad-textarea {
 	background-color: white;
+	white-space: pre-wrap;
 }
 
 

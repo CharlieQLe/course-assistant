@@ -181,8 +181,10 @@ function renderFlashcards(element) {
             // rerenders flashcards after client deletes the flashcard in the edit screen
             renderFlashcards(document.getElementById('flashcard'));
             
+            const url = window.location.pathname;       // reads url
+            const split = url.split('/');
             // post to server. tell server to delete this flashcard
-            fetch('/api/users/USER/class/CLASS/flashcards/FLASHCARD/removeFlashcard', {
+            fetch(`/api/users/${split[2]}/class/${split[4]}/flashcards/${split[6]}/removeFlashcard`, {
                 method: 'POST', 
                 body: JSON.stringify(temp), 
                 headers: {
@@ -192,7 +194,7 @@ function renderFlashcards(element) {
                 return response.json();
             }).then(obj => {
                 if(obj.status !== 200) {
-                    
+                    throw obj.result;
                 }
             }).catch(e => {
                 console.log(error);
@@ -317,16 +319,23 @@ function shuffle(array) {
 };
 
 window.addEventListener('load', async function() {
+    const url = window.location.pathname;       // reads url
+    const split = url.split('/');
+    
+    console.log(split);
     // grab flashcards from server
-    fetch('/api/users/USER/class/CLASS/flashcards/FLASHCARD')
+    fetch(`/api/users/${split[2]}/class/${split[4]}/flashcards/${split[6]}`)
     .then(response => {
         return response.json();
     }).then(obj => {
         // if we get a status code of 200, set the client-side flashcard set 
         // with flashcard set from server
+        console.log(obj)
         if (obj.status === 200) {
             flashcards = obj.result;
             renderFlashcards(document.getElementById('flashcard'));
+        } else {
+            throw 'something went wrong with getting the flashcards from the server: ' + obj.result;
         }
 
     }).catch(e => {
@@ -335,9 +344,7 @@ window.addEventListener('load', async function() {
     // console.log(window.location.pathname);
 
     // sets the file name of the flashcard
-    const url = window.location.pathname;       // reads url
-    const split = url.split('/');
-    document.getElementById('flashcard-title').innerHTML = split[split.length-1];
+    document.getElementById('flashcard-title').innerHTML = split[split.length-1].replace('%20', ' ');
 });
 
 
@@ -364,8 +371,10 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
         definition: d
     }
 
+    const url = window.location.pathname;       // reads url
+    const split = url.split('/');
     // POST: add a flashcard to the set of flashcards
-    fetch('/api/users/USER/class/CLASS/flashcards/FLASHCARD/addFlashcard', {
+    fetch(`/api/users/${split[2]}/class/${split[4]}/flashcards/${split[6]}/addFlashcard`, {
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
@@ -375,22 +384,23 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
         return response.json();
     }).then(obj => {
         if (obj.status !== 200) {
-
+            throw obj.result;
         }
+        // clear term and description input box after every added term
+        document.getElementById('term-input').value = '';
+        document.getElementById('flashcard-desc-input').value = '';
+        
+        flashcards.push(temp);
+        renderFlashcards(document.getElementById('flashcard'));
+    
+        // the following 2 lines of code auto scroll to the buttom when
+        //  adding flashcards in the edit screen
+        const elem = document.getElementById('flashcard');
+        elem.scrollTop = elem.scrollHeight;
     }).catch(e => {
         console.log(e);
     });
 
-    // clear term and description input box after every added term
-    document.getElementById('term-input').value = '';
-    document.getElementById('flashcard-desc-input').value = '';
-    
-    renderFlashcards(document.getElementById('flashcard'));
-
-    // the following 2 lines of code auto scroll to the buttom when
-    //  adding flashcards in the edit screen
-    const elem = document.getElementById('flashcard');
-    elem.scrollTop = elem.scrollHeight;
     
 });
 
