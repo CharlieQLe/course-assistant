@@ -12,8 +12,6 @@ const app = express();
 
 app.use(express.json()); // process json 
 app.use(express.static('./public')); // serve public files
-app.use(express.static('./public/css')); // serve public files
-app.use(express.static('./public/js')); // serve public files
 
 // Set the signup and login endpoints
 app.post("/api/signup", userAPI.postSignup);
@@ -44,24 +42,40 @@ app.get("/api/users/:user/tags", tagAPI.getAll);
 app.post("/api/users/:user/tags/:tag/create", tagAPI.postCreate);
 app.post("/api/users/:user/tags/:tag/remove", tagAPI.postRemove);
 
+// serving note files at the given url
+// user types this url or is sent to this url
+app.get("/users/:user/class/:class/notes/:note", (req, res) => {
+    res.sendFile(process.cwd() + '/public/notepad.html')
+});
 // Set the note endpoints
 app.get("/api/users/:user/class/:class/notes/:note", noteAPI.getNote);
 app.post("/api/users/:user/class/:class/notes/:note/create", noteAPI.postCreate);
-app.get("/api/users/:user/class/:class/notes/:note/tags", noteAPI.getTags);
-app.post("/api/users/:user/class/:class/notes/:note/edit", noteAPI.postEdit);
-app.post("/api/users/:user/class/:class/notes/:note/addTags", noteAPI.postAddTags);
 app.post("/api/users/:user/class/:class/notes/:note/remove", noteAPI.postRemove);
-app.post("/api/users/:user/class/:class/notes/:note/removeTags", noteAPI.postRemoveTags);
+app.post("/api/users/:user/class/:class/notes/:note/edit", noteAPI.postEdit);
 
+// serving flashcard files at the given url
+// user types this url or is sent to this url
+app.get("/users/:user/class/:class/flashcards/:flashcard", (req, res) => {
+    res.sendFile(process.cwd() + '/public/flashcard.html')
+});
 // Set the flashcard endpoints
 app.get("/api/users/:user/class/:class/flashcards/:flashcard", flashcardAPI.getFlashcards);
-app.get("/api/users/:user/class/:class/flashcards/:flashcard/tags", flashcardAPI.getTags);
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/create", flashcardAPI.postCreate);
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/remove", flashcardAPI.postRemove);
-app.post("/api/users/:user/class/:class/flashcards/:flashcard/addTags", flashcardAPI.postAddTags);
-app.post("/api/users/:user/class/:class/flashcards/:flashcard/removeTags", flashcardAPI.postRemoveTags);
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/addFlashcard", flashcardAPI.postAddFlashcard);
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/removeFlashcard", flashcardAPI.postRemoveFlashcard);
+
+
+// the following 3 gets is to get css/js/png files
+app.get(/.*\.css$/, (req, res) => {
+    res.sendFile(process.cwd() + `/public/css${req.url.match(/(?:.(?!\/))+$/)}`)
+});
+app.get(/.*\.js$/, (req, res) => {
+    res.sendFile(process.cwd() + `/public/js/${req.url.match(/(?:.(?!\/))+$/)}`)
+});
+app.get(/.*\.png$/, (req, res) => {
+    res.sendFile(process.cwd() + `/public/images/${req.url.match(/(?:.(?!\/))+$/)}`)
+});
 
 // Set the default handler
 app.get("*", defaultHandler);

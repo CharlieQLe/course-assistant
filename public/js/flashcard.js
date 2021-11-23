@@ -182,20 +182,23 @@ function renderFlashcards(element) {
             renderFlashcards(document.getElementById('flashcard'));
             
             // post to server. tell server to delete this flashcard
-            fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/removeFlashcard', {
+            fetch('/api/users/USER/class/CLASS/flashcards/FLASHCARD/removeFlashcard', {
                 method: 'POST', 
                 body: JSON.stringify(temp), 
                 headers: {
                     'Content-Type': 'application/json',
                 }
-            }).then(function(response) {
-                return response.text()
-            }).then(function(text) {
-                console.log(text)
-            }).catch(function(error) {
-                console.log(error)
-            })
+            }).then(response => {
+                return response.json();
+            }).then(obj => {
+                if(obj.status !== 200) {
+                    
+                }
+            }).catch(e => {
+                console.log(error);
+            });
         })
+        
         element.appendChild(main);
 
     }
@@ -209,7 +212,7 @@ function renderReview(element) {
         main.lastChild.innerHTML = '';
 
         element.appendChild(main);
-    }   
+    }
 }
 
 
@@ -313,6 +316,30 @@ function shuffle(array) {
     return array;
 };
 
+window.addEventListener('load', async function() {
+    // grab flashcards from server
+    fetch('/api/users/USER/class/CLASS/flashcards/FLASHCARD')
+    .then(response => {
+        return response.json();
+    }).then(obj => {
+        // if we get a status code of 200, set the client-side flashcard set 
+        // with flashcard set from server
+        if (obj.status === 200) {
+            flashcards = obj.result;
+            renderFlashcards(document.getElementById('flashcard'));
+        }
+
+    }).catch(e => {
+        console.log(e);
+    });
+    // console.log(window.location.pathname);
+
+    // sets the file name of the flashcard
+    const url = window.location.pathname;       // reads url
+    const split = url.split('/');
+    document.getElementById('flashcard-title').innerHTML = split[split.length-1];
+});
+
 
 
 // when client clicks on the initial add flashcard button, it adds an attribute 
@@ -337,39 +364,26 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
         definition: d
     }
 
-
-    // change
-    // https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/addFlashcard
-    // to
-    // http://localhost:8080/api/users/USER/class/CLASS/flashcards/FLASHCARD/addFlashcard
-    // and add mode: 'cors' to fetch obj if you want to test GET/POST on localhost
-    fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/addFlashcard', {
+    // POST: add a flashcard to the set of flashcards
+    fetch('/api/users/USER/class/CLASS/flashcards/FLASHCARD/addFlashcard', {
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
             'Content-Type': 'application/json',
         }
-        
-    }).then(function(response) {
-        return response.text()
-    }).then(function(text) {
-        console.log(text)
-    }).catch(function(error) {
-        console.log(error)
+    }).then(response => {
+        return response.json();
+    }).then(obj => {
+        if (obj.status !== 200) {
+
+        }
+    }).catch(e => {
+        console.log(e);
     });
-
-    // TODO GRAB FLASHCARDS FROM SERVER
-    // FETCH 
-
-    // client side storage
-    flashcards.push(temp);
-
 
     // clear term and description input box after every added term
     document.getElementById('term-input').value = '';
     document.getElementById('flashcard-desc-input').value = '';
-
-    
     
     renderFlashcards(document.getElementById('flashcard'));
 
@@ -382,7 +396,6 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
 
 // the study button is displayed when you are in th editing flashcard section
 document.getElementById('study-btn').addEventListener('click', () => {
-    // TODO
     document.getElementById('study-and-flashcard').classList.toggle("invisible");
     document.getElementById('review-missed-term').classList.toggle("invisible");
     renderStudyFlashcards(document.getElementById('flashcard'));
@@ -408,38 +421,3 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 document.getElementById('review-missed-term-btn').addEventListener('click', () => {
     renderReview(document.getElementById('flashcard'));
 });
-
-
-// // TEMPORARY CRUD OPERATIONS FOR DISPLAY FOR MILESTONE 2
-// document.getElementById('crudc').addEventListener('click', () => {
-//     fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/create', {
-//         method: 'POST', 
-//         body: JSON.stringify({ tags: [], description: "aaaaaaa" }), 
-//         headers: {
-//             'Content-Type': 'application/json',
-//         }
-//     }).then(function(response) {
-//         return response.text()
-//     }).then(function(text) {
-//         console.log(text)
-//     }).catch(function(error) {
-//         console.log(error)
-//     })
-
-// })
-    
-// document.getElementById('crudr').addEventListener('click', () => {
-//     fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD')
-//     .then(response => response.text())
-//     .then(text => console.log(text))
-//     .catch(error => console.log(error))
-// })
-
-// document.getElementById('crudd').addEventListener('click', () => {
-//     fetch('https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/remove', {
-//         method: 'POST', 
-//     }).then(response => response.text())
-//     .then(text => console.log(text))
-//     .catch(error => console.log(error))
-
-// })
