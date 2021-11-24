@@ -6,6 +6,8 @@ https://cs326-final-kappa.herokuapp.com/
 
 ## Database Description / Documentation
 
+...
+
 DB (‘final-kappa’) // database
 	USER 1 //each user has a collection of documents
 		DOCUMENT 1 { //each document has a name, class, and type, type determines what else is stored
