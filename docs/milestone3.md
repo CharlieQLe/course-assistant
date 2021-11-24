@@ -1,17 +1,5 @@
 # Milestone 3
 
-## URL
-
-https://cs326-final-kappa.herokuapp.com/
-
-## Database Description / Documentation
-
-
-
-## Division of Labor
-
-# Milestone 3
-
 
 ## URL
 
