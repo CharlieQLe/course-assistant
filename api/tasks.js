@@ -1,4 +1,33 @@
-'use strict';
+'use strict'
+
+const { client } = require('./mongo.js');
+
+const db = 'final-kappa';
+
+// tasks {
+//      "taskid": "",
+//      "taskname": "",
+//      "description": ""
+//      "date": ""
+//      "time": ""
+//      "classname": ""
+// }
+// ==============================================================
+
+
+/**
+ * 
+ * @param {string} user the user to check in the database
+ * @returns a promise<boolean> that tells us if the user is in the database or not
+ */
+ function findUser(user) {
+    let found = client.db(db).listCollections().toArray().then(collection => {
+        return collection.filter(col => col.name === user).length === 1;
+    });
+    return found;
+}  
+
+// TODO GO THROUGH THIS JS AND CHANGE ALL THE FILE WRITING FROM JSON FILE TO MONGO DB
 
 /**
  * Process a get request to retrieve every task.
@@ -7,27 +36,76 @@
  * @param {Response<any, Record<string, any>, number>} response 
  */
 
-// TODO GO THROUGH THIS JS AND CHANGE ALL THE FILE WRITING FROM JSON FILE TO MONGO DB
-
 function getAll(request, response) {
 
-    const user = request.params['user'];
-    
-    if (user !== undefined) {
-        if (fs.existsSync(`./users/${user}/tasks.json`)) {
-            fs.readFile(`./users/${user}/tasks.json`, (err, data) => {
-                if (err) {
-                    response.end(JSON.stringify({ result: `Unable to find tasks` }));
-                } else {
-                    response.end(JSON.stringify(data));
-                }
-            });
-        } else {
-            response.end(JSON.stringify({ result: `User ${user} tasks not found` }));
+    const user = request.params.user;
+
+    // respond with an error if user does not exist
+    findUser(user).then(found => {
+        if(!found) {
+            response.end(JSON.stringify({
+                        status: 404,
+                        result: `user(${user}) could not be found`
+                    })
+            )
+            return;
         }
-    } else {
-        response.end(JSON.stringify({ result: 'Task not found.  Check name and try again.' }));
-    }
+    });
+
+    // get all tasks from database for specific user
+    client.db(db).collection(user).find({
+        type: 'task'
+    }).toArray().then(arr => {
+        if (arr.length === 0) {
+            response.end(JSON.stringify({ status: 404, result: `Task (${taskid}) could not be found` }));
+            return;
+        } 
+        response.end(JSON.stringify({ status: 200, result: arr }));
+    }).catch(e => {
+        response.end(JSON.stringify({ status: 404, result: "GET tasks: Error parsing for tasks with mongodb" }));
+        return;
+    });
+
+}
+
+/**
+ * Process a get request to retrieve a specific task.
+ * 
+ * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
+ * @param {Response<any, Record<string, any>, number>} response 
+ */
+ function getTask(request, response) {
+
+    const user = request.params.user;
+    const taskid = request.params.taskid; //primary key
+
+    // respond with an error if user does not exist
+    findUser(user).then(found => {
+        if(!found) {
+            response.end(JSON.stringify({
+                        status: 404,
+                        result: `user(${user}) could not be found`
+                    })
+            )
+            return;
+        }
+    });
+
+    // get task from database
+    client.db(db).collection(user).find({
+        taskID: taskid,
+        type: 'task'
+    }).toArray().then(arr => {
+        if (arr.length === 0) {
+            response.end(JSON.stringify({ status: 404, result: `Task (${taskid}) could not be found` }));
+            return;
+        } 
+        response.end(JSON.stringify({ status: 200, result: arr[0].body }));
+    }).catch(e => {
+        response.end(JSON.stringify({ status: 404, result: "GET tasks: Error parsing for tasks with mongodb" }));
+        return;
+    });
+
 }
 
 /**
@@ -38,60 +116,42 @@ function getAll(request, response) {
  */
 function postCreate(request, response) {
 
-    const action = request.body['action'];
-    const user = request.params['user'];
+    const user = request.params.user;
+    const taskid = request.params.taskid; //primary key
+    const classname = request.body['classname'];
+    const taskname = request.body['taskname'];
+    const description = request.body['description'];
+    const date = request.body['date'];
+    const time = request.body['time'];
 
-    if (user === undefined) {
-        response.end(JSON.stringify({ result: 'user unknown' }));
-        return;
-    }
+    // respond with an error if user does not exist
+    findUser(user).then(found => {
+        if(!found) {
+            response.end(JSON.stringify({
+                        status: 404,
+                        result: `user(${user}) could not be found`
+                    })
+            )
+            return;
+        }
+    });
 
-    switch (action) {
-        case 'add': {
-            taskAdd(request, response);
-            break;
-        }
-        case 'edit': {
-            taskEdit(request, response);
-            break;
-        }
-        case 'remove': {
-            taskDelete(request, response);
-            break;
-        }
-        default: {
-            response.end(JSON.stringify({ result: 'command unknown' }));
-            break;
-        }
-    }
+    const query = {
+        user: user,
+        taskID: taskid,
+        classname: classname,
+        taskname: taskname,
+        description: description,
+        date: date,
+        time: time,
+        type: 'task'
+    };
+
+    client.db(db).collection(user).insertOne(query);
+
+    response.end(JSON.stringify({ status: 200, result: "Create task received!" }));
 }
 
-/**
- * Process a get request to retrieve every task.
- * 
- * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
- * @param {Response<any, Record<string, any>, number>} response 
- */
- function getTask(request, response) {
-
-    const user = request.params['user'];
-    const taskid = request.params['taskid']; //primary key; //name would be the primary key for identifying tasks
-    if (user !== undefined && taskid !== undefined) {
-        if (fs.existsSync(`./api/users/${user}/tasks.json/${taskid}`)) {
-            fs.readFile(`./api/users/${user}/tasks.json/${taskid}`, (err, data) => {
-                if (err) {
-                    response.end(JSON.stringify({ result: `Unable to find task at ID ${taskid}` }));
-                } else {
-                    response.end(JSON.stringify(data));
-                }
-            });
-        } else {
-            response.end(JSON.stringify({ result: `User ${user} tasks not found` }));
-        }
-    } else {
-        response.end(JSON.stringify({ result: 'Task not found.  Check name and try again.' }));
-    }
-}
 
 /**
  * Process a post request to edit a task.
@@ -101,38 +161,55 @@ function postCreate(request, response) {
  */
 function postEdit(request, response) {
 
-    const user = request.params['user'];
-    const taskid = request.params['taskid']; //primary key
+    const user = request.params.user;
+    const taskid = request.params.taskid; //primary key
+    const classname = request.body['classname'];
     const taskname = request.body['taskname'];
     const description = request.body['description'];
     const date = request.body['date'];
     const time = request.body['time'];
-    const classname = request.body['classname'];
+    
 
-    if (user !== undefined && taskid !== undefined && taskname !== undefined && description !== undefined && date !== undefined && time !== undefined && classname !== undefined) {
-
-        if (fs.existsSync(`./api/users/${user}/tasks.json/${taskid}`)) {
-            fs.readFileSync(`./api/users/${user}/tasks.json/${taskid}`, (err, data) => {
-                if (err) { // Error when unable to write the description.
-                    response.end(JSON.stringify({ result: `Failed to edit for ${taskid}` }));
-                } else { // Success on writing the description
-                    const parsed = JSON.parse(data);
-                    const tasktoedit = parsed[parseInt(taskid)];
-                    tasktoedit.taskname = taskname;
-                    tasktoedit.description = description;
-                    tasktoedit.date = date;
-                    tasktoedit.time = time;
-                    tasktoedit.classname = classname;
-
-                    response.end(JSON.stringify({ result: `Edit successful for ${taskid}` }));
-                }
-            });
-        } else {
-            response.end(JSON.stringify({ result: `Task ${taskid} doesn't exist` }));
+    // respond with an error if user does not exist
+    findUser(user).then(found => {
+        if(!found) {
+            response.end(JSON.stringify({
+                        status: 404,
+                        result: `user(${user}) could not be found`
+                    })
+            )
+            return;
         }
-    } else {
-        response.end(JSON.stringify({ result: 'edit task failed' }));
+    });
+
+    // check if task is found
+    client.db(db).collection(user).find({
+        taskID: taskid,
+        type: 'task'
+    }).toArray().then(arr => {
+        if (arr.length === 0) {
+            response.end(JSON.stringify({ status: 404, result: `Task(${taskid}) could not be found` }));
+            return;
+        } 
+    }).catch(e => {
+        response.end(JSON.stringify({ status: 404, result: "GET tasks: Error parsing for tasks with mongodb" }));
+        return;
+    });
+
+    const query = {
+        taskID: taskid,
+        type: 'task'
+    };
+
+    const updateTask = {
+        $set: { taskname: taskname },
+        $set: { classname: classname },
+        $set: { description: description },
+        $set: { date: date },
+        $set: { time: time },
     }
+    client.db(db).collection(user).updateOne(query, updateTask);
+    response.end(JSON.stringify({ status: 200, result: "Edit task received!" }));
 }
 
 /**
@@ -143,22 +220,44 @@ function postEdit(request, response) {
  */
 function postRemove(request, response) {
    
-    const user = request.params['user'];
-    const taskid = request.params['taskid']; //primary key
+    const user = request.params.user;
+    const taskid = request.params.taskid; //primary key
 
-    if (user !== undefined && taskid !== undefined) {
-
-        if (fs.existsSync(`./api/users/${user}/tasks.json/${taskid}`)) {
-            const task = fs.readFileSync(`./api/users/${user}/tasks.json/${taskid}`);
-            const parsed = JSON.parse(task);
-            parsed.remove(parseInt(taskid));
-            response.end(JSON.stringify({ result: `Removed task ${taskid}` }));
-        } else {
-            response.end(JSON.stringify({ result: `Task ${taskid} doesn't exist` }));
+    // respond with an error if user does not exist
+    findUser(user).then(found => {
+        if(!found) {
+            response.end(JSON.stringify({
+                        status: 404,
+                        result: `user(${user}) could not be found`
+                    })
+            )
+            return;
         }
-    } else {
-        response.end(JSON.stringify({ result: 'Remove task failed.  Please check the name exists and try again.' }));
-    }
+    });
+
+    // check if class or task is found
+    client.db(db).collection(user).find({
+        taskID: taskid,
+        type: 'task'
+    }).toArray().then(arr => {
+        if (arr.length === 0) {
+            response.end(JSON.stringify({ status: 404, result: `Task (${taskid}) could not be found` }));
+            return;
+        } 
+    }).catch(e => {
+        response.end(JSON.stringify({ status: 404, result: "GET tasks: Error parsing for tasks with mongodb" }));
+        return;
+    });
+
+    const query = {
+        taskID: taskid,
+        type: 'task'
+    };
+
+    client.db(db).collection(user).deleteOne(query);
+
+    response.end(JSON.stringify({ status: 200, result: "Remove task received!" }));
+
 }
 
 module.exports = { getAll, postCreate, getTask, postEdit, postRemove };
