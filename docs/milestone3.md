@@ -46,7 +46,7 @@ https://cs326-final-kappa.herokuapp.com/
 
 				description: String // description of task
 
-				date: String /date of task
+				date: String //date of task
 
 				time: String //time of task
 			}
