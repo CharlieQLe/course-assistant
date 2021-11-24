@@ -1,5 +1,23 @@
 'use strict';
 
+const { client } = require("./mongo");
+
+
+const fs = require('fs');  // REMOVE THIS AFTER IMPLEMENTING MONGODB
+
+
+/**
+ * 
+ * @param {string} user the user to check in the database
+ * @returns a promise<boolean> that tells us if the user is in the database or not
+ */
+ function findUser(user) {
+    let found = client.db('final-kappa').listCollections().toArray().then(collection => {
+        return collection.filter(col => col.name === user).length === 1;
+    });
+    return found;
+}  
+
 /**
  * Process a post request to sign up.
  * 
@@ -87,34 +105,51 @@ function getData(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postEdit(request, response) {
+    const name = request.params.user;   // get user name from url
+    
+    const nameToChange = request.body['name'];  // get name from json obj received from fetch
+    const emailToChange = request.body['email'];
+    const passwordToChange = request.body['password'];
 
-    const user = request.params['user'];
-    const name = request.body['name'];
-    const email = request.body['email']; //primary key
-    const password = request.body['password'];
-
-    if (user !== undefined && name !== undefined && email !== undefined && password !== undefined) {
-
-        if (fs.existsSync(`./api/users/${user}`)) {
-            fs.readFileSync(`./api/users/${user}`, (err, data) => {
-                if (err) { // Error when unable to write the description.
-                    response.end(JSON.stringify({ result: `Failed to edit for ${user}` }));
-                } else { // Success on writing the description
-                    const parsed = JSON.parse(data);
-                    const profiletoedit = parsed[parseInt(user)];
-                    profiletoedit.name = name;
-                    profiletoedit.email = email;
-                    profiletoedit.password = password;
-
-                    response.end(JSON.stringify({ result: `Edit successful for ${user}` }));
-                }
-            });
-        } else {
-            response.end(JSON.stringify({ result: `${user} doesn't exist` }));
+    
+    // respond with an error if user does not exist
+    findUser(name).then(found => {
+        if(!found) {
+            response.end(JSON.stringify({
+                        status: 404,
+                        result: `user(${user}) could not be found`
+                    })
+            )
         }
-    } else {
-        response.end(JSON.stringify({ result: 'edit profile failed' }));
+    });
+
+
+    const query = {
+        name: name,
+    };
+
+    // change collection name to the nameToChange
+    if (nameToChange.length !== 0) {
+        client.db('final-kappa').collection(user).rename(nameToChange);
+        user = nameToChange;
     }
+
+    const toUpdate = {};
+    if (emailToChange.length !== 0) {
+        toUpdate['email'] = emailToChange;
+    }
+
+    if (passwordToChange.length !== 0) {
+        toUpdate['password'] = passwordToChange;
+    }
+    
+    const updateDocument = {
+        $set: toUpdate
+    };
+
+    client.db('final-kappa').collection(user).updateOne(query, updateDocument);
+
+    response.end(JSON.stringify({ status: 200, result: "Changed name, email, or password" }));
 }
 
 /**
