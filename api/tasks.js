@@ -14,7 +14,6 @@ const db = 'final-kappa';
 // }
 // ==============================================================
 
-
 /**
  * 
  * @param {string} user the user to check in the database
@@ -26,8 +25,6 @@ const db = 'final-kappa';
     });
     return found;
 }  
-
-// TODO GO THROUGH THIS JS AND CHANGE ALL THE FILE WRITING FROM JSON FILE TO MONGO DB
 
 /**
  * Process a get request to retrieve every task.
@@ -54,13 +51,13 @@ function getAll(request, response) {
 
     // get all tasks from database for specific user
     client.db(db).collection(user).find({
-        type: 'task'
+        type: 'task' //only check based on the type being task to return all tasks
     }).toArray().then(arr => {
         if (arr.length === 0) {
-            response.end(JSON.stringify({ status: 404, result: `Task (${taskid}) could not be found` }));
+            response.end(JSON.stringify({ status: 404, result: `No tasks found. Try creating a task.` }));
             return;
         } 
-        response.end(JSON.stringify({ status: 200, result: arr }));
+        response.end(JSON.stringify({ status: 200, result: arr.body })); //return the full array of tasks
     }).catch(e => {
         response.end(JSON.stringify({ status: 404, result: "GET tasks: Error parsing for tasks with mongodb" }));
         return;
@@ -93,14 +90,14 @@ function getAll(request, response) {
 
     // get task from database
     client.db(db).collection(user).find({
-        taskID: taskid,
+        taskID: taskid, //taskid is unique, so it can be used on its own to locate a specific task
         type: 'task'
     }).toArray().then(arr => {
         if (arr.length === 0) {
             response.end(JSON.stringify({ status: 404, result: `Task (${taskid}) could not be found` }));
             return;
         } 
-        response.end(JSON.stringify({ status: 200, result: arr[0].body }));
+        response.end(JSON.stringify({ status: 200, result: arr[0].body })); //return the first index from array so that the specified task is returned
     }).catch(e => {
         response.end(JSON.stringify({ status: 404, result: "GET tasks: Error parsing for tasks with mongodb" }));
         return;
@@ -136,7 +133,7 @@ function postCreate(request, response) {
         }
     });
 
-    const query = {
+    const query = { //create a query to be inserted in the database with all task attributes
         user: user,
         taskID: taskid,
         classname: classname,
@@ -147,9 +144,9 @@ function postCreate(request, response) {
         type: 'task'
     };
 
-    client.db(db).collection(user).insertOne(query);
+    client.db(db).collection(user).insertOne(query); //insert the query from above into the database
 
-    response.end(JSON.stringify({ status: 200, result: "Create task received!" }));
+    response.end(JSON.stringify({ status: 200, result: "Create task received!" })); //Success, task added to database
 }
 
 
@@ -196,20 +193,21 @@ function postEdit(request, response) {
         return;
     });
 
-    const query = {
+    const query = { //create a query with taskID and type task to hold specific task
         taskID: taskid,
         type: 'task'
     };
 
-    const updateTask = {
+    const updateTask = { //set all fields to param and body values for use in update
         $set: { taskname: taskname },
         $set: { classname: classname },
         $set: { description: description },
         $set: { date: date },
         $set: { time: time },
     }
-    client.db(db).collection(user).updateOne(query, updateTask);
-    response.end(JSON.stringify({ status: 200, result: "Edit task received!" }));
+    client.db(db).collection(user).updateOne(query, updateTask); //update the task identified by query with fields from updateTask
+
+    response.end(JSON.stringify({ status: 200, result: "Edit task received!" })); //Success, task edited
 }
 
 /**
@@ -220,7 +218,7 @@ function postEdit(request, response) {
  */
 function postRemove(request, response) {
    
-    const user = request.params.user;
+    const user = request.params.user; 
     const taskid = request.params.taskid; //primary key
 
     // respond with an error if user does not exist
@@ -249,14 +247,14 @@ function postRemove(request, response) {
         return;
     });
 
-    const query = {
+    const query = { //create a query with taskID and type task to hold specific task
         taskID: taskid,
         type: 'task'
     };
 
-    client.db(db).collection(user).deleteOne(query);
+    client.db(db).collection(user).deleteOne(query); //delete the task from user collection based on taskID
 
-    response.end(JSON.stringify({ status: 200, result: "Remove task received!" }));
+    response.end(JSON.stringify({ status: 200, result: "Remove task received!" })); //Success, task removed
 
 }
 
