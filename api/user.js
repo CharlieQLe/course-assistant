@@ -80,22 +80,39 @@ function postLogin(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function getData(request, response) {
-    const user = request.params['user'];
-    if (user !== undefined) {
-        if (fs.existsSync(`./api/users/${user}`)) {
-            fs.readFile(`./api/users/${user}`, (err, data) => {
-                if (err) {
-                    response.end(JSON.stringify({ result: `Unable to find user ${user}` }));
-                } else {
-                    response.end(JSON.stringify(data));
-                }
-            });
-        } else {
-            response.end(JSON.stringify({ result: `User ${user} not found` }));
+    const user = request.params.user;   // get user name from url
+    
+    const name = request.body['name'];  // get name from json obj received from fetch
+    const email = request.body['email'];
+    const password = request.body['password'];
+
+    // respond with an error if user does not exist
+    findUser(user).then(found => {
+        if(!found) {
+            response.end(JSON.stringify({
+                        status: 404,
+                        result: `user(${user}) could not be found`
+                    })
+            )
+            return;
         }
-    } else {
-        response.end(JSON.stringify({ result: 'User not found.  Check name and try again.' }));
-    }
+    });
+
+    // get task from database
+    client.db(db).collection(user).find({
+        name: name, //taskid is unique, so it can be used on its own to locate a specific task
+        email: email,
+        password: password
+    }).toArray().then(arr => {
+        if (arr.length === 0) {
+            response.end(JSON.stringify({ status: 404, result: `User with name (${name}) or email (${email}) could not be found` }));
+            return;
+        } 
+        response.end(JSON.stringify({ status: 200, result: arr[0].body })); //return user information
+    }).catch(e => {
+        response.end(JSON.stringify({ status: 404, result: "GET tasks: Error parsing for user information with mongodb" }));
+        return;
+    });
 }
 
 /**
@@ -160,21 +177,26 @@ function postEdit(request, response) {
  */
 function postDelete(request, response) {
     
-    const user = request.params['user'];
+    const user = request.params.user;
 
-    if (user !== undefined) {
-
-        // If the class folder exists, delete it
-        // Otherwise, respond with an error
-        if (fs.existsSync(`./api/users/${user}`)) {
-            fs.rmSync(`./api/users/${user}`, { recursive: true, force: true });
-            response.end(JSON.stringify({ result: `Removed user ${user}` }));
-        } else {
-            response.end(JSON.stringify({ result: `User ${user} doesn't exist` }));
+    // respond with an error if user does not exist
+    findUser(user).then(found => {
+        if(!found) {
+            response.end(JSON.stringify({
+                        status: 404,
+                        result: `user(${user}) could not be found`
+                    })
+            )
         }
-    } else {
-        response.end(JSON.stringify({ result: 'Delete profile failed' }));
-    }
+    });
+
+    const query = {
+        user: user,
+    };
+
+    client.db(db).collection(user).deleteOne(query); //delete the user from the database
+
+    response.end(JSON.stringify({ status: 200, result: "User profile removed!" })); //Success, user removed
 }
 
 module.exports = { postSignup, postLogin, getData, postEdit, postDelete };
