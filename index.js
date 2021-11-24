@@ -17,6 +17,11 @@ app.use(express.static('./public')); // serve public files
 app.post("/api/signup", userAPI.postSignup);
 app.post("/api/login", userAPI.postLogin);
 
+// send user to profile page when url is entered
+// user types this url or is sent to this url
+app.get("/users/:user/", (req, res) => {
+    res.sendFile(process.cwd() + '/public/user-profile.html')
+});
 // Set the user endpoints
 app.get("/api/users/:user", userAPI.getData);
 app.post("/api/users/:user/edit", userAPI.postEdit);
