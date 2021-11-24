@@ -197,6 +197,8 @@ function renderFlashcards(element) {
                     throw obj.result;
                 }
             }).catch(e => {
+        		// set page to 404 error if there is an error
+		        document.body.innerHTML = '404';
                 console.log(error);
             });
         })
@@ -321,8 +323,8 @@ function shuffle(array) {
 window.addEventListener('load', async function() {
     const url = window.location.pathname;       // reads url
     const split = url.split('/');
-    
-    console.log(split);
+    // console.log(split);
+
     // grab flashcards from server
     fetch(`/api/users/${split[2]}/class/${split[4]}/flashcards/${split[6]}`)
     .then(response => {
@@ -330,7 +332,8 @@ window.addEventListener('load', async function() {
     }).then(obj => {
         // if we get a status code of 200, set the client-side flashcard set 
         // with flashcard set from server
-        console.log(obj)
+        // console.log(obj)
+
         if (obj.status === 200) {
             flashcards = obj.result;
             renderFlashcards(document.getElementById('flashcard'));
@@ -339,6 +342,8 @@ window.addEventListener('load', async function() {
         }
 
     }).catch(e => {
+        // set page to 404 error if there is an error
+		document.body.innerHTML = '404';
         console.log(e);
     });
     // console.log(window.location.pathname);
@@ -373,6 +378,7 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
 
     const url = window.location.pathname;       // reads url
     const split = url.split('/');
+
     // POST: add a flashcard to the set of flashcards
     fetch(`/api/users/${split[2]}/class/${split[4]}/flashcards/${split[6]}/addFlashcard`, {
         method: 'POST', 
@@ -398,6 +404,8 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
         const elem = document.getElementById('flashcard');
         elem.scrollTop = elem.scrollHeight;
     }).catch(e => {
+        // set page to 404 error if there is an error
+		document.body.innerHTML = '404';
         console.log(e);
     });
 

@@ -2,13 +2,15 @@
 
 const { client } = require('./mongo.js');
 
+const db = 'final-kappa';
+
 /**
  * 
  * @param {string} user the user to check in the database
  * @returns a promise<boolean> that tells us if the user is in the database or not
  */
  function findUser(user) {
-    let found = client.db('final-kappa').listCollections().toArray().then(collection => {
+    let found = client.db(db).listCollections().toArray().then(collection => {
         return collection.filter(col => col.name === user).length === 1;
     });
     return found;
@@ -30,25 +32,28 @@ function getNote(request, response) {
         if(!found) {
             response.end(JSON.stringify({
                         status: 404,
-                        result: `user(${user}), class(${userClass}), or note(${noteName}) could not be found`
+                        result: `user(${user}) could not be found`
                     })
             )
+            return;
         }
     });
 
     // get the notes in the database
-    client.db('final-kappa').collection(user).find({
+    client.db(db).collection(user).find({
         name: noteName,
         class: userClass,
         type: 'note'
     }).toArray().then(arr => {
-        console.log(arr)
+        if (arr.length === 0) {
+            response.end(JSON.stringify({ status: 404, result: `$class(${userClass}) or note(${noteName}) could not be found` }));
+            return;
+        } 
         response.end(JSON.stringify({ status: 200, result: arr[0].body }));
     }).catch(e => {
         response.end(JSON.stringify({ status: 404, result: "GET notes: Error parsing for notes with mongodb" }));
     });
 
-    return;
 }
 
 /**
@@ -69,9 +74,10 @@ function postCreate(request, response) {
         if(!found) {
             response.end(JSON.stringify({
                         status: 404,
-                        result: `user(${user}), class(${userClass}), or note(${noteName}) could not be found`
+                        result: `user(${user}) could not be found`
                     })
             )
+            return;
         }
     });
 
@@ -82,7 +88,7 @@ function postCreate(request, response) {
         tags: tags,
         body: body
     };
-    client.db('final-kappa').collection(user).insertOne(query);
+    client.db(db).collection(user).insertOne(query);
 
     response.end(JSON.stringify({ status: 200, result: "Create notes received!" }));
 }
@@ -103,10 +109,26 @@ function postRemove(request, response) {
         if(!found) {
             response.end(JSON.stringify({
                         status: 404,
-                        result: `user(${user}), class(${userClass}), or note(${noteName}) could not be found`
+                        result: `user(${user}) could not be found`
                     })
             )
+            return;
         }
+    });
+
+    // check if class or note is found
+    client.db(db).collection(user).find({
+        name: noteName,
+        class: userClass,
+        type: 'note'
+    }).toArray().then(arr => {
+        if (arr.length === 0) {
+            response.end(JSON.stringify({ status: 404, result: `$class(${userClass}) or note(${noteName}) could not be found` }));
+            return;
+        } 
+    }).catch(e => {
+        response.end(JSON.stringify({ status: 404, result: "GET notes: Error parsing for notes with mongodb" }));
+        return;
     });
 
     const query = {
@@ -114,7 +136,7 @@ function postRemove(request, response) {
         class: userClass,
         type: 'note',
     };
-    client.db('final-kappa').collection(user).deleteOne(query);
+    client.db(db).collection(user).deleteOne(query);
 
     response.end(JSON.stringify({ status: 200, result: "Remove note received!" }));
 }
@@ -136,10 +158,26 @@ function postEdit(request, response) {
         if(!found) {
             response.end(JSON.stringify({
                         status: 404,
-                        result: `user(${user}), class(${userClass}), or note(${noteName}) could not be found`
+                        result: `user(${user}) could not be found`
                     })
             )
+            return;
         }
+    });
+
+    // check if class or note is found
+    client.db(db).collection(user).find({
+        name: noteName,
+        class: userClass,
+        type: 'note'
+    }).toArray().then(arr => {
+        if (arr.length === 0) {
+            response.end(JSON.stringify({ status: 404, result: `$class(${userClass}) or note(${noteName}) could not be found` }));
+            return;
+        } 
+    }).catch(e => {
+        response.end(JSON.stringify({ status: 404, result: "GET notes: Error parsing for notes with mongodb" }));
+        return;
     });
 
     const query = {
@@ -150,7 +188,7 @@ function postEdit(request, response) {
     const updateDocument = {
         $set: { body: body }
     }
-    client.db('final-kappa').collection(user).updateOne(query, updateDocument);
+    client.db(db).collection(user).updateOne(query, updateDocument);
     response.end(JSON.stringify({ status: 200, result: "Edit note received!" }));
 }
 
