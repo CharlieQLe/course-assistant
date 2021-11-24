@@ -1,5 +1,10 @@
 'use strict';
 
+//TODO FINISH IMPLEMENTATION OF DOM SURGERY FOR DELETE AND EDIT
+//ASSIGN A TASK ID BASED ON A NEW CONSTANT CALLED NEXTTASKID WHICH WILL START AT 0
+//PROBABLY SIMPLIFY MODALS FOR ADDING AND EDITING TASKS SO LESS DOM SURGERY IS REQUIRED
+
+
 /*DOM SURGERY
 need dom surgery for creating tasks and adding them to the array --> then sort them by date --> somehow check date and add tasks on current date to todayTasks
         create and outside div with id=tasks for dom surgery to insert tasks
@@ -84,8 +89,8 @@ function createTask() { //taskName, taskDate, taskTime, taskClass, taskDesc mayb
 function renderTask(element) {
     element.innerHTML = '';
 
-    for (let i = 0; i < todayTasks.length; i++) {
-        let taskHolder = createTask(todayTasks[i]);
+    for (let i = 0; i < allTasks.length; i++) {
+        let taskHolder = createTask(allTasks[i]);
         taskHolder.appendChild(element);
     }
 }
@@ -202,7 +207,8 @@ document.getElementById("edittaskbutton").addEventListener('click', () => { //wh
 
 });
 
-// // //DELETE TASK CLICKED
+// // //DELETE TASK CLICKED 
+//GET THE TASK ID AND USE THAT TO DELETE FROM SERVER --> POST WITH JUST TASKID?
 
 document.getElementById("deletetaskbutton").addEventListener('click', () => { //when delete task is clicked inside edit task modal
 
@@ -234,7 +240,7 @@ document.getElementById("deletetaskbutton").addEventListener('click', () => { //
 
 });
 
-// // //DAY ON CALENDER CLICKED
+// // //DAY ON CALENDER CLICKED, IDEALLY THIS WOULD FETCH THE TASKS FOR THAT DAY AND RENDER THEM IN THE INNER HTML IN THE TOP OF THE CALENDAR
 
 // document.getElementById("day").addEventListener('click', () => {
 

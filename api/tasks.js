@@ -6,6 +6,9 @@
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
+
+// TODO GO THROUGH THIS JS AND CHANGE ALL THE FILE WRITING FROM JSON FILE TO MONGO DB
+
 function getAll(request, response) {
 
     const user = request.params['user'];
