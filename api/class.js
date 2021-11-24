@@ -28,16 +28,18 @@ function getAll(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postCreate(request, response) {
-    client.db("final-kappa").collection(request.body["user"]).findOne({
+    let user = request.body["user"];
+    client.db("final-kappa").collection(user).findOne({
         type: request.body["class"]
     }, (error, result) => {
         if (error) {
-            console.log(`Error on class.postCreate: ${err}`);
+            client.db("final-kappa").collection(user).insertOne({
+                name: request.params.class,
+                class: request.params.class,
+                type: "class"
+            });
         } else {
-
-            // todo: create a class
-
-            console.log(result);
+            
         }
         response.end();
     });
@@ -58,10 +60,7 @@ function getClass(request, response) {
             console.log(`Error on class.getClass: ${err}`);
             response.end("ERROR ON CLASS DATA");
         } else {
-
-            // todo: respond with class data
-
-            response.end("CLASS DATA HERE");
+            response.end(JSON.stringify(result));
         }
     });
 }
@@ -93,16 +92,17 @@ function postEdit(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postRemove(request, response) {
-    client.db("final-kappa").collection(request.body["user"]).findOne({
-        type: request.body["class"]
+    let user = request.body["user"];
+    let className = request.body["class"];
+    client.db("final-kappa").collection(user).findOne({
+        class: className
     }, (error, result) => {
         if (error) {
             console.log(`Error on class.postRemove: ${err}`);
         } else {
-
-            // todo: remove class
-
-            console.log(result);
+            client.db("final-kappa").collection(user).deleteMany({
+                class: className
+            });
         }
         response.end();
     });
@@ -118,19 +118,26 @@ function postRemove(request, response) {
 function getSearch(request, response) {
     let includeTags = (request.query.includeTags || '').split('+');
     let excludeTags = (request.query.excludeTags || '').split('+');
+    let className = request.body["class"];
 
     client.db("final-kappa").collection(request.body["user"]).find({
         $or: [
             {
-                class: request.body["class"],
+                class: className,
                 type: "note",
                 tags: {
                     $all: includeTags,
                     $ne: excludeTags
                 }
+            },
+            {
+                class: className,
+                type: "flashcards",
+                tags: {
+                    $all: includeTags,
+                    $ne: excludeTags
+                }
             }
-
-            // todo: add more file types
         ]
     }).toArray((error, found) => {
         if (error) {
