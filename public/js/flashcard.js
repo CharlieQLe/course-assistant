@@ -198,8 +198,8 @@ function renderFlashcards(element) {
                 }
             }).catch(e => {
         		// set page to 404 error if there is an error
-		        document.body.innerHTML = '404';
-                console.log(error);
+		        document.body.innerHTML = '404' + ' ' + e;
+                // console.log(e);
             });
         })
         
@@ -343,8 +343,8 @@ window.addEventListener('load', async function() {
 
     }).catch(e => {
         // set page to 404 error if there is an error
-		document.body.innerHTML = '404';
-        console.log(e);
+		document.body.innerHTML = '404' + ' ' + e;
+        // console.log(e);
     });
     // console.log(window.location.pathname);
 
@@ -405,8 +405,8 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
         elem.scrollTop = elem.scrollHeight;
     }).catch(e => {
         // set page to 404 error if there is an error
-		document.body.innerHTML = '404';
-        console.log(e);
+		document.body.innerHTML = '404' + ' ' + e;
+        // console.log(e);
     });
 
     

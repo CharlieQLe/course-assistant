@@ -20,8 +20,8 @@ window.addEventListener('load', async function() {
 
     }).catch(e => {
 		// set page to 404 error if there is an error
-		document.body.innerHTML = '404';
-        console.log(e);
+		document.body.innerHTML = '404' + ' ' + e;
+        // console.log(e);
     });
 
 })
@@ -40,6 +40,14 @@ document.getElementById('save-btn').addEventListener('click', () => {
 		headers: {
 			'Content-Type': 'application/json',
 		}
+	}).then(response => response.json())
+	.then(obj => {
+		if(obj.status !== 200) {
+			throw obj.result;
+		}
+	}).catch(e => {
+		// set page to error if server could not save it
+		document.body.innerHTML = '404' + ' ' + e;
 	});
 
 });
