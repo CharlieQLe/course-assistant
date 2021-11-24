@@ -5,6 +5,8 @@ const { client } = require("./mongo");
 
 const fs = require('fs');  // REMOVE THIS AFTER IMPLEMENTING MONGODB
 
+//TODO FIGURE OUT IMPLEMENTATION OF SIGNUP AND LOGIN AND WHERE AUTHENTICATION WILL HAPPEN
+
 
 /**
  * 
