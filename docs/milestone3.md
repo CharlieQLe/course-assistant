@@ -6,7 +6,7 @@ https://cs326-final-kappa.herokuapp.com/
 
 ## Database Description / Documentation
 
-...
+	
 
 DB (‘final-kappa’) // database
 	USER 1 //each user has a collection of documents
@@ -16,7 +16,7 @@ DB (‘final-kappa’) // database
 			type: String //type of file ex. ‘note’, ‘flashcard’, ‘task’, ‘classDesc’, etc
 		}
 
-	Here are some examples of what certain additions would look like…
+		Here are some examples of what certain additions would look like…
 
 		DOCUMENT 2 (note) {
 			name: ‘derivative notes’  //name of the document
