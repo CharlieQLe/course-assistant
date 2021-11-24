@@ -2,6 +2,8 @@
 
 const { client } = require('./mongo.js');
 
+const db = 'final-kappa';
+
 // flashcards {
 //     "tags": [],
 //     "description": "",
@@ -21,7 +23,7 @@ const { client } = require('./mongo.js');
  * @returns a promise<boolean> that tells us if the user is in the database or not
  */
 function findUser(user) {
-    let found = client.db('final-kappa').listCollections().toArray().then(collection => {
+    let found = client.db(db).listCollections().toArray().then(collection => {
         return collection.filter(col => col.name === user).length === 1;
     });
     return found;
@@ -44,24 +46,28 @@ function getFlashcards(request, response) {
         if(!found) {
             response.end(JSON.stringify({
                         status: 404,
-                        result: `user(${user}), class(${userClass}), or flashcard(${flashcardSetName}) could not be found`
+                        result: `user(${user})`
                     })
             )
+            return;
         }
     });
 
     // get the set of flashcards in the database
-    client.db('final-kappa').collection(user).find({
+    client.db(db).collection(user).find({
         name: flashcardSetName,
         class: userClass,
         type: 'flashcard'
     }).toArray().then(arr => {
+        if (arr.length === 0) {
+            response.end(JSON.stringify({ status: 404, result: `class(${userClass}), or flashcard(${flashcardSetName}) could not be found` }));
+            return;
+        }
         response.end(JSON.stringify({ status: 200, result: arr[0].flashcards }));
     }).catch(e => {
         response.end(JSON.stringify({ status: 404, result: "GET flashcards: Error parsing for flashcards with mongodb" }));
     });
 
-    return;
 }
 
 
@@ -82,9 +88,10 @@ function postCreate(request, response) {
         if(!found) {
             response.end(JSON.stringify({
                         status: 404,
-                        result: `user(${user}), class(${userClass}), or flashcard(${flashcardSetName}) could not be found`
+                        result: `user(${user}) could not be found`
                     })
             )
+            return;
         }
     });
     
@@ -95,7 +102,7 @@ function postCreate(request, response) {
         tags: tags,
         flashcards: []
     };
-    client.db('final-kappa').collection(user).insertOne(query);
+    client.db(db).collection(user).insertOne(query);
 
     response.end(JSON.stringify({ status: 200, result: "Create a set of flashcards received!" }));
 }
@@ -116,10 +123,26 @@ function postRemove(request, response) {
         if(!found) {
             response.end(JSON.stringify({
                         status: 404,
-                        result: `user(${user}), class(${userClass}), or flashcard(${flashcardSetName}) could not be found`
+                        result: `user(${user}) could not be found`
                     })
             )
+            return;
         }
+    });
+
+    // check if class or flashcard exists
+    client.db(db).collection(user).find({
+        name: flashcardSetName,
+        class: userClass,
+        type: 'flashcard'
+    }).toArray().then(arr => {
+        if (arr.length === 0) {
+            response.end(JSON.stringify({ status: 404, result: `class(${userClass}), or flashcard(${flashcardSetName}) could not be found` }));
+            return;
+        }
+    }).catch(e => {
+        response.end(JSON.stringify({ status: 404, result: "GET flashcards: Error parsing for flashcards with mongodb" }));
+        return;
     });
     
     const query = {
@@ -127,7 +150,7 @@ function postRemove(request, response) {
         class: userClass,
         type: 'flashcard'
     };
-    client.db('final-kappa').collection(user).deleteOne(query);
+    client.db(db).collection(user).deleteOne(query);
 
     response.end(JSON.stringify({ status: 200, result: "Remove set of flashcards received!" }));
 }
@@ -151,10 +174,26 @@ function postAddFlashcard(request, response) {
         if(!found) {
             response.end(JSON.stringify({
                         status: 404,
-                        result: `user(${user}), class(${userClass}), or flashcard(${flashcardSetName}) could not be found`
+                        result: `user(${user}) could not be found`
                     })
             )
+            return;
         }
+    });
+
+    // check if class or flashcard exists
+    client.db(db).collection(user).find({
+        name: flashcardSetName,
+        class: userClass,
+        type: 'flashcard'
+    }).toArray().then(arr => {
+        if (arr.length === 0) {
+            response.end(JSON.stringify({ status: 404, result: `class(${userClass}), or flashcard(${flashcardSetName}) could not be found` }));
+            return;
+        }
+    }).catch(e => {
+        response.end(JSON.stringify({ status: 404, result: "GET flashcards: Error parsing for flashcards with mongodb" }));
+        return;
     });
     
     const query = {
@@ -167,7 +206,7 @@ function postAddFlashcard(request, response) {
         $push: { "flashcards": {term: term, definition: definition} }
     };
 
-    client.db('final-kappa').collection(user).updateOne(query, updateDocument);
+    client.db(db).collection(user).updateOne(query, updateDocument);
 
     response.end(JSON.stringify({ status: 200, result: "Add flashcard received!" }));
 }
@@ -190,10 +229,26 @@ function postRemoveFlashcard(request, response) {
         if(!found) {
             response.end(JSON.stringify({
                         status: 404,
-                        result: `user(${user}), class(${userClass}), or flashcard(${flashcardSetName}) could not be found`
+                        result: `user(${user}) could not be found`
                     })
             )
+            return;
         }
+    });
+
+    // check if class or flashcard exists
+    client.db(db).collection(user).find({
+        name: flashcardSetName,
+        class: userClass,
+        type: 'flashcard'
+    }).toArray().then(arr => {
+        if (arr.length === 0) {
+            response.end(JSON.stringify({ status: 404, result: `class(${userClass}), or flashcard(${flashcardSetName}) could not be found` }));
+            return;
+        }
+    }).catch(e => {
+        response.end(JSON.stringify({ status: 404, result: "GET flashcards: Error parsing for flashcards with mongodb" }));
+        return;
     });
     
     const query = {
@@ -206,7 +261,7 @@ function postRemoveFlashcard(request, response) {
         $pull: { "flashcards": {term: term, definition: definition} }
     };
 
-    client.db('final-kappa').collection(user).updateOne(query, updateDocument);
+    client.db(db).collection(user).updateOne(query, updateDocument);
 
     response.end(JSON.stringify({ status: 200, result: "Remove flashcard received!" }));
 }
