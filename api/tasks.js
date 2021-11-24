@@ -134,6 +134,7 @@ function postCreate(request, response) {
     });
 
     const query = { //create a query to be inserted in the database with all task attributes
+        type: 'task',
         user: user,
         taskID: taskid,
         classname: classname,
@@ -141,7 +142,6 @@ function postCreate(request, response) {
         description: description,
         date: date,
         time: time,
-        type: 'task'
     };
 
     client.db(db).collection(user).insertOne(query); //insert the query from above into the database
