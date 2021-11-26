@@ -2,8 +2,6 @@
 
 const { client } = require('./mongo.js');
 
-const db = 'final-kappa'
-
 /**
  * Process a get request to retrieve the data of a note.
  * 
@@ -15,14 +13,14 @@ function getNote(request, response) {
     const userClass = request.params.class;
     const noteName = request.params.note;
 
-    client.db(db).listCollections().toArray((error, result) => {
+    client.db('final-kappa').listCollections().toArray((error, result) => {
         if (error) {
             response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.getNote: ${error}` }));
         }
         
         // if user is found in the database, then proceed to find the note in the db
         if (result.filter(col => col.name === user).length === 1) {
-            client.db(db).collection(user).find({
+            client.db('final-kappa').collection(user).find({
                 name: noteName,
                 class: userClass,
                 type: 'note'
@@ -56,7 +54,7 @@ function postCreate(request, response) {
     const noteName = request.params.note;
     const tags = request.body['tags'];
 
-    client.db(db).listCollections().toArray((error, result) => {
+    client.db('final-kappa').listCollections().toArray((error, result) => {
         if (error) {
             response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postCreate: ${error}` }));
         }
@@ -70,7 +68,7 @@ function postCreate(request, response) {
                 tags: tags,
                 body: ''
             };
-            client.db(db).collection(user).insertOne(query, (error, result) => {
+            client.db('final-kappa').collection(user).insertOne(query, (error, result) => {
                 if (error) {
                     response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postCreate: ${error}` }));
                 }
@@ -94,7 +92,7 @@ function postRemove(request, response) {
     const userClass = request.params.class;
     const noteName = request.params.note;
 
-    client.db(db).listCollections().toArray((error, result) => {
+    client.db('final-kappa').listCollections().toArray((error, result) => {
         if (error) {
             response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postRemove: ${error}` }));
         }
@@ -106,7 +104,7 @@ function postRemove(request, response) {
                 class: userClass,
                 type: 'note',
             };
-            client.db(db).collection(user).deleteOne(query, (error, result) => {
+            client.db('final-kappa').collection(user).deleteOne(query, (error, result) => {
                 if (error) {
                     response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postRemove: ${error}` }));
                 }
@@ -130,7 +128,7 @@ function postEdit(request, response) {
     const noteName = request.params.note;
     const body = request.body['body'];
 
-    client.db(db).listCollections().toArray((error, result) => {
+    client.db('final-kappa').listCollections().toArray((error, result) => {
         if (error) {
             response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postEdit: ${error}` }));
         }
@@ -145,7 +143,7 @@ function postEdit(request, response) {
             const updateDocument = {
                 $set: { body: body }
             }
-            client.db(db).collection(user).updateOne(query, updateDocument, (error, result) => {
+            client.db('final-kappa').collection(user).updateOne(query, updateDocument, (error, result) => {
                 if (error) {
                     response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postEdit: ${error}` }));
                 }

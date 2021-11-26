@@ -9,7 +9,7 @@ const { client } = require('./mongo.js');
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function getAll(request, response) {
-    client.db("final-kappa").collection(request.body["user"]).find({
+    client.db("final-kappa").collection(request.params.user).find({
        type: "class" 
     }).toArray((err, classes) => {
         if (err) {
@@ -28,9 +28,9 @@ function getAll(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postCreate(request, response) {
-    let user = request.body["user"];
+    let user = request.params.user;
     client.db("final-kappa").collection(user).findOne({
-        type: request.body["class"]
+        type: request.params.class
     }, (error, result) => {
         if (error) {
             client.db("final-kappa").collection(user).insertOne({
@@ -52,8 +52,8 @@ function postCreate(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function getClass(request, response) {
-    client.db("final-kappa").collection(request.body["user"]).findOne({
-        class: request.body["class"],
+    client.db("final-kappa").collection(request.params.user).findOne({
+        class: request.params.class,
         type: "classData"
     }, (error, result) => {
         if (error) {
@@ -72,8 +72,8 @@ function getClass(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postEdit(request, response) {
-    client.db("final-kappa").collection(request.body["user"]).updateOne({
-        class: request.body["class"],
+    client.db("final-kappa").collection(request.params.user).updateOne({
+        class: request.params.class,
         type: "classData"
     }, (error, result) => {
         if (error) {
@@ -92,8 +92,8 @@ function postEdit(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postRemove(request, response) {
-    let user = request.body["user"];
-    let className = request.body["class"];
+    let user = request.params.user;
+    let className = request.params.class;
     client.db("final-kappa").collection(user).findOne({
         class: className
     }, (error, result) => {
@@ -120,7 +120,7 @@ function getSearch(request, response) {
     let excludeTags = (request.query.excludeTags || '').split('+');
     let className = request.body["class"];
 
-    client.db("final-kappa").collection(request.body["user"]).find({
+    client.db("final-kappa").collection(request.params.user).find({
         $or: [
             {
                 class: className,

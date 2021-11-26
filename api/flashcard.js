@@ -2,8 +2,6 @@
 
 const { client } = require('./mongo.js');
 
-const db = 'final-kappa';
-
 // flashcards {
 //     "tags": [],
 //     "description": "",
@@ -15,24 +13,6 @@ const db = 'final-kappa';
 //     "definition": ""
 // }
 // ==============================================================
-
-
-/*
-template for querying the db after checking if the user exists
-
-client.db(db).listCollections().toArray((error, result) => {
-    if (error) {
-        response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.getNote: ${error}` }));
-    }
-    
-    // if user is found in the database, then
-    if (result.filter(col => col.name === user).length === 1) {
-        
-    } else {
-        response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.getNote: user(${user}) could not be found` }));
-    }
-});
-*/
 
 
 /**
@@ -47,7 +27,7 @@ function getFlashcards(request, response) {
     const flashcardSetName = request.params.flashcard;
 
 
-    client.db(db).listCollections().toArray((error, result) => {
+    client.db('final-kappa').listCollections().toArray((error, result) => {
         if (error) {
             response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.getFlashcards: ${error}` }));
         }
@@ -55,7 +35,7 @@ function getFlashcards(request, response) {
         // if user is found in the database, then get the set of flashcards
         if (result.filter(col => col.name === user).length === 1) {
             // get the set of flashcards in the database
-            client.db(db).collection(user).find({
+            client.db('final-kappa').collection(user).find({
                 name: flashcardSetName,
                 class: userClass,
                 type: 'flashcard'
@@ -92,7 +72,7 @@ function postCreate(request, response) {
     const flashcardSetName = request.params.flashcard;
     const tags = request.body['tags'];
     
-    client.db(db).listCollections().toArray((error, result) => {
+    client.db('final-kappa').listCollections().toArray((error, result) => {
         if (error) {
             response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postCreate: ${error}` }));
         }
@@ -106,7 +86,7 @@ function postCreate(request, response) {
                 tags: tags,
                 flashcards: []
             };
-            client.db(db).collection(user).insertOne(query, (error, result) => {
+            client.db('final-kappa').collection(user).insertOne(query, (error, result) => {
                 if (error) {
                     response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postCreate: ${error}` }));
                 }
@@ -130,7 +110,7 @@ function postRemove(request, response) {
     const userClass = request.params.class;
     const flashcardSetName = request.params.flashcard;
 
-    client.db(db).listCollections().toArray((error, result) => {
+    client.db('final-kappa').listCollections().toArray((error, result) => {
         if (error) {
             response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemove: ${error}` }));
         }
@@ -142,7 +122,7 @@ function postRemove(request, response) {
                 class: userClass,
                 type: 'flashcard'
             };
-            client.db(db).collection(user).deleteOne(query, (error, result) => {
+            client.db('final-kappa').collection(user).deleteOne(query, (error, result) => {
                 if (error) {
                     response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemove: ${error}` }));
                 }
@@ -168,7 +148,7 @@ function postAddFlashcard(request, response) {
     const term = request.body['term'];
     const definition = request.body['definition'];
 
-    client.db(db).listCollections().toArray((error, result) => {
+    client.db('final-kappa').listCollections().toArray((error, result) => {
         if (error) {
             response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postAddFlashcard: ${error}` }));
         }
@@ -185,7 +165,7 @@ function postAddFlashcard(request, response) {
                 $push: { "flashcards": {term: term, definition: definition} }
             };
             
-            client.db(db).collection(user).updateOne(query, updateDocument, (error, result) => {
+            client.db('final-kappa').collection(user).updateOne(query, updateDocument, (error, result) => {
                 if (error) {
                     response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postAddFlashcard: ${error}` }));
                 }
@@ -210,7 +190,7 @@ function postRemoveFlashcard(request, response) {
     const term = request.body['term'];
     const definition = request.body['definition'];
 
-    client.db(db).listCollections().toArray((error, result) => {
+    client.db('final-kappa').listCollections().toArray((error, result) => {
         if (error) {
             response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemoveFlashcard: ${error}` }));
         }
@@ -227,7 +207,7 @@ function postRemoveFlashcard(request, response) {
                 $pull: { "flashcards": {term: term, definition: definition} }
             };
             
-            client.db(db).collection(user).updateOne(query, updateDocument, (error, result) => {
+            client.db('final-kappa').collection(user).updateOne(query, updateDocument, (error, result) => {
                 if (error) {
                     response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemoveFlashcard: ${error}` }));
                 }
