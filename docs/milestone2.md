@@ -145,11 +145,6 @@ curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NO
 Retrieve the data of a note.
 
 ```
-curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/tags
-```
-Retrieve the tags of a note
-
-```
 curl -X POST '{ "tags": "[]" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/create
 ```
 Create a note.
@@ -164,15 +159,6 @@ curl -X POST https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/
 ```
 Remove a note.
 
-```
-curl -X POST '{ "tags": "[]" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/addTags
-```
-Add tags to the notes
-
-```
-curl -X POST '{ "tags": "[]" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/removeTags
-```
-Remove tags to the notes
 
 ### Flashcards
 
@@ -180,11 +166,6 @@ Remove tags to the notes
 curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD
 ```
 Get the set of flashcards.
-
-```
-curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/tags
-```
-Get the tags of the set of flashcards.
 
 ```
 curl -X POST '{ "tags": "[]" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/create
@@ -195,16 +176,6 @@ Create a set of flashcards with the given tags.
 curl -x POST https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/remove
 ```
 Remove a set of flashcards.
-
-```
-curl -X POST '{ "tags": "[]" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/addTags
-```
-Add tags to the set of flashcards
-
-```
-curl -X POST '{ "tags": "[]" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/removeTags
-```
-Remove tags to the set of flashcards
 
 ```
 curl -X POST '{ "term: "", "definition": "" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/addFlashcard
