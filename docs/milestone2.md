@@ -167,6 +167,12 @@ curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcar
 ```
 Get the set of flashcards.
 
+
+```
+curl -X POST -d '{ "tags": [""] }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/create
+```
+Create a set of flashcards.
+
 ```
 curl -x POST https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/remove
 ```
