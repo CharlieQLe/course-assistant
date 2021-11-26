@@ -17,17 +17,22 @@ const db = 'final-kappa';
 // ==============================================================
 
 
-/**
- * 
- * @param {string} user the user to check in the database
- * @returns a promise<boolean> that tells us if the user is in the database or not
- */
-function findUser(user) {
-    let found = client.db(db).listCollections().toArray().then(collection => {
-        return collection.filter(col => col.name === user).length === 1;
-    });
-    return found;
-}  
+/*
+template for querying the db after checking if the user exists
+
+client.db(db).listCollections().toArray((error, result) => {
+    if (error) {
+        response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.getNote: ${error}` }));
+    }
+    
+    // if user is found in the database, then
+    if (result.filter(col => col.name === user).length === 1) {
+        
+    } else {
+        response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.getNote: user(${user}) could not be found` }));
+    }
+});
+*/
 
 
 /**
@@ -41,32 +46,36 @@ function getFlashcards(request, response) {
     const userClass = request.params.class;
     const flashcardSetName = request.params.flashcard;
 
-    // respond with an error if user does not exist
-    findUser(user).then(found => {
-        if(!found) {
-            response.end(JSON.stringify({
-                        status: 404,
-                        result: `user(${user})`
-                    })
-            )
-            return;
+
+    client.db(db).listCollections().toArray((error, result) => {
+        if (error) {
+            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.getFlashcards: ${error}` }));
+        }
+        
+        // if user is found in the database, then get the set of flashcards
+        if (result.filter(col => col.name === user).length === 1) {
+            // get the set of flashcards in the database
+            client.db(db).collection(user).find({
+                name: flashcardSetName,
+                class: userClass,
+                type: 'flashcard'
+            }).toArray((error, result) => {
+                if (error) {
+                    response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.getFlashcards(after checking for user): ${error}` }));
+                }
+                
+                // if the set of flashcards could not be found
+                if (result.length === 0) {
+                    response.end(JSON.stringify({ status: 404, result: `class(${userClass}), or flashcard(${flashcardSetName}) could not be found` }));
+                    return;
+                }
+                response.end(JSON.stringify({ status: 200, result: result[0].flashcards }));
+            });
+        } else {
+            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.getFlashcards: user(${user}) could not be found` }));
         }
     });
 
-    // get the set of flashcards in the database
-    client.db(db).collection(user).find({
-        name: flashcardSetName,
-        class: userClass,
-        type: 'flashcard'
-    }).toArray().then(arr => {
-        if (arr.length === 0) {
-            response.end(JSON.stringify({ status: 404, result: `class(${userClass}), or flashcard(${flashcardSetName}) could not be found` }));
-            return;
-        }
-        response.end(JSON.stringify({ status: 200, result: arr[0].flashcards }));
-    }).catch(e => {
-        response.end(JSON.stringify({ status: 404, result: "GET flashcards: Error parsing for flashcards with mongodb" }));
-    });
 
 }
 
@@ -82,29 +91,32 @@ function postCreate(request, response) {
     const userClass = request.params.class;
     const flashcardSetName = request.params.flashcard;
     const tags = request.body['tags'];
-
-    // respond with an error if user does not exist
-    findUser(user).then(found => {
-        if(!found) {
-            response.end(JSON.stringify({
-                        status: 404,
-                        result: `user(${user}) could not be found`
-                    })
-            )
-            return;
+    
+    client.db(db).listCollections().toArray((error, result) => {
+        if (error) {
+            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postCreate: ${error}` }));
+        }
+        
+        // if user is found in the database, then create the set of flashcard
+        if (result.filter(col => col.name === user).length === 1) {
+            const query = {
+                name: flashcardSetName,
+                class: userClass,
+                type: 'flashcard',
+                tags: tags,
+                flashcards: []
+            };
+            client.db(db).collection(user).insertOne(query, (error, result) => {
+                if (error) {
+                    response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postCreate: ${error}` }));
+                }
+                response.end(JSON.stringify({ status: 200, result: "Create a set of flashcards received!" }));
+            });
+        } else {
+            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postCreate: user(${user}) could not be found` }));
         }
     });
-    
-    const query = {
-        name: flashcardSetName,
-        class: userClass,
-        type: 'flashcard',
-        tags: tags,
-        flashcards: []
-    };
-    client.db(db).collection(user).insertOne(query);
 
-    response.end(JSON.stringify({ status: 200, result: "Create a set of flashcards received!" }));
 }
 
 /**
@@ -118,41 +130,28 @@ function postRemove(request, response) {
     const userClass = request.params.class;
     const flashcardSetName = request.params.flashcard;
 
-    // respond with an error if user does not exist
-    findUser(user).then(found => {
-        if(!found) {
-            response.end(JSON.stringify({
-                        status: 404,
-                        result: `user(${user}) could not be found`
-                    })
-            )
-            return;
+    client.db(db).listCollections().toArray((error, result) => {
+        if (error) {
+            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemove: ${error}` }));
+        }
+        
+        // if user is found in the database, then remove the set of flashcard
+        if (result.filter(col => col.name === user).length === 1) {
+            const query = {
+                name: flashcardSetName,
+                class: userClass,
+                type: 'flashcard'
+            };
+            client.db(db).collection(user).deleteOne(query, (error, result) => {
+                if (error) {
+                    response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemove: ${error}` }));
+                }
+                response.end(JSON.stringify({ status: 200, result: "Remove set of flashcards received!" }));
+            });
+        } else {
+            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemove: user(${user}) could not be found` }));
         }
     });
-
-    // check if class or flashcard exists
-    client.db(db).collection(user).find({
-        name: flashcardSetName,
-        class: userClass,
-        type: 'flashcard'
-    }).toArray().then(arr => {
-        if (arr.length === 0) {
-            response.end(JSON.stringify({ status: 404, result: `class(${userClass}), or flashcard(${flashcardSetName}) could not be found` }));
-            return;
-        }
-    }).catch(e => {
-        response.end(JSON.stringify({ status: 404, result: "GET flashcards: Error parsing for flashcards with mongodb" }));
-        return;
-    });
-    
-    const query = {
-        name: flashcardSetName,
-        class: userClass,
-        type: 'flashcard'
-    };
-    client.db(db).collection(user).deleteOne(query);
-
-    response.end(JSON.stringify({ status: 200, result: "Remove set of flashcards received!" }));
 }
 
 
@@ -169,46 +168,33 @@ function postAddFlashcard(request, response) {
     const term = request.body['term'];
     const definition = request.body['definition'];
 
-    // respond with an error if user does not exist
-    findUser(user).then(found => {
-        if(!found) {
-            response.end(JSON.stringify({
-                        status: 404,
-                        result: `user(${user}) could not be found`
-                    })
-            )
-            return;
+    client.db(db).listCollections().toArray((error, result) => {
+        if (error) {
+            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postAddFlashcard: ${error}` }));
+        }
+        
+        // if user is found in the database, then add the flashcard in the set
+        if (result.filter(col => col.name === user).length === 1) {
+            const query = {
+                name: flashcardSetName,
+                class: userClass, 
+                type: 'flashcard'
+            };
+            
+            const updateDocument = {
+                $push: { "flashcards": {term: term, definition: definition} }
+            };
+            
+            client.db(db).collection(user).updateOne(query, updateDocument, (error, result) => {
+                if (error) {
+                    response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postAddFlashcard: ${error}` }));
+                }
+                response.end(JSON.stringify({ status: 200, result: "Add flashcard received!" }));
+            });           
+        } else {
+            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postAddFlashcard: user(${user}) could not be found` }));
         }
     });
-
-    // check if class or flashcard exists
-    client.db(db).collection(user).find({
-        name: flashcardSetName,
-        class: userClass,
-        type: 'flashcard'
-    }).toArray().then(arr => {
-        if (arr.length === 0) {
-            response.end(JSON.stringify({ status: 404, result: `class(${userClass}), or flashcard(${flashcardSetName}) could not be found` }));
-            return;
-        }
-    }).catch(e => {
-        response.end(JSON.stringify({ status: 404, result: "GET flashcards: Error parsing for flashcards with mongodb" }));
-        return;
-    });
-    
-    const query = {
-        name: flashcardSetName,
-        class: userClass, 
-        type: 'flashcard'
-    };
-
-    const updateDocument = {
-        $push: { "flashcards": {term: term, definition: definition} }
-    };
-
-    client.db(db).collection(user).updateOne(query, updateDocument);
-
-    response.end(JSON.stringify({ status: 200, result: "Add flashcard received!" }));
 }
 
 /**
@@ -224,46 +210,33 @@ function postRemoveFlashcard(request, response) {
     const term = request.body['term'];
     const definition = request.body['definition'];
 
-    // respond with an error if user does not exist
-    findUser(user).then(found => {
-        if(!found) {
-            response.end(JSON.stringify({
-                        status: 404,
-                        result: `user(${user}) could not be found`
-                    })
-            )
-            return;
+    client.db(db).listCollections().toArray((error, result) => {
+        if (error) {
+            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemoveFlashcard: ${error}` }));
+        }
+        
+        // if user is found in the database, then
+        if (result.filter(col => col.name === user).length === 1) {
+            const query = {
+                name: flashcardSetName,
+                class: userClass, 
+                type: 'flashcard'
+            };
+            
+            const updateDocument = {
+                $pull: { "flashcards": {term: term, definition: definition} }
+            };
+            
+            client.db(db).collection(user).updateOne(query, updateDocument, (error, result) => {
+                if (error) {
+                    response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemoveFlashcard: ${error}` }));
+                }
+                response.end(JSON.stringify({ status: 200, result: "Remove flashcard received!" }));
+            });
+        } else {
+            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemoveFlashcard: user(${user}) could not be found` }));
         }
     });
-
-    // check if class or flashcard exists
-    client.db(db).collection(user).find({
-        name: flashcardSetName,
-        class: userClass,
-        type: 'flashcard'
-    }).toArray().then(arr => {
-        if (arr.length === 0) {
-            response.end(JSON.stringify({ status: 404, result: `class(${userClass}), or flashcard(${flashcardSetName}) could not be found` }));
-            return;
-        }
-    }).catch(e => {
-        response.end(JSON.stringify({ status: 404, result: "GET flashcards: Error parsing for flashcards with mongodb" }));
-        return;
-    });
-    
-    const query = {
-        name: flashcardSetName,
-        class: userClass, 
-        type: 'flashcard'
-    };
-
-    const updateDocument = {
-        $pull: { "flashcards": {term: term, definition: definition} }
-    };
-
-    client.db(db).collection(user).updateOne(query, updateDocument);
-
-    response.end(JSON.stringify({ status: 200, result: "Remove flashcard received!" }));
 }
 
 module.exports = {
