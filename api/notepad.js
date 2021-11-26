@@ -2,19 +2,7 @@
 
 const { client } = require('./mongo.js');
 
-const db = 'final-kappa';
-
-/**
- * 
- * @param {string} user the user to check in the database
- * @returns a promise<boolean> that tells us if the user is in the database or not
- */
- function findUser(user) {
-    let found = client.db(db).listCollections().toArray().then(collection => {
-        return collection.filter(col => col.name === user).length === 1;
-    });
-    return found;
-}  
+const db = 'final-kappa'
 
 /**
  * Process a get request to retrieve the data of a note.
@@ -27,33 +15,33 @@ function getNote(request, response) {
     const userClass = request.params.class;
     const noteName = request.params.note;
 
-    // respond with an error if user does not exist
-    findUser(user).then(found => {
-        if(!found) {
-            response.end(JSON.stringify({
-                        status: 404,
-                        result: `user(${user}) could not be found`
-                    })
-            )
-            return;
+    client.db(db).listCollections().toArray((error, result) => {
+        if (error) {
+            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.getNote: ${error}` }));
+        }
+        
+        // if user is found in the database, then proceed to find the note in the db
+        if (result.filter(col => col.name === user).length === 1) {
+            client.db(db).collection(user).find({
+                name: noteName,
+                class: userClass,
+                type: 'note'
+            }).toArray((error, result) => {
+                if (error) {
+                    response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.getNote(after checking for user): ${error}` }));
+                }
+                
+                // if user does not have the requested notes
+                if (result.length === 0) {
+                    response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.getNote: class(${userClass}) or note(${noteName}) could not be found` }));
+                    return;
+                } 
+                response.end(JSON.stringify({ status: 200, result: result[0].body }));
+            });
+        } else {
+            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.getNote: user(${user}) could not be found` }));
         }
     });
-
-    // get the notes in the database
-    client.db(db).collection(user).find({
-        name: noteName,
-        class: userClass,
-        type: 'note'
-    }).toArray().then(arr => {
-        if (arr.length === 0) {
-            response.end(JSON.stringify({ status: 404, result: `$class(${userClass}) or note(${noteName}) could not be found` }));
-            return;
-        } 
-        response.end(JSON.stringify({ status: 200, result: arr[0].body }));
-    }).catch(e => {
-        response.end(JSON.stringify({ status: 404, result: "GET notes: Error parsing for notes with mongodb" }));
-    });
-
 }
 
 /**
@@ -66,31 +54,33 @@ function postCreate(request, response) {
     const user = request.params.user;
     const userClass = request.params.class;
     const noteName = request.params.note;
-    const tags = request['tags'];
-    const body = request['body'];
+    const tags = request.body['tags'];
 
-    // respond with an error if user does not exist
-    findUser(user).then(found => {
-        if(!found) {
-            response.end(JSON.stringify({
-                        status: 404,
-                        result: `user(${user}) could not be found`
-                    })
-            )
-            return;
+    client.db(db).listCollections().toArray((error, result) => {
+        if (error) {
+            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postCreate: ${error}` }));
+        }
+        
+        // if user is found in the database, then create the note
+        if (result.filter(col => col.name === user).length === 1) {
+            const query = {
+                name: noteName,
+                class: userClass,
+                type: 'note',
+                tags: tags,
+                body: ''
+            };
+            client.db(db).collection(user).insertOne(query, (error, result) => {
+                if (error) {
+                    response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postCreate: ${error}` }));
+                }
+                response.end(JSON.stringify({ status: 200, result: "Create notes received!" }));
+            });
+        } else {
+            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postCreate: user(${user}) could not be found` }));
         }
     });
 
-    const query = {
-        name: noteName,
-        class: userClass,
-        type: 'note',
-        tags: tags,
-        body: body
-    };
-    client.db(db).collection(user).insertOne(query);
-
-    response.end(JSON.stringify({ status: 200, result: "Create notes received!" }));
 }
 
 /**
@@ -104,41 +94,28 @@ function postRemove(request, response) {
     const userClass = request.params.class;
     const noteName = request.params.note;
 
-    // respond with an error if user does not exist
-    findUser(user).then(found => {
-        if(!found) {
-            response.end(JSON.stringify({
-                        status: 404,
-                        result: `user(${user}) could not be found`
-                    })
-            )
-            return;
+    client.db(db).listCollections().toArray((error, result) => {
+        if (error) {
+            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postRemove: ${error}` }));
+        }
+        
+        // if user is found in the database, then remove the requested note
+        if (result.filter(col => col.name === user).length === 1) {
+            const query = {
+                name: noteName,
+                class: userClass,
+                type: 'note',
+            };
+            client.db(db).collection(user).deleteOne(query, (error, result) => {
+                if (error) {
+                    response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postRemove: ${error}` }));
+                }
+                response.end(JSON.stringify({ status: 200, result: "Remove note received!" }));
+            });
+        } else {
+            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postRemove: user(${user}) could not be found` }));
         }
     });
-
-    // check if class or note is found
-    client.db(db).collection(user).find({
-        name: noteName,
-        class: userClass,
-        type: 'note'
-    }).toArray().then(arr => {
-        if (arr.length === 0) {
-            response.end(JSON.stringify({ status: 404, result: `$class(${userClass}) or note(${noteName}) could not be found` }));
-            return;
-        } 
-    }).catch(e => {
-        response.end(JSON.stringify({ status: 404, result: "GET notes: Error parsing for notes with mongodb" }));
-        return;
-    });
-
-    const query = {
-        name: noteName,
-        class: userClass,
-        type: 'note',
-    };
-    client.db(db).collection(user).deleteOne(query);
-
-    response.end(JSON.stringify({ status: 200, result: "Remove note received!" }));
 }
 
 /**
@@ -153,43 +130,32 @@ function postEdit(request, response) {
     const noteName = request.params.note;
     const body = request.body['body'];
 
-    // respond with an error if user does not exist
-    findUser(user).then(found => {
-        if(!found) {
-            response.end(JSON.stringify({
-                        status: 404,
-                        result: `user(${user}) could not be found`
-                    })
-            )
-            return;
+    client.db(db).listCollections().toArray((error, result) => {
+        if (error) {
+            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postEdit: ${error}` }));
+        }
+        
+        // if user is found in the database, then edit the requested note
+        if (result.filter(col => col.name === user).length === 1) {
+            const query = {
+                name: noteName,
+                class: userClass,
+                type: 'note',
+            };
+            const updateDocument = {
+                $set: { body: body }
+            }
+            client.db(db).collection(user).updateOne(query, updateDocument, (error, result) => {
+                if (error) {
+                    response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postEdit: ${error}` }));
+                }
+                response.end(JSON.stringify({ status: 200, result: "Edit note received!" }));
+            });
+        } else {
+            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postEdit: user(${user}) could not be found` }));
         }
     });
 
-    // check if class or note is found
-    client.db(db).collection(user).find({
-        name: noteName,
-        class: userClass,
-        type: 'note'
-    }).toArray().then(arr => {
-        if (arr.length === 0) {
-            response.end(JSON.stringify({ status: 404, result: `$class(${userClass}) or note(${noteName}) could not be found` }));
-            return;
-        } 
-    }).catch(e => {
-        response.end(JSON.stringify({ status: 404, result: "GET notes: Error parsing for notes with mongodb" }));
-        return;
-    });
-
-    const query = {
-        name: noteName,
-        class: userClass,
-        type: 'note',
-    };
-    const updateDocument = {
-        $set: { body: body }
-    }
-    client.db(db).collection(user).updateOne(query, updateDocument);
-    response.end(JSON.stringify({ status: 200, result: "Edit note received!" }));
 }
 
 module.exports = {

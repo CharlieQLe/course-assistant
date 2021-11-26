@@ -77,7 +77,14 @@ app.post("/api/users/:user/class/:class/flashcards/:flashcard/remove", flashcard
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/addFlashcard", flashcardAPI.postAddFlashcard);
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/removeFlashcard", flashcardAPI.postRemoveFlashcard);
 
+/*
+the regEx, /.*\.css$/, reads anything with .css at the end
 
+the regEx, /(?:.(?!\/))+$/, reads only the ending of the url
+eg. url: https://somewebsite.com/others/flashcard.js, the regEx gets /flashcard.js
+
+*********** TODO: check if the something.css file exists ***********
+*/
 // the following 3 gets is to get css/js/png files
 app.get(/.*\.css$/, (req, res) => {
     res.sendFile(process.cwd() + `/public/css${req.url.match(/(?:.(?!\/))+$/)}`)
