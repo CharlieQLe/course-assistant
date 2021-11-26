@@ -121,10 +121,12 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mx-auto">
           <li class="nav-item px-1">
-            <button class="btn btn-primary" type="button">Create Note</button>
+            <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+            data-bs-target="#createNoteModal">Create Note</button>
           </li>
           <li class="nav-item px-1">
-            <button class="btn btn-primary" type="button">Create Flashcards</button>
+            <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+            data-bs-target="#createFlashcardModal">Create Flashcard</button>
           </li>
           <li class="nav-item px-1">
             <button class="btn btn-primary" type="button" data-bs-toggle="modal"
@@ -146,6 +148,149 @@
       </div>
     </div>
   </nav>
+
+  <!-- Create Note Modal -->
+  <div id="createNoteModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+
+        <!-- Header -->
+        <div class="modal-header">
+          <!-- Title -->
+          <h5 class="modal-title">Create Note</h5>
+
+          <!-- Close button -->
+          <button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body">
+          <form>
+            <!-- File chooser -->
+            <!-- <label for="exampleFormControlInput1" class="form-label">Email address</label> -->
+            <input type="text" class="form-control" id="createNoteInput" placeholder="">
+            <br>
+
+            <!-- Add tags group -->
+            <div id="addTagsGroup">
+              <h5>Add Tags</h5>
+              <br>
+              <div class="label-no-count">added tags here</div>
+              <br>
+
+              <!-- Create/add tag inputs -->
+              <div class="row">
+
+                <!-- Add tag dropdown -->
+                <div class="dropdown col-auto">
+                  <button class="btn btn-primary dropdown-toggle" type="button" id="addTagButton"
+                    data-bs-toggle="dropdown" aria-expanded="false">Add tag</button>
+
+                  <!-- Dropdown of all tags -->
+                  <ul class="dropdown-menu" aria-labelledby="addTagButton">
+                    <li class="dropdown-item">Tag 1</li>
+                    <li class="dropdown-item">Tag 2</li>
+                    <li class="dropdown-item">Tag 3</li>
+                  </ul>
+                </div>
+
+                <!-- Create tag text field -->
+                <div class="col">
+                  <input type="text" id="createTagInput" class="form-control">
+                </div>
+
+                <!-- Create tag button -->
+                <div class="col-auto">
+                  <input type="button" class="btn btn-primary" id="createTagButton" value="Create Tag">
+                </div>
+              </div>
+            </div>
+            <br>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <form>
+            <!-- Upload button -->
+            <button type="button" class="btn btn-primary" id="createNoteButton">Create</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Create Flashcard Modal -->
+  <div id="createFlashcardModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+
+        <!-- Header -->
+        <div class="modal-header">
+          <!-- Title -->
+          <h5 class="modal-title">Create Flashcard</h5>
+
+          <!-- Close button -->
+          <button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body">
+          <form>
+            <!-- File chooser -->
+            <!-- <label for="exampleFormControlInput1" class="form-label">Email address</label> -->
+            <input type="text" class="form-control" id="createFlashcardInput" placeholder="">
+            <br>
+
+            <!-- Add tags group -->
+            <div id="addTagsGroup">
+              <h5>Add Tags</h5>
+              <br>
+              <div class="label-no-count">added tags here</div>
+              <br>
+
+              <!-- Create/add tag inputs -->
+              <div class="row">
+
+                <!-- Add tag dropdown -->
+                <div class="dropdown col-auto">
+                  <button class="btn btn-primary dropdown-toggle" type="button" id="addTagButton"
+                    data-bs-toggle="dropdown" aria-expanded="false">Add tag</button>
+
+                  <!-- Dropdown of all tags -->
+                  <ul class="dropdown-menu" aria-labelledby="addTagButton">
+                    <li class="dropdown-item">Tag 1</li>
+                    <li class="dropdown-item">Tag 2</li>
+                    <li class="dropdown-item">Tag 3</li>
+                  </ul>
+                </div>
+
+                <!-- Create tag text field -->
+                <div class="col">
+                  <input type="text" id="createTagInput" class="form-control">
+                </div>
+
+                <!-- Create tag button -->
+                <div class="col-auto">
+                  <input type="button" class="btn btn-primary" id="createTagButton" value="Create Tag">
+                </div>
+              </div>
+            </div>
+            <br>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <form>
+            <!-- Upload button -->
+            <button type="button" class="btn btn-primary" id="createFlashcardButton">Create</button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
 
   <!-- Upload modal -->
   <div id="uploadModal" class="modal fade" tabindex="-1" role="dialog">
