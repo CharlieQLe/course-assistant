@@ -145,7 +145,7 @@ curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NO
 Retrieve the data of a note.
 
 ```
-curl -X POST -d '{ "tags": "[]" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/create
+curl -X POST -d '{ "tags": [""] }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/create
 ```
 Create a note.
 
