@@ -71,7 +71,7 @@ curl https://cs326-final-kappa.herokuapp.com/api/users/USER/tasks
 Running the above retrieves all of the tasks the specified user has as a stringified array.
 
 ```
-curl -X POST -d '{ "name": "Task Name", "Description": "Do something", "Class": "Some class", "Date": "Some date", "Time": "Some time" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/tasks/create
+curl -X POST -d '{ "name": "Task Name", "description": "Do something", "class": "Some class", "date": "Some date", "time": "Some time" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/tasks/create
 ```
 Running the above sends a post request to create a task with the specified name and description, scheduled for some time and date, and belonging to a class for the specified user.
 
@@ -81,7 +81,7 @@ curl https://cs326-final-kappa.herokuapp.com/api/users/USER/tasks/TASKID
 Get the data of a task with the specified id for the specified user.
 
 ```
-curl -X POST -d '{ "name": "Task Name", "Description": "Do something", "Class": "Some class", "Date": "Some date", "Time": "Some time" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/tasks/TASKID/edit
+curl -X POST -d '{ "name": "Task Name", "description": "Do something", "class": "Some class", "date": "Some date", "time": "Some time" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/tasks/TASKID/edit
 ```
 Running the above sends a post request to edit a task with the specified id to have the specified name, description, etc. for the specified user.
 
@@ -103,12 +103,12 @@ curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS
 Running the above retrieves the data of the specified class that belongs to the user. It retrieves the class description and the files that belong to the class.
 
 ```
-curl -X POST -d '{ "Description": "Do something" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/create
+curl -X POST -d '{ "description": "Do something" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/create
 ```
 Running the above sends a post request to create a class of the specified name with a description for the specified user.
 
 ```
-curl -X POST -d '{ "Description": "Do something" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/edit
+curl -X POST -d '{ "description": "Do something" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/edit
 ```
 Running the above sends a post request to edit the description of the specified class for the user.
 
