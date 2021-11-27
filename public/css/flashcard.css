@@ -7,7 +7,7 @@
 
 .word-wrap {
 	/* border: 1px solid blue; */
-	word-wrap: break-word;
+	overflow-wrap: break-word;
 }
 
 .hov {
