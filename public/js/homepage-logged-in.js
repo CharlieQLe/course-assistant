@@ -355,7 +355,7 @@ function renderSelectClassInModalTasks(element, classes) {
 
 	const initialSelected = document.createElement('option');
 	initialSelected.setAttribute('selected', '');
-	initialSelected.innerHTML = 'Select Task';
+	initialSelected.innerHTML = 'Select Class';
 	element.appendChild(initialSelected);
 	
 	for(let i = 0; i < classes.length; i++) {
