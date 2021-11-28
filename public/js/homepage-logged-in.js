@@ -1,419 +1,500 @@
-'use strict';
+'use strict'
 
-//TODO FINISH IMPLEMENTATION OF DOM SURGERY FOR DELETE AND EDIT
-//ASSIGN A TASK ID BASED ON A NEW CONSTANT CALLED NEXTTASKID WHICH WILL START AT 0
-//PROBABLY SIMPLIFY MODALS FOR ADDING AND EDITING TASKS SO LESS DOM SURGERY IS REQUIRED
+// CONTROL F TO FIND ALL THE TODOS
+
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+let clickedDay = new Date().getDate();
+let clickedMonth = new Date().getMonth();	// months is off by 1, eg. January = 0, December = 11
+let clickedYear = new Date().getFullYear();
+let allTasks = []; // user tasks
+
+// FOR TESTING PURPOSES. REMOVE LATER
+allTasks.push({
+	name: 'atask',
+	description: 'a VERY LONG DESCRIPTION OF A TASK. THIS IS VERY IMPORTANT. DO ASAP',
+	class: 'One',
+	date: '2021-11-30',
+	time: '23:10'
+}, {
+	name: 'aSecondTask',
+	description: 'description of task 2',
+	class: 'Two',
+	date: '2021-11-27',
+	time: '23:10'
+});
 
 
-/*DOM SURGERY
-need dom surgery for creating tasks and adding them to the array --> then sort them by date --> somehow check date and add tasks on current date to todayTasks
-        create and outside div with id=tasks for dom surgery to insert tasks
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-            <label class="form-check-label" for="flexCheckDefault">
-              Task 1
-              <li class="list-inline-item">
-                <button class="btn btn-outline-light btn-sm rounded-0" type="button" data-bs-toggle="modal" data-bs-target = "#edittask" data-placement="top" title="Add"><i class="fa fa-table"></i>Edit</button>
-              </li>
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-            <label class="form-check-label" for="flexCheckDefault">
-              Task 2
-              <li class="list-inline-item">
-                <button class="btn btn-outline-light btn-sm rounded-0" type="button" data-bs-toggle="modal" data-bs-target = "#edittask" data-placement="top" title="Add"><i class="fa fa-table"></i>Edit</button>
-              </li>
-            </label>
-          </div>
+
+// ON LOAD
+window.addEventListener('load', () => {
+	// Displayed in the Dark Blue part of the Calandar
+	// on load, it displays the current day, month and year
+	document.getElementById('selectedDay').innerHTML = new Date().getDate();
+	document.getElementById('month').innerHTML = months[new Date().getMonth()];
+	document.getElementById('year').innerHTML = new Date().getFullYear();
+
+	// renders the days in the calandar
+	renderDays(document.getElementById('daysTable'), new Date().getMonth(), new Date().getFullYear());
+	
+
+	// ***************
+	// FOR TESTING PURPOSES, DELETE LATER
+	const classes = ['One', 'Two', 'Three', 'Four'];
+	
+	// initialize classes
+	// const classes = [];
+
+	// TODO: GET request to server asking for the classes so we can
+	// see the all the classes of the user when creating a tasks.
+	// currently, the classes displayed are in the classes array
+
+
+
+	// after the GET request, render the classes in select class in task modal
+	renderSelectClassInModalTasks(document.getElementById('taskClass'), classes);
+
+	// TODO: GET request to server asking for all the tasks
+	// the user currently has, then update the allTasks array
+
+
+	// after GET request, then we render today's tasks
+	renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(day => {
+		if (day.date === `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`) {
+			return day;
+		}
+	}));
+
+
+
+	// renders the tasks in modal
+	renderModalTasks(document.getElementById('modalTasksBody'));
+	
+	// includes all tasks, including the tasks from selected tasks 
+	renderTask(document.getElementById('futureTasks'), allTasks);
+
+	
+});
+
+
+
+// ================ CALANDAR =======================
+/* DOM SURGERY
+<div class="row text-center">
+	<div class="d-flex justify-content-between">
+		<div class="col" id="days">1</div>
+		<div class="col" id="days">2</div>
+		<div class="col" id="days">3</div>
+		<div class="col" id="days">4</div>
+		<div class="col" id="days">5</div>
+		<div class="col" id="days">6</div>
+		<div class="col" id="days">7</div>
+	</div>
+</div>
 */
-let allTasks = []; //where do these get appended? via post?
-//let todayTasks = [];
 
-//renders a new task on side bar when added
 
-function createTask() { //taskName, taskDate, taskTime, taskClass, taskDesc maybe pass these in using getElementById.value?
+function renderDays(element, month, year) {
+	element.innerHTML = '';
 
-    
-    const taskHolder = document.createElement('div');
-    taskHolder.classList.add("form-check");
-    taskHolder.setAttribute('id', 'task') //CREATE THE TASK FOR THE SIDEBAR
+	const firstDay = (new Date(year, month)).getDay();
+	const lastDay = 32 - new Date(year, month, 32).getDate()
 
-    const taskInput = document.createElement('input');
-    taskInput.classList.add("form-check-input");
-    taskInput.setAttribute('type', 'checkbox');
-    taskInput.setAttribute('value', '');
-    //taskInput.innerHTML = '';
-    taskInput.setAttribute('id', 'flexCheckDefault');
+	let day = 1;
 
-    const task = document.createElement('label');
-    task.classList.add("form-check-label");
-    task.setAttribute('for', 'flexCheckDefault');
-    task.innerHTML = document.getElementById("taskName").value;
+	for (let i = 0; i < 5; i++) {
+		const outerWrapper = document.createElement('div');
+		outerWrapper.classList.add('row', 'text-center');
 
-    const li = document.createElement('li');
-    li.classList.add("list-inline-item");
+		const innerWrapper = document.createElement('div');
+		innerWrapper.classList.add('d-flex', 'justify-content-between');
+		outerWrapper.appendChild(innerWrapper);
 
-    const editButton = document.createElement('button')
-    editButton.classList.add("btn btn-outline-light btn-sm rounded-0");
-    editButton.setAttribute('id', 'editbutton');
-    editButton.setAttribute('type', 'button');
-    editButton.setAttribute('data-bs-toggle', 'modal');
-    editButton.setAttribute('data-bs-target', '#edittask');
-    editButton.setAttribute('title', 'Edit');
-    editButton.innerHTML = "Edit"
 
-    const i = document.createElement('i');
-    i.classList.add("fa fa-table");
+		for (let j = 0; j < 7; j++) {
+			const dayDiv = document.createElement('div');
+			dayDiv.classList.add('col');
+			dayDiv.setAttribute('id', 'days');
 
-    editButton.appendChild(i); //append i to edit button
-    li.appendChild(editButton); //append edit button to li
+			// dayDiv does not display a number if those squares are not days
+			if (!(i === 0 && j < firstDay) && day <= lastDay) {
+				dayDiv.innerHTML = day.toString();
+				day++;
+			}
+			
+			// when a day is clicked on the dayTable
+			dayDiv.addEventListener('click', () => {
+				// if the dayDiv is an actual day, render new updated day
+				if(dayDiv.innerHTML !== '') {
+					document.getElementById('selectedDay').innerHTML = dayDiv.innerHTML;
+					clickedDay = dayDiv.innerHTML;
+					
+					const date = `${clickedYear}-${clickedMonth+1}-${clickedDay}`;
+					
+					// from allTasks array, get all days that matches this day
+					let clickedDayArray = allTasks.filter(task => task.date === date);
+					renderTask(document.getElementById('selectedDayTasks'), clickedDayArray);
 
-    taskHolder.appendChild(taskInput); //append taskInput, task, and li to the taskHolder parent div
-    taskHolder.appendChild(task);
-    taskHolder.appendChild(li);
+				}
+			})
 
-    taskHolderParent = document.getElementById('taskholdercol'); //set parent equal to col-sm div that holds all tasks
-    taskHolderParent.appendChild(taskHolder);
-    return taskHolder;
+			innerWrapper.appendChild(dayDiv);
+		}
+		element.appendChild(outerWrapper);
+	}
 }
 
-// function editTask() {
+// event listener for previous month arrow button
+document.getElementById('prev').addEventListener('click', () => {
+	if (clickedMonth === 0) {
+		clickedMonth = 11;
+		clickedYear--;
+	} else {
+		clickedMonth--;
+	}
 
-// }
+	// renders the day, month and year
+	document.getElementById('selectedDay').innerHTML = clickedDay;
+	document.getElementById('month').innerHTML = months[clickedMonth];
+	document.getElementById('year').innerHTML = clickedYear;
 
-// function deleteTask() {
+	// renders the days in the calandar
+	renderDays(document.getElementById('daysTable'), clickedMonth, clickedYear);
+});
 
-// }
+// event listener for previous month arrow button
+document.getElementById('next').addEventListener('click', () => {
+	if (clickedMonth === 11) {
+		clickedMonth = 0;
+		clickedYear++;
+	} else {
+		clickedMonth++;
+	}
+	
+	// renders the day, month and year
+	document.getElementById('selectedDay').innerHTML = clickedDay;
+	document.getElementById('month').innerHTML = months[clickedMonth];
+	document.getElementById('year').innerHTML = clickedYear;
 
-function renderTask(element) {
+	// renders the days in the calandar
+	renderDays(document.getElementById('daysTable'), clickedMonth, clickedYear);
+});
+
+
+
+
+// ==============================================
+// ==============================================
+// ==============================================
+// ==============================================
+// ==============================================
+// ==============================================
+// ==============================================
+// ==============================================
+// ==============================================
+// ==============================================
+// ================ TASKS =======================
+
+/* DOM SURGERY to create tasks
+<div class="form-check">
+	<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+	<label class="form-check-label" for="flexCheckDefault">
+		Task 1
+		<button class="btn btn-outline-light btn-sm rounded-0" type="button" data-bs-toggle="modal" data-bs-target = "#editTasks" data-placement="top" title="Add"><i class="fa fa-table"></i>Edit</button>
+	</label>
+</div>
+*/
+
+/**
+ * Note: only tasks in the selected day's tasks or future tasks(not modals)
+ * @param {obj} task task obj{name, description, class, date, time}
+ * @returns an element
+ */
+function createTask(userTask) {
+	const taskHolder = document.createElement('div');
+	taskHolder.classList.add('form-check');
+
+	const taskInput = document.createElement('input');
+	taskInput.classList.add('form-check-input');
+	taskInput.setAttribute('type', 'checkbox');
+	taskInput.setAttribute('value', '');
+	taskInput.setAttribute('id', 'flexCheckDefault');
+
+	const task = document.createElement('label');
+	task.classList.add('form-check-label');
+	task.setAttribute('for', 'flexCheckDefault');
+	task.innerHTML = `${userTask.name}`;
+
+	// space in between the user task and the edit button
+	const space = document.createElement('span');
+	space.innerHTML = ' ';
+
+	const editButton = document.createElement('button');
+	editButton.classList.add('btn', 'btn-outline-light', 'btn-sm', 'rounded', 'border-end');
+	editButton.setAttribute('type', 'button');
+	editButton.setAttribute('data-bs-toggle', 'modal');
+	editButton.setAttribute('data-bs-target', '#tasksModal');
+	editButton.setAttribute('data-placement', 'top');
+	// editButton.setAttribute('title', 'Edit');		// The title attribute specifies extra information about an element.
+	const editButtonText = document.createElement('span');
+	editButtonText.innerHTML = ' Edit';
+	editButtonText.style.color = 'black';
+	
+	const i = document.createElement('i');
+	i.classList.add('fa', 'fa-table');
+	i.style.color = 'black';
+
+	editButton.appendChild(i);
+	editButton.appendChild(editButtonText);
+	editButton.addEventListener('click', () => {
+		// when the edit button is clicked, display submit edit button and delete button
+		// then hide the add button
+		// this is done with the following 3 if statements
+		document.getElementById('tasksTitle').innerHTML = 'Edit Task';
+		const addTaskButton = document.getElementById("addTaskButton");
+		if (window.getComputedStyle(addTaskButton).display === "block") {
+			addTaskButton.style.display = "none";
+		}
+	
+		const submitEditTaskButton = document.getElementById("submitEditTaskButton");
+		if (window.getComputedStyle(submitEditTaskButton).display === "none") {
+			submitEditTaskButton.style.display = "block";
+		}
+		const deleteTaskButton = document.getElementById("deleteTaskButton");
+		if (window.getComputedStyle(deleteTaskButton).display === "none") {
+			deleteTaskButton.style.display = "block";
+		}
+
+
+		// when the user clicks the edit button of a task, in modal, 
+		// display the clicked tasks on the left of current tasks
+		document.getElementById('taskName').value = userTask.name;
+		document.getElementById('taskDate').value = userTask.date;
+		document.getElementById('taskTime').value = userTask.time;
+		document.getElementById('taskClass').value = userTask.class;
+		document.getElementById('taskDescription').value = userTask.description;
+
+	});
+
+	// mouseover and mouseout are the 2 events you need to create a hover effect
+	// for the button
+	editButton.addEventListener('mouseover', () => {
+		editButton.style.backgroundColor = '#0d6efd';
+		editButton.style.border = 'none';
+		editButtonText.style.color = 'white';
+		i.style.color = 'white';
+	});
+	
+	editButton.addEventListener('mouseout', () => {
+		editButton.style.backgroundColor = 'transparent';
+		editButton.style.borderRight = 'solid 1px black';
+		editButtonText.style.color = 'black';
+		i.style.color = 'black';
+	});
+
+
+
+	task.appendChild(space);
+	task.appendChild(editButton);
+
+	taskHolder.appendChild(taskInput); //append taskInput, task, and li to the taskHolder parent div
+	taskHolder.appendChild(task);
+
+	return taskHolder;
+}
+
+/* DOM SURGERY on the tasks in tasks modal
+<tr>
+    <th scope="row">Class 1</th>
+    <td>Project Milestone Due</td>
+    <td>3/4/4</td>
+    <td>yyyy-MM-dd</td>
+</tr>
+*/
+/**
+ * Create tasks in tasks modal
+ * @param {string} name name of task
+ * @param {string} description description of the task
+ * @param {string} date date when the task is due(yyyy-mm-dd)
+ * @param {string} time time when the task is due(HH:mm), time is using 24 hour clock system(aka. military time)
+ * @returns an element
+ */
+ function createModalTasks(name, description, userClass, date, time) {
+	const arr = [description, userClass, date, time];
+
+	const row = document.createElement('tr');
+	
+	const header = document.createElement('th');
+	header.setAttribute('scope', 'row');
+	header.innerHTML = name;
+	row.appendChild(header);
+	
+	for(let i = 0; i < 4; i++) {
+		const col = document.createElement('td');
+		col.innerHTML = arr[i];
+		col.style.wordBreak = 'break-all';
+		row.appendChild(col);
+	}
+
+	return row;
+}
+
+/* DOM SURGERY for the options inside the select
+<select class="form-select" id="taskClass">
+	<option selected>Select Class</option>
+	<option value="One">One</option>
+	<option value="Two">Two</option>
+	<option value="Three">Three</option>
+</select>
+*/
+
+// render the options in the select form(select form
+// is the dropdown menu in task modal)
+function renderSelectClassInModalTasks(element, classes) {
+	element.innerHTML = '';
+
+	const initialSelected = document.createElement('option');
+	initialSelected.setAttribute('selected', '');
+	initialSelected.innerHTML = 'Select Task';
+	element.appendChild(initialSelected);
+	
+	for(let i = 0; i < classes.length; i++) {
+		const option = document.createElement('option');
+		option.setAttribute('value', classes[i]);
+		option.innerHTML = classes[i];
+		element.appendChild(option);
+	}
+}
+
+
+// either renders the selected day's tasks or future tasks(not modals)
+function renderTask(element, taskArray) {
     element.innerHTML = '';
 
-    for (let i = 0; i < allTasks.length; i++) {
-        let taskHolder = createTask(allTasks[i]);
-        taskHolder.appendChild(element);
+    for (let i = 0; i < taskArray.length; i++) {
+        element.appendChild(createTask(taskArray[i]));
     }
 }
 
-// function renderTodayTask(element) { //USE THIS TO RENDER TOP DIV, SORTING BY RECENCY (5 OR 6 MOST RECENT OR JUST BY DAY)
-    
-//     element.innerHTML = '';
 
-//     for (let i = 0; i < allTasks.length; i++) {
-//         const main = createTask(allTasks[i]);
-//         element.appendChild(main);
-
-//     }
-
-// }
-// // //ADD TASK CLICKED
-
-document.getElementById("addtaskbutton").addEventListener('click', () => { //when add task is clicked inside add task modal
-    //popup add task modal --> already taken care of via bootstraps
-    //add task to the side (using renderTask?)
-    //add to calendar
-
-    //TODO NEED TO FIGURE OUT HOW TO INDEX THEM (TASKID) / OR IF IT WILL JUST BE AUTOMATIC
-
-    const n = document.getElementById('taskName').value;
-    const d = document.getElementById('taskDate').value;
-    const t = document.getElementById('taskTime').value;
-    const c = document.getElementById('taskClass').value;
-    const desc = document.getElementById('taskDescription').value;
-
-    if (n.length === 0 || d.length === 0 || t.length === 0 || c.length === 0 || desc.length === 0) {
-        return;
+// renders all tasks(allTasks variable) in modals
+function renderModalTasks(element) {
+	element.innerHTML = '';
+	
+    for (let i = 0; i < allTasks.length; i++) {
+		const taskHolder = createModalTasks(allTasks[i].name, allTasks[i].description, allTasks[i].class, allTasks[i].date, allTasks[i].time);
+        element.appendChild(taskHolder);
     }
+}
 
-    let temp = {
-        name: n,
-        date: d,
-        time: t,
-        class: c,
-        description: desc
-    }
+document.getElementById('addTaskOpenModal').addEventListener('click', () => {
 
-    fetch('/api/users/dummy/tasks/create', {
-        method: 'POST', 
-        body: JSON.stringify(temp), 
-        headers: {
-            'Content-Type': 'application/json',
-        }
-        
-    // }).then(function(response) {
-    //     return response.text()
-    // }).then(function(text) {
-    //     console.log(text)
-    // }).catch(function(error) {
-    //     console.log(error)
-    });
-
-    // TODO GRAB TASKS FROM SERVER
-    // FETCH 
-
-    // client side storage
-    allTasks.push(temp);
+	// when user clicks the open modal, clear the tasks on the left side
+	document.getElementById('taskName').value = '';
+	document.getElementById('taskDate').value = '';
+	document.getElementById('taskTime').value = '';
+	document.getElementById('taskClass').value = '';
+	document.getElementById('taskDescription').value = '';
 
 
-    // clear name, time, date, class, description input box after every added term
-    document.getElementById('taskName').value = '';
-    document.getElementById('taskDate').value = '';
-    document.getElementById('taskTime').value = '';
-    document.getElementById('taskClass').value = '';
-    document.getElementById('taskDescription').value = '';
-    
-    renderTask(document.getElementById('task')); //RENDER THE TASKS ON THE SIDEBAR
-    
+
+	document.getElementById('tasksTitle').innerHTML = 'Add a Task';
+	// if add task button is clicked, only display add button
+	const addTaskButton = document.getElementById("addTaskButton");
+	if (window.getComputedStyle(addTaskButton).display === "none") {
+		addTaskButton.style.display = "block";
+	}
+
+	// make submit and edit button invisible
+	const submitEditTaskButton = document.getElementById("submitEditTaskButton");
+	if (window.getComputedStyle(submitEditTaskButton).display === "block") {
+		submitEditTaskButton.style.display = "none";
+	}
+	const deleteTaskButton = document.getElementById("deleteTaskButton");
+	if (window.getComputedStyle(deleteTaskButton).display === "block") {
+		deleteTaskButton.style.display = "none";
+	}
+});
+
+// date is yyyy-MM-dd
+// time is HH:mm
+document.getElementById('addTaskButton').addEventListener('click', () => {
+	const taskName = document.getElementById('taskName').value;
+    const taskDate = document.getElementById('taskDate').value;
+    const taskTime = document.getElementById('taskTime').value;
+	const taskClass = document.getElementById('taskClass').value;
+    const taskDescription = document.getElementById('taskDescription').value;
+
+	// stops user from adding tasks with some empty fields
+	if (taskName.length === 0 || taskDate.length === 0 || taskTime === 0 || taskClass === 0 || taskDescription === 0) {
+		return;
+	}
+
+	const temp = {
+		name: taskName,
+		description: taskDescription,
+		class: taskClass,
+		date: taskDate,
+		time: taskTime
+	};
+
+
+	allTasks.push(temp);
+
+	// TODO, POST request: tell server to add a task and update allTasks array
+
+
+
+
+	// renders the tasks in modal
+	renderModalTasks(document.getElementById('modalTasksBody'));
+	
+	// includes all tasks, including the tasks from selected tasks 
+	renderTask(document.getElementById('futureTasks'), allTasks);
+
+	// clear all fields in the add tasks(left side of task modal) 
+	document.getElementById('taskName').value = '';
+	document.getElementById('taskDate').value = '';
+	document.getElementById('taskTime').value = '';
+	document.getElementById('taskClass').value = '';
+	document.getElementById('taskDescription').value = '';
 });
 
 
-// // //EDIT BUTTON NEXT TO TASK CLICKED
 
-document.getElementById("edittaskbutton").addEventListener('click', () => { //when edit task is clicked inside edit task modal
+document.getElementById('submitEditTaskButton').addEventListener('click', () => {
+	const taskName = document.getElementById('taskName').value;
+    const taskDate = document.getElementById('taskDate').value;
+    const taskTime = document.getElementById('taskTime').value;
+	const taskClass = document.getElementById('taskClass').value;
+    const taskDescription = document.getElementById('taskDescription').value;
 
-    //pop up edit task modal --> already taken care of via bootstrap
-    //read task data into edit task modal
-    //update task data when update is clicked
 
-    //post the server edit endpoint with all the values from the edit task modal
+	// TODO: POST request and update allTasks array
+	// then edit that task from client-side storage array(allTasks)
 
-    const n = document.getElementById('taskName').value;
-    const d = document.getElementById('taskDate').value;
-    const t = document.getElementById('taskTime').value;
-    const c = document.getElementById('taskClass').value;
-    const desc = document.getElementById('taskDescription').value;
-
-    if (n.length === 0 || d.length === 0 || t.length === 0 || c.length === 0 || desc.length === 0) {
-        return;
-    }
-
-    let temp = {
-        name: n,
-        date: d,
-        time: t,
-        class: c,
-        description: desc
-    }
-
-    fetch('https://cs326-final-kappa.herokuapp.com/api/users/:user/tasks/:taskid/edit', { //send a post to edit endpoint to edit the task
-        method: 'POST', 
-        body: JSON.stringify(temp), 
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    });
-
-    renderTask(document.getElementById('task')); //RE-RENDER THE TASKS ON THE SIDEBAR TO TAKE INTO ACCOUNT EDIT
-
+	// after submitting changes, clear all fields in the add tasks(left side of task modal) 
+	document.getElementById('taskName').value = '';
+	document.getElementById('taskDate').value = '';
+	document.getElementById('taskTime').value = '';
+	document.getElementById('taskClass').value = '';
+	document.getElementById('taskDescription').value = '';
 });
 
-// // //DELETE TASK CLICKED 
-//GET THE TASK ID AND USE THAT TO DELETE FROM SERVER --> POST WITH JUST TASKID?
+document.getElementById('deleteTaskButton').addEventListener('click', () => {
+	const taskName = document.getElementById('taskName').value;
+    const taskDate = document.getElementById('taskDate').value;
+    const taskTime = document.getElementById('taskTime').value;
+	const taskClass = document.getElementById('taskClass').value;
+    const taskDescription = document.getElementById('taskDescription').value;
+	
+	// TODO: POST request and update allTasks array
+	// then remove task from client-side storage array(allTasks)
 
-document.getElementById("deletetaskbutton").addEventListener('click', () => { //when delete task is clicked inside edit task modal
-
-//delete task from tasks on side
-
-// for(let i = 0; i < allTasks.length; i++) {
-
-// }
-
-//post the server endpoint with the values from the delete task modal
-//HAVE TO PASS IN TASKID --> STILL FIGURING OUT WHERE TO ASSIGN THAT
-    fetch('https://cs326-final-kappa.herokuapp.com/api/users/:user/tasks/:taskid/remove', {
-        method: 'POST', 
-        body: JSON.stringify(temp), 
-        headers: {
-            'Content-Type': 'application/json',
-        }
-        
-    // }).then(function(response) {
-    //     return response.text()
-    // }).then(function(text) {
-    //     console.log(text)
-    // }).catch(function(error) {
-    //     console.log(error)
-    });
-
-    renderTask(document.getElementById('task')); //RE-RENDER THE TASKS ON THE SIDEBAR TO TAKE INTO ACCOUNT DELETION
-
-
+	// after deleting a task, clear all fields in the add tasks(left side of task modal) 
+	document.getElementById('taskName').value = '';
+	document.getElementById('taskDate').value = '';
+	document.getElementById('taskTime').value = '';
+	document.getElementById('taskClass').value = '';
+	document.getElementById('taskDescription').value = '';
 });
-
-// // //DAY ON CALENDER CLICKED, IDEALLY THIS WOULD FETCH THE TASKS FOR THAT DAY AND RENDER THEM IN THE INNER HTML IN THE TOP OF THE CALENDAR
-
-// document.getElementById("day").addEventListener('click', () => {
-
-//     //read events from selected day
-//     //update list events on side under events for selected day
-
-// })
-
-
-
-
-//GETTING CALENDAR TO RENDER AND RESPOND TO CLICKS
-
-document.addEventListener('DOMContentLoaded', function(){
-    var today = new Date(),
-        year = today.getFullYear(),
-        month = today.getMonth(),
-        monthTag =["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
-        day = today.getDate(),
-        days = document.getElementsByTagName('td'),
-        selectedDay,
-        setDate,
-        daysLen = days.length;
-// options should like '2014-01-01'
-    function Calendar(selector, options) {
-        this.options = options;
-        this.draw();
-    }
-    
-    Calendar.prototype.draw  = function() {
-        this.getCookie('selected_day');
-        this.getOptions();
-        this.drawDays();
-        var that = this,
-            reset = document.getElementById('reset'),
-            pre = document.getElementsByClassName('pre-button'),
-            next = document.getElementsByClassName('next-button');
-            
-            pre[0].addEventListener('click', function(){that.preMonth(); });
-            next[0].addEventListener('click', function(){that.nextMonth(); });
-            reset.addEventListener('click', function(){that.reset(); });
-        while(daysLen--) {
-            days[daysLen].addEventListener('click', function(){that.clickDay(this); });
-        }
-    };
-    
-    Calendar.prototype.drawHeader = function(e) {
-        var headDay = document.getElementsByClassName('head-day'),
-            headMonth = document.getElementsByClassName('head-month');
-
-            e?headDay[0].innerHTML = e : headDay[0].innerHTML = day;
-            headMonth[0].innerHTML = monthTag[month] +" - " + year;        
-     };
-    
-    Calendar.prototype.drawDays = function() {
-        var startDay = new Date(year, month, 1).getDay(),
-
-            nDays = new Date(year, month + 1, 0).getDate(),
-    
-            n = startDay;
-
-        for(var k = 0; k <42; k++) {
-            days[k].innerHTML = '';
-            days[k].id = '';
-            days[k].className = '';
-        }
-
-        for(var i  = 1; i <= nDays ; i++) {
-            days[n].innerHTML = i; 
-            n++;
-        }
-        
-        for(var j = 0; j < 42; j++) {
-            if(days[j].innerHTML === ""){
-                
-                days[j].id = "disabled";
-                
-            }else if(j === day + startDay - 1){
-                if((this.options && (month === setDate.getMonth()) && (year === setDate.getFullYear())) || (!this.options && (month === today.getMonth())&&(year===today.getFullYear()))){
-                    this.drawHeader(day);
-                    days[j].id = "today";
-                }
-            }
-            if(selectedDay){
-                if((j === selectedDay.getDate() + startDay - 1)&&(month === selectedDay.getMonth())&&(year === selectedDay.getFullYear())){
-                days[j].className = "selected";
-                this.drawHeader(selectedDay.getDate());
-                }
-            }
-        }
-    };
-    
-    Calendar.prototype.clickDay = function(o) {
-        var selected = document.getElementsByClassName("selected"),
-            len = selected.length;
-        if(len !== 0){
-            selected[0].className = "";
-        }
-        o.className = "selected";
-        selectedDay = new Date(year, month, o.innerHTML);
-        this.drawHeader(o.innerHTML);
-        this.setCookie('selected_day', 1);
-        
-    };
-    
-    Calendar.prototype.preMonth = function() {
-        if(month < 1){ 
-            month = 11;
-            year = year - 1; 
-        }else{
-            month = month - 1;
-        }
-        this.drawHeader(1);
-        this.drawDays();
-    };
-    
-    Calendar.prototype.nextMonth = function() {
-        if(month >= 11){
-            month = 0;
-            year =  year + 1; 
-        }else{
-            month = month + 1;
-        }
-        this.drawHeader(1);
-        this.drawDays();
-    };
-    
-    Calendar.prototype.getOptions = function() {
-        if(this.options){
-            var sets = this.options.split('-');
-                setDate = new Date(sets[0], sets[1]-1, sets[2]);
-                day = setDate.getDate();
-                year = setDate.getFullYear();
-                month = setDate.getMonth();
-        }
-    };
-    
-     Calendar.prototype.reset = function() {
-         month = today.getMonth();
-         year = today.getFullYear();
-         day = today.getDate();
-         this.options = undefined;
-         this.drawDays();
-     };
-    
-    Calendar.prototype.setCookie = function(name, expiredays){
-        if(expiredays) {
-            var date = new Date();
-            date.setTime(date.getTime() + (expiredays*24*60*60*1000));
-            var expires = "; expires=" +date.toGMTString();
-        }else{
-            var expires = "";
-        }
-        document.cookie = name + "=" + selectedDay + expires + "; path=/";
-    };
-    
-    Calendar.prototype.getCookie = function(name) {
-        if(document.cookie.length){
-            var arrCookie  = document.cookie.split(';'),
-                nameEQ = name + "=";
-            for(var i = 0, cLen = arrCookie.length; i < cLen; i++) {
-                var c = arrCookie[i];
-                while (c.charAt(0)==' ') {
-                    c = c.substring(1,c.length);
-                    
-                }
-                if (c.indexOf(nameEQ) === 0) {
-                    selectedDay =  new Date(c.substring(nameEQ.length, c.length));
-                }
-            }
-        }
-    };
-    var calendar = new Calendar();
-    
-        
-}, false);
