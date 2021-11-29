@@ -78,7 +78,7 @@ window.addEventListener('load', () => {
 
 
 
-// ================ CALANDAR =======================
+// ================ CALENDAR =======================
 /* DOM SURGERY
 <div class="row text-center">
 	<div class="d-flex justify-content-between">
@@ -425,6 +425,10 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
 	const taskClass = document.getElementById('taskClass').value;
     const taskDescription = document.getElementById('taskDescription').value;
 
+
+	const url = window.location.pathname;       // reads url
+    const split = url.split('/');
+
 	// stops user from adding tasks with some empty fields
 	if (taskName.length === 0 || taskDate.length === 0 || taskTime === 0 || taskClass === 0 || taskDescription === 0) {
 		return;
@@ -443,8 +447,13 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
 
 	// TODO, POST request: tell server to add a task and update allTasks array
 
-
-
+	fetch(`/api/users/${split[2]}/tasks/create`, {
+        method: 'POST', 
+        body: JSON.stringify(temp), 
+        headers: {
+            'Content-Type': 'application/json',
+        }
+	});
 
 	// renders the tasks in modal
 	renderModalTasks(document.getElementById('modalTasksBody'));
@@ -469,9 +478,41 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 	const taskClass = document.getElementById('taskClass').value;
     const taskDescription = document.getElementById('taskDescription').value;
 
+	const url = window.location.pathname;       // reads url
+    const split = url.split('/');
+
+	const temp = {
+		name: taskName,
+		description: taskDescription,
+		class: taskClass,
+		date: taskDate,
+		time: taskTime
+	};
+
 
 	// TODO: POST request and update allTasks array
 	// then edit that task from client-side storage array(allTasks)
+
+	fetch(`/api/users/${split[2]}/tasks/${split[4]}/edit`, { //POST the server with the edited values
+        method: 'POST', 
+        body: JSON.stringify(temp), 
+        headers: {
+            'Content-Type': 'application/json',
+        }
+	});
+
+	//Need to figure out how to edit allTasks array
+
+	for(let i = 0; i < allTasks.length; i++) {
+		if(allTasks[i].name === taskName) { //search through allTasks array, if the name matches the taskName value in edit modal, edit the values in allTasks
+			allTasks[i].name === taskName;
+			allTasks[i].date === taskDate;
+			allTasks[i].time === taskTime;
+			allTasks[i].class === taskClass;
+			allTasks[i].description === taskDescription;
+		}
+	}
+
 
 	// after submitting changes, clear all fields in the add tasks(left side of task modal) 
 	document.getElementById('taskName').value = '';
@@ -487,9 +528,37 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
     const taskTime = document.getElementById('taskTime').value;
 	const taskClass = document.getElementById('taskClass').value;
     const taskDescription = document.getElementById('taskDescription').value;
-	
+
+	const url = window.location.pathname;       // reads url
+    const split = url.split('/');
+
+	const temp = {
+		name: taskName,
+		description: taskDescription,
+		class: taskClass,
+		date: taskDate,
+		time: taskTime
+	};
+
 	// TODO: POST request and update allTasks array
 	// then remove task from client-side storage array(allTasks)
+
+
+	fetch(`/api/users/${split[2]}/tasks/${split[4]}/remove`, { //POST the server and remove task from database
+        method: 'POST', 
+        body: JSON.stringify(temp), 
+        headers: {
+            'Content-Type': 'application/json',
+        }
+	});
+
+	//Need to figure out how to delete from allTasks array
+
+	for(let i = 0; i < allTasks.length; i++) {
+		if(allTasks[i].name === taskName) { //search through allTasks array, if the name matches the taskName value in edit modal, edit the values in allTasks
+			allTasks.splice(i, 1);
+		}
+	}
 
 	// after deleting a task, clear all fields in the add tasks(left side of task modal) 
 	document.getElementById('taskName').value = '';
