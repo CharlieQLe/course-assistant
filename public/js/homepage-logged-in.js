@@ -501,10 +501,11 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
         }
 	});
 
-	//Need to figure out how to edit allTasks array
+	//edit allTasks array
 
 	for(let i = 0; i < allTasks.length; i++) {
-		if(allTasks[i].name === taskName) { //search through allTasks array, if the name matches the taskName value in edit modal, edit the values in allTasks
+		if(allTasks[i].name === taskName && allTasks[i].description === taskDescription && allTasks[i].class=== taskClass && allTasks[i].date === taskDate && allTasks[i].time === taskTime) { 
+			//search through allTasks array, if the values match the specified index, edit the values in allTasks on client side
 			allTasks[i].name === taskName;
 			allTasks[i].date === taskDate;
 			allTasks[i].time === taskTime;
@@ -552,10 +553,9 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
         }
 	});
 
-	//Need to figure out how to delete from allTasks array
-
 	for(let i = 0; i < allTasks.length; i++) {
-		if(allTasks[i].name === taskName) { //search through allTasks array, if the name matches the taskName value in edit modal, edit the values in allTasks
+		if(allTasks[i].name === taskName && allTasks[i].description === taskDescription && allTasks[i].class=== taskClass && allTasks[i].date === taskDate && allTasks[i].time === taskTime) { 
+			//search through allTasks array, if the values all match, delete the item at said index from client side storage
 			allTasks.splice(i, 1);
 		}
 	}
