@@ -20,19 +20,15 @@ app.post("/api/login", userAPI.postLogin);
 // send user to profile page when url is entered
 // user types this url or is sent to this url
 app.get("/users/:user/", (req, res) => {
+    res.sendFile(process.cwd() + '/public/home.html')
+});
+app.get("/users/:user/user-profile.html", (req, res) => {
     res.sendFile(process.cwd() + '/public/user-profile.html')
 });
 // Set the user endpoints
 app.get("/api/users/:user", userAPI.getData);
 app.post("/api/users/:user/edit", userAPI.postEdit);
 app.post("/api/users/:user/delete", userAPI.postDelete);
-
-//NOT SURE IF THIS IS RIGHT SO COMMENTED FOR NOW
-// // serving task files at the given url 
-// // user types this url or is sent to this url
-// app.get("/api/users/:user/tasks/:taskid", (req, res) => {
-//     res.sendFile(process.cwd() + '/public/home.html')
-// });
 
 // Set the task endpoints
 app.get("/api/users/:user/tasks", taskAPI.getAll);
