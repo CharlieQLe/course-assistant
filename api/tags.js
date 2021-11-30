@@ -9,7 +9,7 @@ const { client } = require('./mongo.js');
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function getAll(request, response) {
-    client.db("final-kappa").collection(request.query.user).find({ type: "tag" }).toArray((err, tags) => {
+    client.db("final-kappa").collection("tags").find({ user: request.params.user }).toArray((err, tags) => {
         if (err) {
             response.end(JSON.stringify({
                 statusCode: -1,
@@ -36,9 +36,9 @@ function getAll(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postCreate(request, response) {
-    client.db("final-kappa").collection(request.params.user).findOne({
+    client.db("final-kappa").collection("tags").findOne({
         name: request.params.tag,
-        type: "tag"
+        user: request.params.user
     }, (err, existingTag) => {
         if (err || existingTag) {
             response.end(JSON.stringify({
@@ -46,9 +46,9 @@ function postCreate(request, response) {
                 data: "Failed to add tag"
             }));
         } else {
-            client.db("final-kappa").collection(request.params.user).insertOne({
+            client.db("final-kappa").collection("tags").insertOne({
                 name: request.params.tag,
-                type: "tag"
+                user: request.params.user
             }, (err, res) => {
                 if (err) {
                     response.end(JSON.stringify({
@@ -73,9 +73,9 @@ function postCreate(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postRemove(request, response) {
-    client.db("final-kappa").collection(request.params.user).deleteOne({
+    client.db("final-kappa").collection("tags").deleteOne({
         name: request.params.tag,
-        type: "tag"
+        user: request.params.user
     }, (err, res) => {
         if (err) {
             response.end(JSON.stringify({
