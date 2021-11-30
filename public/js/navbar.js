@@ -69,6 +69,8 @@ window.addEventListener('load', () => {
 })
 
 
+
+
 function renderNavbar(element, user, classArr, active) {
 	element.innerHTML = '';
 	const navbar = document.createElement('nav');
@@ -87,8 +89,10 @@ function renderNavbar(element, user, classArr, active) {
 	logo.setAttribute('width', '24');
 	logo.setAttribute('height', '24');
 	logo.addEventListener('click', () => {
-		window.location.href = "/home.html";
-
+		const url = window.location.pathname;       // reads url
+		const split = url.split('/');
+		window.location.href = `/${split[1]}/${split[2]}`;
+ 
 	});
 	logo.addEventListener('mouseover', () => {
 		logo.style.cursor = 'pointer';
@@ -131,7 +135,9 @@ function renderNavbar(element, user, classArr, active) {
 	const homeAnchor = document.createElement('a');
 	homeAnchor.classList.add('nav-link');
 	homeAnchor.addEventListener('click', () => {
-		window.location.href = "/home.html";
+		const url = window.location.pathname;       // reads url
+		const split = url.split('/');
+		window.location.href = `/${split[1]}/${split[2]}`;
 	});
 	homeAnchor.innerHTML = 'Home';
 	home.appendChild(homeAnchor);
@@ -185,7 +191,9 @@ function renderNavbar(element, user, classArr, active) {
 	const editProfile = document.createElement('a');
 	editProfile.classList.add('dropdown-item');
 	editProfile.addEventListener('click', () => {
-		window.location.href = "/user-profile.html";
+		const url = window.location.pathname;       // reads url
+		const split = url.split('/');
+		window.location.href = `/${split[1]}/${split[2]}/user-profile.html`;
 	});
 	editProfile.innerHTML = 'Edit Profile';
 	editProfileLi.appendChild(editProfile);
