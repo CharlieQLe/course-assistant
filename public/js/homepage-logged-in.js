@@ -493,7 +493,7 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 	// TODO: POST request and update allTasks array
 	// then edit that task from client-side storage array(allTasks)
 
-	fetch(`/api/users/${split[2]}/tasks/${taskName}/edit`, { //POST the server with the edited values
+	fetch(`/api/users/${split[2]}/tasks/${split[4]}/edit`, { //POST the server with the edited values
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
@@ -545,7 +545,7 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 	// then remove task from client-side storage array(allTasks)
 
 
-	fetch(`/api/users/${split[2]}/tasks/${taskName}/remove`, { //POST the server and remove task from database
+	fetch(`/api/users/${split[2]}/tasks/${split[4]}/remove`, { //POST the server and remove task from database
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
