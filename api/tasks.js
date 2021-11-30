@@ -60,7 +60,7 @@ function getAll(request, response) {
  function getTask(request, response) {
 
     const user = request.params.user;
-    const taskname = request.params.name; //primary key
+    const taskname = request.params.task; //primary key
 
     // respond with an error if user does not exist
     findUser(user).then(found => {
@@ -100,7 +100,7 @@ function getAll(request, response) {
 function postCreate(request, response) {
 
     const user = request.params.user;
-    const taskname = request.params.name;
+    const taskname = request.params.task;
     //const taskid = request.params.taskid; //primary key
     const classname = request.body['class'];
     const description = request.body['description'];
@@ -145,7 +145,7 @@ function postCreate(request, response) {
 function postEdit(request, response) {
 
     const user = request.params.user;
-    const taskname = request.params.name;
+    const taskname = request.params.task;
     //const taskid = request.params.taskid; //primary key
     const classname = request.body['class'];
     const description = request.body['description'];
@@ -205,7 +205,7 @@ function postEdit(request, response) {
 function postRemove(request, response) {
    
     const user = request.params.user; 
-    const taskname = request.params.name;
+    const taskname = request.params.task;
     //const taskid = request.params.taskid; //primary key
 
     // respond with an error if user does not exist
