@@ -41,14 +41,6 @@ app.post("/api/users/:user/tasks/:task", taskAPI.getTask);
 app.post("/api/users/:user/tasks/:task/edit", taskAPI.postEdit);
 app.post("/api/users/:user/tasks/:task/remove", taskAPI.postRemove);
 
-// Set the class endpoints
-app.get("/api/users/:user/class/", classAPI.getAll);
-app.get("/api/users/:user/class/:class", classAPI.getClass);
-app.post("/api/users/:user/class/:class/create", classAPI.postCreate);
-app.post("/api/users/:user/class/:class/edit", classAPI.postEdit);
-app.post("/api/users/:user/class/:class/remove", classAPI.postRemove);
-app.get("/api/users/:user/class/:class/search", classAPI.getSearch);
-
 // Set the tag endpoints
 app.get("/api/users/:user/tags", tagAPI.getAll);
 app.post("/api/users/:user/tags/:tag/create", tagAPI.postCreate);
@@ -56,26 +48,26 @@ app.post("/api/users/:user/tags/:tag/remove", tagAPI.postRemove);
 
 // serving note files at the given url
 // user types this url or is sent to this url
-app.get("/users/:user/class/:class/notes/:note", (req, res) => {
+app.get("/users/:user/notes/:note", (req, res) => {
     res.sendFile(process.cwd() + '/public/notepad.html')
 });
 // Set the note endpoints
-app.get("/api/users/:user/class/:class/notes/:note", noteAPI.getNote);
-app.post("/api/users/:user/class/:class/notes/:note/create", noteAPI.postCreate);
-app.post("/api/users/:user/class/:class/notes/:note/remove", noteAPI.postRemove);
-app.post("/api/users/:user/class/:class/notes/:note/edit", noteAPI.postEdit);
+app.get("/api/users/:user/notes/:note", noteAPI.getNote);
+app.post("/api/users/:user/notes/:note/create", noteAPI.postCreate);
+app.post("/api/users/:user/notes/:note/remove", noteAPI.postRemove);
+app.post("/api/users/:user/notes/:note/edit", noteAPI.postEdit);
 
 // serving flashcard files at the given url
 // user types this url or is sent to this url
-app.get("/users/:user/class/:class/flashcards/:flashcard", (req, res) => {
+app.get("/users/:user/flashcards/:flashcard", (req, res) => {
     res.sendFile(process.cwd() + '/public/flashcard.html')
 });
 // Set the flashcard endpoints
-app.get("/api/users/:user/class/:class/flashcards/:flashcard", flashcardAPI.getFlashcards);
-app.post("/api/users/:user/class/:class/flashcards/:flashcard/create", flashcardAPI.postCreate);
-app.post("/api/users/:user/class/:class/flashcards/:flashcard/remove", flashcardAPI.postRemove);
-app.post("/api/users/:user/class/:class/flashcards/:flashcard/addFlashcard", flashcardAPI.postAddFlashcard);
-app.post("/api/users/:user/class/:class/flashcards/:flashcard/removeFlashcard", flashcardAPI.postRemoveFlashcard);
+app.get("/api/users/:user/flashcards/:flashcard", flashcardAPI.getFlashcards);
+app.post("/api/users/:user/flashcards/:flashcard/create", flashcardAPI.postCreate);
+app.post("/api/users/:user/flashcards/:flashcard/remove", flashcardAPI.postRemove);
+app.post("/api/users/:user/flashcards/:flashcard/addFlashcard", flashcardAPI.postAddFlashcard);
+app.post("/api/users/:user/flashcards/:flashcard/removeFlashcard", flashcardAPI.postRemoveFlashcard);
 
 /*
 the regEx, /.*\.css$/, reads anything with .css at the end
