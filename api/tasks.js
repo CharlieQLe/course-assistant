@@ -60,7 +60,7 @@ function getAll(request, response) {
  function getTask(request, response) {
 
     const user = request.params.user;
-    const taskid = request.params.taskid; //primary key
+    const taskname = request.params.name; //primary key
 
     // respond with an error if user does not exist
     findUser(user).then(found => {
@@ -76,11 +76,11 @@ function getAll(request, response) {
 
     // get task from database
     client.db('final-kappa').collection(user).find({
-        taskID: taskid, //taskid is unique, so it can be used on its own to locate a specific task
+        name: taskname, //taskid is unique, so it can be used on its own to locate a specific task
         type: 'task'
     }).toArray().then(arr => {
         if (arr.length === 0) {
-            response.end(JSON.stringify({ status: 404, result: `Task (${taskid}) could not be found` }));
+            response.end(JSON.stringify({ status: 404, result: `Task (${taskname}) could not be found` }));
             return;
         } 
         response.end(JSON.stringify({ status: 200, result: arr[0].body })); //return the first index from array so that the specified task is returned
@@ -100,9 +100,9 @@ function getAll(request, response) {
 function postCreate(request, response) {
 
     const user = request.params.user;
-    const taskid = request.params.taskid; //primary key
-    const classname = request.body['classname'];
-    const taskname = request.body['taskname'];
+    const taskname = request.params.name;
+    //const taskid = request.params.taskid; //primary key
+    const classname = request.body['class'];
     const description = request.body['description'];
     const date = request.body['date'];
     const time = request.body['time'];
@@ -122,9 +122,9 @@ function postCreate(request, response) {
     const query = { //create a query to be inserted in the database with all task attributes
         type: 'task',
         user: user,
-        taskID: taskid,
-        classname: classname,
-        taskname: taskname,
+        //taskID: taskid,
+        class: classname,
+        name: taskname,
         description: description,
         date: date,
         time: time,
@@ -145,9 +145,9 @@ function postCreate(request, response) {
 function postEdit(request, response) {
 
     const user = request.params.user;
-    const taskid = request.params.taskid; //primary key
-    const classname = request.body['classname'];
-    const taskname = request.body['taskname'];
+    const taskname = request.params.name;
+    //const taskid = request.params.taskid; //primary key
+    const classname = request.body['class'];
     const description = request.body['description'];
     const date = request.body['date'];
     const time = request.body['time'];
@@ -167,11 +167,11 @@ function postEdit(request, response) {
 
     // check if task is found
     client.db('final-kappa').collection(user).find({
-        taskID: taskid,
+        name: taskname,
         type: 'task'
     }).toArray().then(arr => {
         if (arr.length === 0) {
-            response.end(JSON.stringify({ status: 404, result: `Task(${taskid}) could not be found` }));
+            response.end(JSON.stringify({ status: 404, result: `Task(${taskname}) could not be found` }));
             return;
         }
     }).catch(e => {
@@ -180,13 +180,13 @@ function postEdit(request, response) {
     });
 
     const query = { //create a query with taskID and type task to hold specific task
-        taskID: taskid,
+        name: taskname,
         type: 'task'
     };
 
     const updateTask = { //set all fields to param and body values for use in update
-        $set: { taskname: taskname },
-        $set: { classname: classname },
+        $set: { name: taskname },
+        $set: { class: classname },
         $set: { description: description },
         $set: { date: date },
         $set: { time: time },
@@ -205,7 +205,8 @@ function postEdit(request, response) {
 function postRemove(request, response) {
    
     const user = request.params.user; 
-    const taskid = request.params.taskid; //primary key
+    const taskname = request.params.name;
+    //const taskid = request.params.taskid; //primary key
 
     // respond with an error if user does not exist
     findUser(user).then(found => {
@@ -221,11 +222,11 @@ function postRemove(request, response) {
 
     // check if class or task is found
     client.db('final-kappa').collection(user).find({
-        taskID: taskid,
+        name: taskname,
         type: 'task'
     }).toArray().then(arr => {
         if (arr.length === 0) {
-            response.end(JSON.stringify({ status: 404, result: `Task (${taskid}) could not be found` }));
+            response.end(JSON.stringify({ status: 404, result: `Task (${taskname}) could not be found` }));
             return;
         } 
     }).catch(e => {
@@ -234,7 +235,7 @@ function postRemove(request, response) {
     });
 
     const query = { //create a query with taskID and type task to hold specific task
-        taskID: taskid,
+        name: taskname,
         type: 'task'
     };
 
