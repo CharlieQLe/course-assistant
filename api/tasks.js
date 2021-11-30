@@ -13,6 +13,19 @@ const { client } = require('./mongo.js');
 // ==============================================================
 
 /**
+ * 
+ * @param {string} user the user to check in the database
+ * @returns a promise<boolean> that tells us if the user is in the database or not
+ */
+
+function findUser(user) {
+    let found = client.db('final-kappa').listCollections().toArray().then(collection => {
+        return collection.filter(col => col.name === user).length === 1;
+    });
+    return found;
+}  
+
+/**
  * Process a get request to retrieve every task.
  * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
@@ -25,7 +38,22 @@ function getAll(request, response) {
 
     // respond with an error if user does not exist
     findUser(user).then(found => {
-        if(!found) {
+        if(found) {
+            // get all tasks from database for specific user
+            client.db('final-kappa').collection(user).find({
+                type: 'task' //only check based on the type being task to return all tasks
+            }).toArray().then(arr => {
+                if (arr.length === 0) {
+                    response.end(JSON.stringify({ status: 404, result: `No tasks found. Try creating a task.` }));
+                    return;
+                } 
+                response.end(JSON.stringify({ status: 200, result: arr.body })); //return the full array of tasks
+            }).catch(e => {
+                response.end(JSON.stringify({ status: 404, result: "GET tasks: Error parsing for tasks with mongodb" }));
+                return;
+            });
+        }
+        else if(!found) {
             response.end(JSON.stringify({
                         status: 404,
                         result: `user(${user}) could not be found`
@@ -35,19 +63,7 @@ function getAll(request, response) {
         }
     });
 
-    // get all tasks from database for specific user
-    client.db('final-kappa').collection(user).find({
-        type: 'task' //only check based on the type being task to return all tasks
-    }).toArray().then(arr => {
-        if (arr.length === 0) {
-            response.end(JSON.stringify({ status: 404, result: `No tasks found. Try creating a task.` }));
-            return;
-        } 
-        response.end(JSON.stringify({ status: 200, result: arr.body })); //return the full array of tasks
-    }).catch(e => {
-        response.end(JSON.stringify({ status: 404, result: "GET tasks: Error parsing for tasks with mongodb" }));
-        return;
-    });
+    
 
 }
 

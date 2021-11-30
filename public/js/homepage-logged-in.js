@@ -2,6 +2,7 @@
 
 // CONTROL F TO FIND ALL THE TODOS
 
+let currentlyEditingTask = null;
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 let clickedDay = new Date().getDate();
@@ -71,6 +72,8 @@ window.addEventListener('load', () => {
 	renderModalTasks(document.getElementById('modalTasksBody'));
 	
 	// includes all tasks, including the tasks from selected tasks 
+	//TODO FIGURE OUT HOW TO FILTER OUT EXPIRED TASKS
+
 	renderTask(document.getElementById('futureTasks'), allTasks);
 
 	
@@ -273,6 +276,10 @@ function createTask(userTask) {
 		document.getElementById('taskTime').value = userTask.time;
 		document.getElementById('taskClass').value = userTask.class;
 		document.getElementById('taskDescription').value = userTask.description;
+
+		//set variable equal to userTask for use in edit button
+
+		currentlyEditingTask = userTask;
 
 	});
 
@@ -489,7 +496,7 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 		time: taskTime
 	};
 
-
+	
 	// TODO: POST request and update allTasks array
 	// then edit that task from client-side storage array(allTasks)
 
@@ -503,18 +510,14 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 
 	//edit allTasks array
 
-	for(let i = 0; i < allTasks.length; i++) {
-		if(allTasks[i].name === taskName && allTasks[i].description === taskDescription && allTasks[i].class === taskClass && allTasks[i].date === taskDate && allTasks[i].time === taskTime) { 
-			//search through allTasks array, if the values match the specified index, edit the values in allTasks on client side
-			allTasks[i].name === taskName;
-			allTasks[i].date === taskDate;
-			allTasks[i].time === taskTime;
-			allTasks[i].class === taskClass;
-			allTasks[i].description === taskDescription;
-		}
-	}
+	currentlyEditingTask.name = taskName;
+	currentlyEditingTask.date = taskDate;
+	currentlyEditingTask.time = taskTime;
+	currentlyEditingTask.class = taskClass;
+	currentlyEditingTask.description = taskDescription;
 
-
+	renderModalTasks(document.getElementById('modalTasksBody')); //re render tasks
+		
 	// after submitting changes, clear all fields in the add tasks(left side of task modal) 
 	document.getElementById('taskName').value = '';
 	document.getElementById('taskDate').value = '';
@@ -544,7 +547,6 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 	// TODO: POST request and update allTasks array
 	// then remove task from client-side storage array(allTasks)
 
-
 	fetch(`/api/users/${split[2]}/tasks/${split[4]}/remove`, { //POST the server and remove task from database
         method: 'POST', 
         body: JSON.stringify(temp), 
@@ -554,11 +556,13 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 	});
 
 	for(let i = 0; i < allTasks.length; i++) {
-		if(allTasks[i].name === taskName && allTasks[i].description === taskDescription && allTasks[i].class=== taskClass && allTasks[i].date === taskDate && allTasks[i].time === taskTime) { 
+		if(allTasks[i].name === currentlyEditingTask.name) { 
 			//search through allTasks array, if the values all match, delete the item at said index from client side storage
 			allTasks.splice(i, 1);
 		}
 	}
+
+	renderModalTasks(document.getElementById('modalTasksBody')); //re render tasks
 
 	// after deleting a task, clear all fields in the add tasks(left side of task modal) 
 	document.getElementById('taskName').value = '';
