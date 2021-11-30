@@ -2,12 +2,12 @@
 
 const userAPI = require('./api/user.js');
 const taskAPI = require('./api/tasks.js');
-const classAPI = require('./api/class.js');
 const tagAPI = require('./api/tags.js');
 const noteAPI = require('./api/notepad.js');
 const flashcardAPI = require('./api/flashcard.js');
 
 const express = require('express');
+
 const app = express();
 
 app.use(express.json()); // process json 

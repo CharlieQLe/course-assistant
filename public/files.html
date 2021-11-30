@@ -25,48 +25,6 @@
 	<!-- Page navbar -->
 	<div id="navbar"></div>
 
-	<!-- Add class modal -->
-	<div id="addClassModal" class="modal fade" tabindex="-1" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-
-				<!-- Header -->
-				<div class="modal-header">
-					<!-- Title -->
-					<h5 class="modal-title">Add Class</h5>
-
-					<!-- Close button -->
-					<button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-
-				<!-- Body -->
-				<div class="modal-body">
-					<form>
-						<!-- Class name input -->
-						<label for="classNameInput" class="form-label">Name</label>
-						<input type="text" id="classNameInput" class="form-control" placeholder="class name">
-						<br>
-
-						<!-- Class description input -->
-						<label for="classDescInput" class="form-label">Description</label>
-						<textarea id="classDescInput" class="form-control multitext-lock-vertical"
-							placeholder="description"></textarea>
-					</form>
-				</div>
-
-				<!-- Footer -->
-				<div class="modal-footer">
-					<form>
-						<!-- Add class button -->
-						<input type="button" class="btn btn-primary" id="addClassButton" value="Add Class">
-					</form>
-				</div>
-
-			</div>
-		</div>
-	</div>
-
 	<!-- Page content -->
 	<br>
 	<div class="label-no-count">no files found</div>
@@ -446,45 +404,7 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- Manage class modal -->
-	<div id="manageClassModal" class="modal fade" tabindex="-1" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-
-				<!-- Header -->
-				<div class="modal-header">
-					<!-- Title -->
-					<h5 class="modal-title">Manage Class</h5>
-
-					<!-- Close button -->
-					<button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-
-				<!-- Body -->
-				<div class="modal-body">
-					<form>
-						<!-- Class description input -->
-						<label for="classDescInput" class="form-label">Description</label>
-						<textarea id="classDescInput" class="form-control multitext-lock-vertical"
-							placeholder="description"></textarea>
-					</form>
-				</div>
-
-				<!-- Footer -->
-				<div class="modal-footer">
-					<form>
-						<input type="button" class="btn btn-primary" id="saveChangesButton" value="Save changes">
-						<input type="button" class="btn btn-danger" id="removeClassButton" value="Delete class">
-					</form>
-				</div>
-
-			</div>
-		</div>
-	</div>
-
-
+    
 	<!-- Option 1: Bootstrap Bundle with Popper -->
 	<!-- <script src="./bootstrap-5.1.3-dist/js/bootstrap.bundle.min.js"></script> -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

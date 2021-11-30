@@ -2,6 +2,9 @@
 
 const fs = require('fs');
 const { MongoClient } = require('mongodb');
+const minicrypt = require("./miniCrypt.js");
+
+const mc = new minicrypt();
 
 // Get the secrets
 let secrets;
@@ -21,4 +24,4 @@ if (!process.env.URI) {
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => { });
 
-module.exports = { client };
+module.exports = { client, mc };

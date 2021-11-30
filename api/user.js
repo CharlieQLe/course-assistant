@@ -1,24 +1,6 @@
 'use strict';
 
-const { client } = require("./mongo");
-
-
-const fs = require('fs');  // REMOVE THIS AFTER IMPLEMENTING MONGODB
-
-//TODO FIGURE OUT IMPLEMENTATION OF SIGNUP AND LOGIN AND WHERE AUTHENTICATION WILL HAPPEN
-
-
-/**
- * 
- * @param {string} user the user to check in the database
- * @returns a promise<boolean> that tells us if the user is in the database or not
- */
- function findUser(user) {
-    let found = client.db('final-kappa').listCollections().toArray().then(collection => {
-        return collection.filter(col => col.name === user).length === 1;
-    });
-    return found;
-}  
+const { client, mc } = require("./initializeServer");
 
 /**
  * Process a post request to sign up.
@@ -27,29 +9,30 @@ const fs = require('fs');  // REMOVE THIS AFTER IMPLEMENTING MONGODB
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postSignup(request, response) {
-    const name = request.body['name'];
-    const email = request.body['email']; //email would have to be primary key
-    const password = request.body['password'];
+    client.db('final-kappa').collection('users').findOne({
+        name: request.body['name'],
+        email: request.body['email']
+    })
+        .then(found => {
+            if (found) {
+                response.end(JSON.stringify({ status: -1, result: "Error on signup: user already exists" }))
+            } else {
+                const [salt, hash] = mc.hash(request.body['password']);
+                client.db('final-kappa').collection('users').insertOne({
+                    name: request.body['name'],
+                    email: request.body['email'],
+                    salt: salt,
+                    hash: hash
+                })
+                    .then(_ => {
+                        response.end(JSON.stringify({ status: -1, result: "Sign up successful!" }))
 
-    if (name !== undefined && email !== undefined && password !== undefined) {
-
-        if (fs.existsSync(`./api/users/${name}`)) {
-            response.end(JSON.stringify({ result: "Profile already exists." }));
-        }
-        else {
-            fs.mkdir(`./api/users/${name}`, (err) => {
-                if (err) {
-                    response.end(JSON.stringify({ result: "Failed to create user" }));
-                }
-                else {
-                    response.end(JSON.stringify({ result: "Successfully created user" }));
-                }
-            })
-
-        }
-    } else {
-        response.end(JSON.stringify({ result: 'Add profile failed.  Please check that all fields are entered and passwords match and try again.' }));
-    }
+                        // todo: redirect user to home page!
+                    })
+                    .catch(err => response.end(JSON.stringify({ status: -1, result: `Error on signup: ${err}` })));
+            }
+        })
+        .catch(err => response.end(JSON.stringify({ status: -1, result: `Error on signup: ${err}` })));
 }
 
 /**
@@ -72,7 +55,7 @@ function postLogin(request, response) {
     } else {
         response.end(JSON.stringify({ result: 'User not found. Please check email and password and try again.  No account? Sign up below.' }));
     }
- 
+
 }
 
 /**
@@ -83,18 +66,18 @@ function postLogin(request, response) {
  */
 function getData(request, response) {
     const user = request.params.user;   // get user name from url
-    
+
     const name = request.body['name'];  // get name from json obj received from fetch
     const email = request.body['email'];
     const password = request.body['password'];
 
     // respond with an error if user does not exist
     findUser(user).then(found => {
-        if(!found) {
+        if (!found) {
             response.end(JSON.stringify({
-                        status: 404,
-                        result: `user(${user}) could not be found`
-                    })
+                status: 404,
+                result: `user(${user}) could not be found`
+            })
             )
             return;
         }
@@ -109,7 +92,7 @@ function getData(request, response) {
         if (arr.length === 0) {
             response.end(JSON.stringify({ status: 404, result: `User with name (${name}) or email (${email}) could not be found` }));
             return;
-        } 
+        }
         response.end(JSON.stringify({ status: 200, result: arr[0].body })); //return user information
     }).catch(e => {
         response.end(JSON.stringify({ status: 404, result: "GET tasks: Error parsing for user information with mongodb" }));
@@ -125,19 +108,19 @@ function getData(request, response) {
  */
 function postEdit(request, response) {
     const name = request.params.user;   // get user name from url
-    
+
     const nameToChange = request.body['name'];  // get name from json obj received from fetch
     const emailToChange = request.body['email'];
     const passwordToChange = request.body['password'];
 
-    
+
     // respond with an error if user does not exist
     findUser(name).then(found => {
-        if(!found) {
+        if (!found) {
             response.end(JSON.stringify({
-                        status: 404,
-                        result: `user(${user}) could not be found`
-                    })
+                status: 404,
+                result: `user(${user}) could not be found`
+            })
             )
         }
     });
@@ -161,7 +144,7 @@ function postEdit(request, response) {
     if (passwordToChange.length !== 0) {
         toUpdate['password'] = passwordToChange;
     }
-    
+
     const updateDocument = {
         $set: toUpdate
     };
@@ -178,16 +161,16 @@ function postEdit(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postDelete(request, response) {
-    
+
     const user = request.params.user;
 
     // respond with an error if user does not exist
     findUser(user).then(found => {
-        if(!found) {
+        if (!found) {
             response.end(JSON.stringify({
-                        status: 404,
-                        result: `user(${user}) could not be found`
-                    })
+                status: 404,
+                result: `user(${user}) could not be found`
+            })
             )
         }
     });
