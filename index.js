@@ -17,15 +17,9 @@ app.use(express.static('./public')); // serve public files
 app.post("/api/signup", userAPI.postSignup);
 app.post("/api/login", userAPI.postLogin);
 
-// send user to profile page when url is entered
-// user types this url or is sent to this url
-app.get("/users/:user/", (req, res) => {
-    res.sendFile(process.cwd() + '/public/home.html')
-});
-app.get("/users/:user/user-profile.html", (req, res) => {
-    res.sendFile(process.cwd() + '/public/user-profile.html')
-});
 // Set the user endpoints
+app.use("/users/:user/", express.static('public', {index: 'home.html'}));       // serve html file
+app.use("/users/:user/profile", express.static('public', {index: 'user-profile.html'}));    // serve html file
 app.get("/api/users/:user", userAPI.getData);
 app.post("/api/users/:user/edit", userAPI.postEdit);
 app.post("/api/users/:user/delete", userAPI.postDelete);
@@ -38,7 +32,8 @@ app.post("/api/users/:user/tasks/:task/edit", taskAPI.postEdit);
 app.post("/api/users/:user/tasks/:task/remove", taskAPI.postRemove);
 
 // Set the class endpoints
-app.get("/api/users/:user/class/", classAPI.getAll);
+app.use("/users/:user/class", express.static('public', {index: 'class.html'}));       // serve html file
+app.get("/api/users/:user/class", classAPI.getAll);
 app.get("/api/users/:user/class/:class", classAPI.getClass);
 app.post("/api/users/:user/class/:class/create", classAPI.postCreate);
 app.post("/api/users/:user/class/:class/edit", classAPI.postEdit);
@@ -50,47 +45,22 @@ app.get("/api/users/:user/tags", tagAPI.getAll);
 app.post("/api/users/:user/tags/:tag/create", tagAPI.postCreate);
 app.post("/api/users/:user/tags/:tag/remove", tagAPI.postRemove);
 
-// serving note files at the given url
-// user types this url or is sent to this url
-app.get("/users/:user/class/:class/notes/:note", (req, res) => {
-    res.sendFile(process.cwd() + '/public/notepad.html')
-});
 // Set the note endpoints
+app.use("/users/:user/class/:class/notes/:note", express.static('public', {index: 'notepad.html'}));    // serve html file
 app.get("/api/users/:user/class/:class/notes/:note", noteAPI.getNote);
 app.post("/api/users/:user/class/:class/notes/:note/create", noteAPI.postCreate);
 app.post("/api/users/:user/class/:class/notes/:note/remove", noteAPI.postRemove);
 app.post("/api/users/:user/class/:class/notes/:note/edit", noteAPI.postEdit);
 
-// serving flashcard files at the given url
-// user types this url or is sent to this url
-app.get("/users/:user/class/:class/flashcards/:flashcard", (req, res) => {
-    res.sendFile(process.cwd() + '/public/flashcard.html')
-});
+
+
 // Set the flashcard endpoints
+app.use("/users/:user/class/:class/flashcards/:flashcard", express.static('public', {index: 'flashcard.html'}));    // serve html file
 app.get("/api/users/:user/class/:class/flashcards/:flashcard", flashcardAPI.getFlashcards);
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/create", flashcardAPI.postCreate);
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/remove", flashcardAPI.postRemove);
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/addFlashcard", flashcardAPI.postAddFlashcard);
 app.post("/api/users/:user/class/:class/flashcards/:flashcard/removeFlashcard", flashcardAPI.postRemoveFlashcard);
-
-/*
-the regEx, /.*\.css$/, reads anything with .css at the end
-
-the regEx, /(?:.(?!\/))+$/, reads only the ending of the url
-eg. url: https://somewebsite.com/others/flashcard.js, the regEx gets /flashcard.js
-
-*********** TODO: check if the something.css file exists ***********
-*/
-// the following 3 gets is to get css/js/png files
-app.get(/.*\.css$/, (req, res) => {
-    res.sendFile(process.cwd() + `/public/css${req.url.match(/(?:.(?!\/))+$/)}`)
-});
-app.get(/.*\.js$/, (req, res) => {
-    res.sendFile(process.cwd() + `/public/js/${req.url.match(/(?:.(?!\/))+$/)}`)
-});
-app.get(/.*\.png$/, (req, res) => {
-    res.sendFile(process.cwd() + `/public/images/${req.url.match(/(?:.(?!\/))+$/)}`)
-});
 
 // Set the default handler
 app.get("*", defaultHandler);
