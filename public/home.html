@@ -46,7 +46,7 @@
 					<span>&#10094;</span>
 				</div>
 
-				<div class="modal-body text-center align-self-center">
+				<div class="modal-body text-center align-self-center" id = "calandarTopText">
 					<h3 class="p-2" id="selectedDay"></h3>
 					<h5 id="month"></h5>
 					<span id="year"></span>
@@ -83,17 +83,17 @@
 		<!-- Tasks Column -->
 		<div class="col-md-6">
 			<div class="row">
-				<h1>Tasks for Selected Day:</h1>
+				<h1 id = "selectedDayTaskHeader">Tasks for Selected Day:</h1>
 				<div id="selectedDayTasks"></div>
 			</div>
 
 			<div class="row">
-				<h1>Future Tasks:</h1>
+				<h1 id = "futureTaskHeader">Future Tasks:</h1>
 				<div id="futureTasks"></div>
 			</div>
 
 			<div class="d-flex justify-content-center mt-2">
-				<button class="btn btn-primary btn-lg rounded-2" id="addTaskOpenModal" type="button"
+				<button class="btn btn-success btn-lg rounded-2" id="addTaskOpenModal" type="button"
 					data-bs-toggle="modal" data-bs-target="#tasksModal" data-placement="top" title="Add">
 					Add New Task
 				</button>
