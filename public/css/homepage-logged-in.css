@@ -9,7 +9,7 @@
 } */
 
 #CalandarMonth {
-	background-color: #fbff01;
+	background-color: green;
 	height: 200px;
 }
 
@@ -34,19 +34,22 @@
 #selectedDay {
 	font-family: Georgia, 'Times New Roman', Times, serif;
 	font-size: 26pt;
-	color: green;
+	color: yellow;
+	font-weight: 900;
 }
 
 #month {
 	font-family: Georgia, 'Times New Roman', Times, serif;
 	font-size: 26pt;
-	color: green;
+	color: yellow;
+	font-weight: 900;
 }
 
 #year {
 	font-family: Georgia, 'Times New Roman', Times, serif;
 	font-size: 26pt;
-	color: green;
+	color: yellow;
+	font-weight: 900;
 }
 
 #prev {
@@ -60,7 +63,7 @@
 #prev, #next {
 	font-size: 2rem;
 	transition: transform .5s ease-in-out;
-	color: green;
+	color: yellow;
 }
 
 #prev:hover, #next:hover {
@@ -75,7 +78,7 @@
 
 #days:hover {
 	color: white;
-	background-color: #2a3246;
+	background-color: green;
   	border-radius: 50%;
 }
 
