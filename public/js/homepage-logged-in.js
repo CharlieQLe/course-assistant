@@ -73,6 +73,7 @@ window.addEventListener('load', () => {
 	
 	// includes all tasks, including the tasks from selected tasks 
 	//TODO FIGURE OUT HOW TO FILTER OUT EXPIRED TASKS
+	//TODO MAYBE SORT FUTURE TASKS IN ORDER OF CLOSENESS TO CURRENT DATE
 
 	renderTask(document.getElementById('futureTasks'), allTasks);
 
