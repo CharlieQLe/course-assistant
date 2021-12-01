@@ -462,11 +462,14 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
         }
 	});
 
-	// renders the tasks in modal
-	renderModalTasks(document.getElementById('modalTasksBody'));
 	
-	// includes all tasks, including the tasks from selected tasks 
-	renderTask(document.getElementById('futureTasks'), allTasks);
+	renderModalTasks(document.getElementById('modalTasksBody')); //re render task modal
+	renderTask(document.getElementById('futureTasks'), allTasks); //re render future tasks
+	renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(day => { //re render selected days tasks
+		if (day.date === `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`) {
+			return day;
+		}
+	}));
 
 	// clear all fields in the add tasks(left side of task modal) 
 	document.getElementById('taskName').value = '';
@@ -496,10 +499,6 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 		time: taskTime
 	};
 
-	
-	// TODO: POST request and update allTasks array
-	// then edit that task from client-side storage array(allTasks)
-
 	fetch(`/api/users/${split[2]}/tasks/${split[4]}/edit`, { //POST the server with the edited values
         method: 'POST', 
         body: JSON.stringify(temp), 
@@ -517,6 +516,12 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 	currentlyEditingTask.description = taskDescription;
 
 	renderModalTasks(document.getElementById('modalTasksBody')); //re render tasks
+	renderTask(document.getElementById('futureTasks'), allTasks); //re render future tasks
+	renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(day => { //re render selected days tasks
+		if (day.date === `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`) {
+			return day;
+		}
+	}));
 		
 	// after submitting changes, clear all fields in the add tasks(left side of task modal) 
 	document.getElementById('taskName').value = '';
@@ -544,8 +549,7 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 		time: taskTime
 	};
 
-	// TODO: POST request and update allTasks array
-	// then remove task from client-side storage array(allTasks)
+	//TODO console.log to check numbers are accurate, add thens for error handelling
 
 	fetch(`/api/users/${split[2]}/tasks/${split[4]}/remove`, { //POST the server and remove task from database
         method: 'POST', 
@@ -556,13 +560,19 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 	});
 
 	for(let i = 0; i < allTasks.length; i++) {
-		if(allTasks[i].name === currentlyEditingTask.name) { 
+		if(allTasks[i] === currentlyEditingTask) { 
 			//search through allTasks array, if the values all match, delete the item at said index from client side storage
 			allTasks.splice(i, 1);
 		}
 	}
 
-	renderModalTasks(document.getElementById('modalTasksBody')); //re render tasks
+	renderModalTasks(document.getElementById('modalTasksBody')); //re render task modal
+	renderTask(document.getElementById('futureTasks'), allTasks); //re render future tasks
+	renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(day => { //re render selected days tasks
+		if (day.date === `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`) {
+			return day;
+		}
+	}));
 
 	// after deleting a task, clear all fields in the add tasks(left side of task modal) 
 	document.getElementById('taskName').value = '';
