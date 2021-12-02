@@ -1,5 +1,6 @@
 'use strict';
 
+const fileAPI = require('./api/files.js');
 const userAPI = require('./api/user.js');
 const taskAPI = require('./api/tasks.js');
 const classAPI = require('./api/class.js');
@@ -39,6 +40,9 @@ app.post("/api/users/:user/class/:class/create", classAPI.postCreate);
 app.post("/api/users/:user/class/:class/edit", classAPI.postEdit);
 app.post("/api/users/:user/class/:class/remove", classAPI.postRemove);
 app.get("/api/users/:user/class/:class/search", classAPI.getSearch);
+
+// Set the file endpoints
+app.get("/api/users/:user/file/search", fileAPI.getSearch);
 
 // Set the tag endpoints
 app.get("/api/users/:user/tags", tagAPI.getAll);

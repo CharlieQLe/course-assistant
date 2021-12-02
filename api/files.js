@@ -54,3 +54,5 @@ function getSearch(request, response) {
         })
         .catch(err => response.end(JSON.stringify({ status: -1, result: `Error searching: ${err}` })));
 }
+
+module.exports = { getSearch }
