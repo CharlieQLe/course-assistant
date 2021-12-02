@@ -48,8 +48,7 @@ function postLogin(request, response) {
     })
         .then(existingUser => {
             if (existingUser) {
-                const [salt, hash] = mc.hash(password);
-                if (existingUser.salt === salt && existingUser.hash === hash) {
+                if (mc.check(password, existingUser.salt, existingUser.hash)) {
 
                     // todo: authentiate
 
