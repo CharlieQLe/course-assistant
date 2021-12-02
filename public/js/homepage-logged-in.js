@@ -26,6 +26,7 @@ allTasks.push({
 
 //TODO
 //FIGURE OUT BUG WHERE SINGLE DIGIT DATES DONT WORK
+//FIGURE OUT BUG WHERE SOME MONTHS DONT HAVE ALL THEIR DAYS
 //FILTER OUT FUTURE TASKS
 
 // ON LOAD
@@ -111,7 +112,7 @@ function renderDays(element, month, year) {
 
 	let day = 1;
 
-	for (let i = 0; i < 5; i++) {
+	for (let i = 0; i < 6; i++) {
 		const outerWrapper = document.createElement('div');
 		outerWrapper.classList.add('row', 'text-center');
 
