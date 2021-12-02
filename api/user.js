@@ -108,8 +108,6 @@ function postEdit(request, response) {
     const passwordToChange = request.body['password'];
     const [salt, hash] = mc.hash(passwordToChange);
     
-    const user = request.params.user;
-
     client.db('final-kappa').collection('authentication').updateOne({
         user: user
     }, {
