@@ -10,24 +10,19 @@ let clickedMonth = new Date().getMonth();	// months is off by 1, eg. January = 0
 let clickedYear = new Date().getFullYear();
 let allTasks = []; // user tasks
 let futureTasks = []; //future tasks
-let classes = []; //initialize classes
 
 // FOR TESTING PURPOSES. REMOVE LATER
 allTasks.push({
 	name: 'atask',
 	description: 'a VERY LONG DESCRIPTION OF A TASK. THIS IS VERY IMPORTANT. DO ASAP',
-	class: 'One',
-	date: '2021-12-2',
+	date: '2021-12-02',
 	time: '23:10'
 }, {
 	name: 'aSecondTask',
 	description: 'description of task 2',
-	class: 'Two',
 	date: '2021-11-27',
 	time: '23:10'
 });
-
-
 
 // ON LOAD
 window.addEventListener('load', () => {
@@ -45,46 +40,12 @@ window.addEventListener('load', () => {
 	// renders the days in the calandar
 	renderDays(document.getElementById('daysTable'), new Date().getMonth(), new Date().getFullYear());
 	
-
-	// ***************
-	// FOR TESTING PURPOSES, DELETE LATER
-	classes = ['One', 'Two', 'Three', 'Four'];
-	
-	
-
-	// TODO: GET request to server asking for the classes so we can
-	// see the all the classes of the user when creating a tasks.
-	// currently, the classes displayed are in the classes array
-
-	// fetch(`/api/users/${split[2]}/class`) //fetch the classes
-	// 	.then(response => {
-	// 		return response.json();
-	// 	}).then(obj => {
-	// 		// if we get a status code of 200, set the client-side class set 
-	// 		// with class set from server
-	// 		// console.log(obj)
-	// 		if (obj.status === 200) {
-	// 			classes = obj.result;
-	// 			// after the GET request, render the classes in select class in task modal
-	// 			renderSelectClassInModalTasks(document.getElementById('taskClass'), classes);
-	// 		} else {
-	// 			throw 'something went wrong with getting the classes from the server: ' + obj.result;
-	// 		}
-	// 	}).catch(e => {
-	// 		// set page to 404 error if there is an error
-	// 		document.body.innerHTML = '404' + ' ' + e;
-	// 		// console.log(e);
-	// 	});
-	// // console.log(window.location.pathname);
-
-	// after the GET request, render the classes in select class in task modal (MOVE THIS WHEN ABOVE IS FIXED)
-	renderSelectClassInModalTasks(document.getElementById('taskClass'), classes);
 	
 	// TODO: GET request to server asking for all the tasks
 	// the user currently has, then update the allTasks array
 
 	// // grab tasks from server
-    // fetch(`/api/users/${split[2]}/tasks`)
+    // fetch(`/api/users/${split[1]}/tasks`)
 	// 	.then(response => {
 	// 		return response.json();
 	// 	}).then(obj => {
@@ -318,7 +279,6 @@ function createTask(userTask) {
 		document.getElementById('taskName').value = userTask.name;
 		document.getElementById('taskDate').value = userTask.date;
 		document.getElementById('taskTime').value = userTask.time;
-		document.getElementById('taskClass').value = userTask.class;
 		document.getElementById('taskDescription').value = userTask.description;
 
 		//set variable equal to userTask for use in edit button
@@ -370,8 +330,8 @@ function createTask(userTask) {
  * @param {string} time time when the task is due(HH:mm), time is using 24 hour clock system(aka. military time)
  * @returns an element
  */
- function createModalTasks(name, description, userClass, date, time) {
-	const arr = [description, userClass, date, time];
+ function createModalTasks(name, description, date, time) {
+	const arr = [description, date, time];
 
 	const row = document.createElement('tr');
 	
@@ -380,7 +340,7 @@ function createTask(userTask) {
 	header.innerHTML = name;
 	row.appendChild(header);
 	
-	for(let i = 0; i < 4; i++) {
+	for(let i = 0; i < 3; i++) {
 		const col = document.createElement('td');
 		col.innerHTML = arr[i];
 		col.style.wordBreak = 'break-all';
@@ -401,21 +361,21 @@ function createTask(userTask) {
 
 // render the options in the select form(select form
 // is the dropdown menu in task modal)
-function renderSelectClassInModalTasks(element, classes) {
-	element.innerHTML = '';
+// function renderSelectClassInModalTasks(element, classes) {
+// 	element.innerHTML = '';
 
-	const initialSelected = document.createElement('option');
-	initialSelected.setAttribute('selected', '');
-	initialSelected.innerHTML = 'Select Class';
-	element.appendChild(initialSelected);
+// 	const initialSelected = document.createElement('option');
+// 	initialSelected.setAttribute('selected', '');
+// 	initialSelected.innerHTML = 'Select Class';
+// 	element.appendChild(initialSelected);
 	
-	for(let i = 0; i < classes.length; i++) {
-		const option = document.createElement('option');
-		option.setAttribute('value', classes[i]);
-		option.innerHTML = classes[i];
-		element.appendChild(option);
-	}
-}
+// 	for(let i = 0; i < classes.length; i++) {
+// 		const option = document.createElement('option');
+// 		option.setAttribute('value', classes[i]);
+// 		option.innerHTML = classes[i];
+// 		element.appendChild(option);
+// 	}
+// }
 
 
 // either renders the selected day's tasks or future tasks(not modals)
@@ -433,7 +393,7 @@ function renderModalTasks(element) {
 	element.innerHTML = '';
 	
     for (let i = 0; i < allTasks.length; i++) {
-		const taskHolder = createModalTasks(allTasks[i].name, allTasks[i].description, allTasks[i].class, allTasks[i].date, allTasks[i].time);
+		const taskHolder = createModalTasks(allTasks[i].name, allTasks[i].description, allTasks[i].date, allTasks[i].time);
         element.appendChild(taskHolder);
     }
 }
@@ -444,7 +404,6 @@ document.getElementById('addTaskOpenModal').addEventListener('click', () => {
 	document.getElementById('taskName').value = '';
 	document.getElementById('taskDate').value = '';
 	document.getElementById('taskTime').value = '';
-	document.getElementById('taskClass').value = '';
 	document.getElementById('taskDescription').value = '';
 
 
@@ -473,7 +432,6 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
 	const taskName = document.getElementById('taskName').value;
     const taskDate = document.getElementById('taskDate').value;
     const taskTime = document.getElementById('taskTime').value;
-	const taskClass = document.getElementById('taskClass').value;
     const taskDescription = document.getElementById('taskDescription').value;
 
 
@@ -481,14 +439,13 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
     const split = url.split('/');
 
 	// stops user from adding tasks with some empty fields
-	if (taskName.length === 0 || taskDate.length === 0 || taskTime === 0 || taskClass === 0 || taskDescription === 0) {
+	if (taskName.length === 0 || taskDate.length === 0 || taskTime === 0 || taskDescription === 0) {
 		return;
 	}
 
 	const temp = {
 		name: taskName,
 		description: taskDescription,
-		class: taskClass,
 		date: taskDate,
 		time: taskTime
 	};
@@ -528,7 +485,6 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
 	document.getElementById('taskName').value = '';
 	document.getElementById('taskDate').value = '';
 	document.getElementById('taskTime').value = '';
-	document.getElementById('taskClass').value = '';
 	document.getElementById('taskDescription').value = '';
 	
 });
@@ -539,7 +495,6 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 	const taskName = document.getElementById('taskName').value;
     const taskDate = document.getElementById('taskDate').value;
     const taskTime = document.getElementById('taskTime').value;
-	const taskClass = document.getElementById('taskClass').value;
     const taskDescription = document.getElementById('taskDescription').value;
 
 	const url = window.location.pathname;       // reads url
@@ -548,12 +503,11 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 	const temp = {
 		name: taskName,
 		description: taskDescription,
-		class: taskClass,
 		date: taskDate,
 		time: taskTime
 	};
 
-	fetch(`/api/users/${split[2]}/tasks/${split[4]}/edit`, { //POST the server with the edited values
+	fetch(`/api/users/${split[1]}/tasks/${taskName}/edit`, { //POST the server with the edited values
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
@@ -575,7 +529,6 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 	currentlyEditingTask.name = taskName;
 	currentlyEditingTask.date = taskDate;
 	currentlyEditingTask.time = taskTime;
-	currentlyEditingTask.class = taskClass;
 	currentlyEditingTask.description = taskDescription;
 
 	renderModalTasks(document.getElementById('modalTasksBody')); //re render tasks
@@ -590,7 +543,6 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 	document.getElementById('taskName').value = '';
 	document.getElementById('taskDate').value = '';
 	document.getElementById('taskTime').value = '';
-	document.getElementById('taskClass').value = '';
 	document.getElementById('taskDescription').value = '';
 });
 
@@ -598,7 +550,6 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 	const taskName = document.getElementById('taskName').value;
     const taskDate = document.getElementById('taskDate').value;
     const taskTime = document.getElementById('taskTime').value;
-	const taskClass = document.getElementById('taskClass').value;
     const taskDescription = document.getElementById('taskDescription').value;
 
 	const url = window.location.pathname;       // reads url
@@ -607,14 +558,13 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 	const temp = {
 		name: taskName,
 		description: taskDescription,
-		class: taskClass,
 		date: taskDate,
 		time: taskTime
 	};
 
 	//TODO console.log to check numbers are accurate, add thens for error handelling
 
-	fetch(`/api/users/${split[2]}/tasks/${split[4]}/remove`, { //POST the server and remove task from database
+	fetch(`/api/users/${split[1]}/tasks/${taskName}/remove`, { //POST the server and remove task from database
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
@@ -650,6 +600,5 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 	document.getElementById('taskName').value = '';
 	document.getElementById('taskDate').value = '';
 	document.getElementById('taskTime').value = '';
-	document.getElementById('taskClass').value = '';
 	document.getElementById('taskDescription').value = '';
 });
