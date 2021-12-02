@@ -22,10 +22,10 @@ function postSignup(request, response) {
             } else {
                 const [salt, hash] = mc.hash(password);
                 return client.db('final-kappa').collection('authentication').insertOne({
-                    name = name,
-                    email = email,
-                    salt = salt,
-                    hash = hash
+                    name: name,
+                    email: email,
+                    salt: salt,
+                    hash: hash
                 });
             }
         })
