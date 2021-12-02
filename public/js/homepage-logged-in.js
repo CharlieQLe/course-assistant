@@ -56,7 +56,7 @@ window.addEventListener('load', () => {
 			// if we get a status code of 200, set the client-side task set 
 			// with task set from server
 			// console.log(obj)
-			if (obj.status === 200) {
+			if (obj.status === 0) {
 				allTasks = obj.result;
 				// after GET request, then we render today's tasks
 				renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(day => {
@@ -459,7 +459,7 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
 	}).then(response => {
 		return response.json();
 	}).then(obj => {
-		if(obj.status !== 200) {
+		if(obj.status !== 0) {
 			throw obj.result;
 		}
 		allTasks.push(temp);
@@ -470,7 +470,7 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
 				return day;
 			}
 		}));
-		
+
 	}).catch(e => {
 		// set page to 404 error if there is an error
 		document.body.innerHTML = '404' + ' ' + e;
@@ -511,7 +511,7 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 		}).then(response => {
 			return response.json();
 		}).then(obj => {
-			if(obj.status !== 200) {
+			if(obj.status !== 0) {
 				throw obj.result;
 			}
 		//edit allTasks array
@@ -567,7 +567,7 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 		}).then(response => {
 			return response.json();
 		}).then(obj => {
-			if(obj.status !== 200) {
+			if(obj.status !== 0) {
 				throw obj.result;
 			}
 			for(let i = 0; i < allTasks.length; i++) {
