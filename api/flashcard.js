@@ -1,6 +1,6 @@
 'use strict'
 
-const { client } = require('./mongo.js');
+const { client } = require('./initializeServer.js');
 
 // flashcards {
 //     "tags": [],

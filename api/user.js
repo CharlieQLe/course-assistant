@@ -1,6 +1,6 @@
 'use strict';
 
-const { client } = require("./mongo");
+const { client } = require("./initializeServer");
 
 
 const fs = require('fs');  // REMOVE THIS AFTER IMPLEMENTING MONGODB
