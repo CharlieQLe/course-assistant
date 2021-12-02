@@ -76,7 +76,7 @@ curl -X POST -d '{ "name": "Task Name", "description": "Do something", "class": 
 Running the above sends a post request to create a task with the specified name and description, scheduled for some time and date, and belonging to a class for the specified user.
 
 ```
-curl https://cs326-final-kappa.herokuapp.com/api/users/USER/tasks/TASKID
+curl https://cs326-final-kappa.herokuapp.com/api/users/USER/tasks/TASK
 ```
 Get the data of a task with the specified id for the specified user.
 
@@ -86,7 +86,7 @@ curl -X POST -d '{ "name": "Task Name", "description": "Do something", "class": 
 Running the above sends a post request to edit a task with the specified id to have the specified name, description, etc. for the specified user.
 
 ```
-curl -X POST https://cs326-final-kappa.herokuapp.com/api/users/USER/tasks/TASKID/remove
+curl -X POST https://cs326-final-kappa.herokuapp.com/api/users/USER/tasks/TASK/remove
 ```
 Running the above sends a post request to remove a task with the specified id.
 
