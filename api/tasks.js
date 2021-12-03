@@ -64,8 +64,7 @@ const { client } = require('./initializeServer.js');
                     user: request.params.user,
                     description: request.body['description'],
                     date: request.body['date'],
-                    time: request.body['time'],
-                    class: request.body['class']
+                    time: request.body['time']
                 })
                     .then(_ => response.end(JSON.stringify({ status: 0, result: "Create task received!" })))
                     .catch(err => response.end(JSON.stringify({ status: -1, result: `Error in tasksAPI.postCreate: ${err}` })));
@@ -89,8 +88,7 @@ const { client } = require('./initializeServer.js');
             name: request.params.task,
             description: request.body['description'],
             date: request.body['date'],
-            time: request.body['time'],
-            class: request.body['class'] 
+            time: request.body['time']
         }
     })
         .then(_ => response.end(JSON.stringify({ status: 0, result: "Edit task received!" })))
