@@ -9,7 +9,7 @@
 } */
 
 #CalandarMonth {
-	background-color: green;
+	background-color: rgb(70, 76, 109);
 	height: 200px;
 }
 
@@ -17,7 +17,7 @@
 	/* color: #e66b6b; */
 	font-family: Georgia, 'Times New Roman', Times, serif;
 	font-size: larger;
-	color: green;
+	color: rgb(70, 76, 109);
 }
 
 #daysTable {
@@ -34,21 +34,21 @@
 #selectedDay {
 	font-family: Georgia, 'Times New Roman', Times, serif;
 	font-size: 26pt;
-	color: yellow;
+	color: white;
 	font-weight: 900;
 }
 
 #month {
 	font-family: Georgia, 'Times New Roman', Times, serif;
 	font-size: 26pt;
-	color: yellow;
+	color: white;
 	font-weight: 900;
 }
 
 #year {
 	font-family: Georgia, 'Times New Roman', Times, serif;
 	font-size: 26pt;
-	color: yellow;
+	color: white;
 	font-weight: 900;
 }
 
@@ -63,11 +63,11 @@
 #prev, #next {
 	font-size: 2rem;
 	transition: transform .5s ease-in-out;
-	color: yellow;
+	color: white;
 }
 
 #prev:hover, #next:hover {
-	color: rgb(255, 255, 255);
+	color: red;
 	transform: rotate(360deg);
 }
 
@@ -78,7 +78,7 @@
 
 #days:hover {
 	color: white;
-	background-color: green;
+	background-color: rgb(70, 76, 109);
   	border-radius: 50%;
 }
 
@@ -92,7 +92,7 @@
 }
 
 #modalTasksHeader {
-	color: green;
+	color: rgb(70, 76, 109);
 	font-size: large;
 }
 
@@ -102,11 +102,11 @@
 }
 
 #selectedDayTaskHeader {
-	color: green;
+	color: rgb(70, 76, 109);
 	font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 #futureTaskHeader {
-	color: green;
+	color: rgb(70, 76, 109);
 	font-family: Georgia, 'Times New Roman', Times, serif;
 }
