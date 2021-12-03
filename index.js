@@ -28,7 +28,6 @@ app.post("/api/users/:user/delete", userAPI.postDelete);
 // Set the task endpoints
 app.get("/api/users/:user/tasks", taskAPI.getAll);
 app.post("/api/users/:user/tasks/create", taskAPI.postCreate);
-app.post("/api/users/:user/tasks/:task", taskAPI.getTask);
 app.post("/api/users/:user/tasks/:task/edit", taskAPI.postEdit);
 app.post("/api/users/:user/tasks/:task/remove", taskAPI.postRemove);
 
