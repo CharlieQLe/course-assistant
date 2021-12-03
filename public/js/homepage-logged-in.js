@@ -60,7 +60,7 @@ window.addEventListener('load', () => {
 				allTasks = obj.result;
 				// after GET request, then we render today's tasks
 				renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(day => {
-					if (day.date === `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`) {
+					if (day.date === `${new Date().getFullYear()}-${(new Date().getMonth()+1).toString().padStart(2, '0')}-${new Date().getDate()}`) {
 						return day;
 					}
 				}));
@@ -502,7 +502,7 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 		time: taskTime
 	};
 
-	fetch(`/api/users/${split[2]}/tasks/${taskName}/edit`, { //POST the server with the edited values
+	fetch(`/api/users/${split[2]}/tasks/edit`, { //POST the server with the edited values
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
@@ -558,7 +558,7 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 
 	//TODO console.log to check numbers are accurate, add thens for error handelling
 
-	fetch(`/api/users/${split[2]}/tasks/${taskName}/remove`, { //POST the server and remove task from database
+	fetch(`/api/users/${split[2]}/tasks/remove`, { //POST the server and remove task from database
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
