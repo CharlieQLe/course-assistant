@@ -15,7 +15,7 @@ function getNote(request, response) {
         type: "note"
     }).then(exist => {
         if (!exist) {
-            throw new Error("Note could not be found");
+            throw "Note could not be found";
         }
         response.end(JSON.stringify({ status: 0, result: exist.body }))
     }).catch(err => {
@@ -30,17 +30,25 @@ function getNote(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postCreate(request, response) {
-    client.db("final-kappa").collection("files").insertOne({
+    client.db("final-kappa").collection("files").findOne({
         user: request.params.user,
-        name: request.params.note,
-        type: "note",
-        tags: request.body['tags'],
-        body: request.body['body']
+        name: request.params.note
+    }).then(exist => {
+        if (exist) {
+            throw "Note already exists";
+        }
+        return client.db("final-kappa").collection("files").insertOne({
+            user: request.params.user,
+            name: request.params.note,
+            type: "note",
+            tags: request.body["tags"],
+            body: request.body["body"]
+        });
     }).then(inserted => {
         if (inserted.acknowledged) {
             response.end(JSON.stringify({ status: 0, result: "Create note received!" }));
         } else {
-            throw new Error("Could not create the note");
+            throw "Could not create the note";
         }
     }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in noteAPI.postCreate: ${err}` })));
 }
@@ -60,7 +68,7 @@ function postRemove(request, response) {
         if (deleted.acknowledged) {
             response.end(JSON.stringify({ status: 0, result: "Deleted note received!" }));
         } else {
-            throw new Error("Could not delete the note");
+            throw "Could not delete the note";
         }
     }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in noteAPI.postRemove: ${err}` })));
 }
@@ -83,7 +91,7 @@ function postEdit(request, response) {
         if (updated.acknowledged) {
             response.end(JSON.stringify({ status: 0, result: `Note has been updated` }));
         } else {
-            throw new Error("Note could not be updated");
+            throw "Note could not be updated";
         }
     }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in noteAPI.postEdit: ${err}` })));
 
