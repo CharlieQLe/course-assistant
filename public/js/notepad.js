@@ -4,12 +4,11 @@ window.addEventListener('load', async function() {
 	const split = url.split('/');
 
 	// GET request to server: asking for the file
-	fetch(`/api/users/${split[2]}/class/${split[4]}/notes/${split[6]}`)
+	fetch(`/api/users/${split[2]}/file/notes/${split[5]}`)
 	.then(response => {
         return response.json();
     }).then(obj => {
-        // console.log(obj)
-        if (obj.status === 200) {
+        if (obj.status === 0) {
             document.getElementById('notepad-textarea').value = obj.result;
 
 			// sets the file name of the notes
@@ -20,8 +19,7 @@ window.addEventListener('load', async function() {
 
     }).catch(e => {
 		// set page to 404 error if there is an error
-		document.body.innerHTML = '404' + ' ' + e;
-        // console.log(e);
+		document.body.innerHTML = e;
     });
 
 })
@@ -34,7 +32,7 @@ document.getElementById('save-btn').addEventListener('click', () => {
 	// console.log(document.getElementById('notepad-textarea').value)
 
 	// post to server. tell server to save file
-	fetch(`/api/users/${split[2]}/class/${split[4]}/notes/${split[6]}/edit`, {
+	fetch(`/api/users/${split[2]}/file/notes/${split[5]}/edit`, {
 		method: 'POST', 
 		body: JSON.stringify({ body: document.getElementById('notepad-textarea').value }), 
 		headers: {
@@ -42,12 +40,12 @@ document.getElementById('save-btn').addEventListener('click', () => {
 		}
 	}).then(response => response.json())
 	.then(obj => {
-		if(obj.status !== 200) {
+		if(obj.status !== 0) {
 			throw obj.result;
 		}
 	}).catch(e => {
 		// set page to error if server could not save it
-		document.body.innerHTML = '404' + ' ' + e;
+		document.body.innerHTML = e;
 	});
 
 });

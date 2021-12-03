@@ -183,8 +183,9 @@ function renderFlashcards(element) {
             
             const url = window.location.pathname;       // reads url
             const split = url.split('/');
+
             // post to server. tell server to delete this flashcard
-            fetch(`/api/users/${split[2]}/class/${split[4]}/flashcards/${split[6]}/removeFlashcard`, {
+            fetch(`/api/users/${split[2]}/file/flashcards/${split[5]}/removeFlashcard`, {
                 method: 'POST', 
                 body: JSON.stringify(temp), 
                 headers: {
@@ -193,18 +194,15 @@ function renderFlashcards(element) {
             }).then(response => {
                 return response.json();
             }).then(obj => {
-                if(obj.status !== 200) {
+                if(obj.status !== 0) {
                     throw obj.result;
                 }
             }).catch(e => {
-        		// set page to 404 error if there is an error
-		        document.body.innerHTML = '404' + ' ' + e;
-                // console.log(e);
+		        document.body.innerHTML = e;
             });
         })
         
         element.appendChild(main);
-
     }
 }
 
@@ -219,15 +217,14 @@ function renderReview(element) {
     }
 }
 
-
 function renderStudyFlashcards(element) {
     element.innerHTML = '';
-
+    
     let rowOuter = makeRow();
     
     const copy = JSON.parse(JSON.stringify(flashcards));
     const copyShuffle = shuffle(copy);      // shuffle flashcards up
-
+    
     for (let i = 0; i < copyShuffle.length; i++) {
         const colOuterLeft = makeCol(0);
         const colOuterRight = makeCol(0);
@@ -239,11 +236,12 @@ function renderStudyFlashcards(element) {
         const content = makeRow();
         content.appendChild(makeCard(copyShuffle[i].term));
         content.appendChild(makeButtons());
-
+        
         // event listener that allows user to click on the card and it will switch
         // between term and definition
         content.firstChild.addEventListener('click', () => {
             let cardParagraph = content.firstChild.firstChild.firstChild.firstChild;
+
             if (cardParagraph.innerHTML === copyShuffle[i].term) {
                 cardParagraph.innerHTML = copyShuffle[i].definition;
             } else {
@@ -326,15 +324,12 @@ window.addEventListener('load', async function() {
     // console.log(split);
 
     // grab flashcards from server
-    fetch(`/api/users/${split[2]}/class/${split[4]}/flashcards/${split[6]}`)
+    fetch(`/api/users/${split[2]}/file/flashcards/${split[5]}`)
     .then(response => {
         return response.json();
     }).then(obj => {
-        // if we get a status code of 200, set the client-side flashcard set 
-        // with flashcard set from server
-        // console.log(obj)
-
-        if (obj.status === 200) {
+        // if we get a status code of 0, set the client-side flashcard set
+        if (obj.status === 0) {
             flashcards = obj.result;
             renderFlashcards(document.getElementById('flashcard'));
         } else {
@@ -342,11 +337,8 @@ window.addEventListener('load', async function() {
         }
 
     }).catch(e => {
-        // set page to 404 error if there is an error
-		document.body.innerHTML = '404' + ' ' + e;
-        // console.log(e);
+		document.body.innerHTML = e;
     });
-    // console.log(window.location.pathname);
 
     // sets the file name of the flashcard
     document.getElementById('flashcard-title').innerHTML = split[split.length-1].replace('%20', ' ');
@@ -380,7 +372,7 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
     const split = url.split('/');
 
     // POST: add a flashcard to the set of flashcards
-    fetch(`/api/users/${split[2]}/class/${split[4]}/flashcards/${split[6]}/addFlashcard`, {
+    fetch(`/api/users/${split[2]}/file/flashcards/${split[5]}/addFlashcard`, {
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
@@ -389,7 +381,7 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
     }).then(response => {
         return response.json();
     }).then(obj => {
-        if (obj.status !== 200) {
+        if (obj.status !== 0) {
             throw obj.result;
         }
         // clear term and description input box after every added term
@@ -400,16 +392,13 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
         renderFlashcards(document.getElementById('flashcard'));
     
         // the following 2 lines of code auto scroll to the buttom when
-        //  adding flashcards in the edit screen
+        // adding flashcards in the edit screen
         const elem = document.getElementById('flashcard');
         elem.scrollTop = elem.scrollHeight;
     }).catch(e => {
-        // set page to 404 error if there is an error
-		document.body.innerHTML = '404' + ' ' + e;
-        // console.log(e);
+		document.body.innerHTML = e;
     });
 
-    
 });
 
 // the study button is displayed when you are in th editing flashcard section
@@ -426,7 +415,7 @@ document.getElementById('edit-btn').addEventListener('click', () => {
     renderFlashcards(document.getElementById('flashcard'));
 });
 
-
+// 
 document.getElementById('reset-btn').addEventListener('click', () => {
     review = [];
     renderStudyFlashcards(document.getElementById('flashcard'));

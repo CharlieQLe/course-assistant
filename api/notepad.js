@@ -9,36 +9,17 @@ const { client } = require('./initializeServer.js');
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function getNote(request, response) {
-    const user = request.params.user;
-    const userClass = request.params.class;
-    const noteName = request.params.note;
-
-    client.db('final-kappa').listCollections().toArray((error, result) => {
-        if (error) {
-            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.getNote: ${error}` }));
+    client.db("final-kappa").collection("files").findOne({
+        user: request.params.user,
+        name: request.params.note,
+        type: "note"
+    }).then(exist => {
+        if (!exist) {
+            throw new Error("Note could not be found");
         }
-        
-        // if user is found in the database, then proceed to find the note in the db
-        if (result.filter(col => col.name === user).length === 1) {
-            client.db('final-kappa').collection(user).find({
-                name: noteName,
-                class: userClass,
-                type: 'note'
-            }).toArray((error, result) => {
-                if (error) {
-                    response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.getNote(after checking for user): ${error}` }));
-                }
-                
-                // if user does not have the requested notes
-                if (result.length === 0) {
-                    response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.getNote: class(${userClass}) or note(${noteName}) could not be found` }));
-                    return;
-                } 
-                response.end(JSON.stringify({ status: 200, result: result[0].body }));
-            });
-        } else {
-            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.getNote: user(${user}) could not be found` }));
-        }
+        response.end(JSON.stringify({ status: 0, result: exist.body }))
+    }).catch(err => {
+        response.end(JSON.stringify({ status: -1, result: err.toString() }))
     });
 }
 
@@ -49,36 +30,19 @@ function getNote(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postCreate(request, response) {
-    const user = request.params.user;
-    const userClass = request.params.class;
-    const noteName = request.params.note;
-    const tags = request.body['tags'];
-
-    client.db('final-kappa').listCollections().toArray((error, result) => {
-        if (error) {
-            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postCreate: ${error}` }));
-        }
-        
-        // if user is found in the database, then create the note
-        if (result.filter(col => col.name === user).length === 1) {
-            const query = {
-                name: noteName,
-                class: userClass,
-                type: 'note',
-                tags: tags,
-                body: ''
-            };
-            client.db('final-kappa').collection(user).insertOne(query, (error, result) => {
-                if (error) {
-                    response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postCreate: ${error}` }));
-                }
-                response.end(JSON.stringify({ status: 200, result: "Create notes received!" }));
-            });
+    client.db("final-kappa").collection("files").insertOne({
+        user: request.params.user,
+        name: request.params.note,
+        type: "note",
+        tags: request.body['tags'],
+        body: request.body['body']
+    }).then(inserted => {
+        if (inserted.acknowledged) {
+            response.end(JSON.stringify({ status: 0, result: "Create note received!" }));
         } else {
-            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postCreate: user(${user}) could not be found` }));
+            throw new Error("Could not create the note");
         }
-    });
-
+    }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in noteAPI.postCreate: ${err}` })));
 }
 
 /**
@@ -88,32 +52,17 @@ function postCreate(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postRemove(request, response) {
-    const user = request.params.user;
-    const userClass = request.params.class;
-    const noteName = request.params.note;
-
-    client.db('final-kappa').listCollections().toArray((error, result) => {
-        if (error) {
-            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postRemove: ${error}` }));
-        }
-        
-        // if user is found in the database, then remove the requested note
-        if (result.filter(col => col.name === user).length === 1) {
-            const query = {
-                name: noteName,
-                class: userClass,
-                type: 'note',
-            };
-            client.db('final-kappa').collection(user).deleteOne(query, (error, result) => {
-                if (error) {
-                    response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postRemove: ${error}` }));
-                }
-                response.end(JSON.stringify({ status: 200, result: "Remove note received!" }));
-            });
+    client.db("final-kappa").collection("files").deleteOne({
+        user: request.params.user,
+        name: request.params.note,
+        type: "note"
+    }).then(deleted => {
+        if (deleted.acknowledged) {
+            response.end(JSON.stringify({ status: 0, result: "Deleted note received!" }));
         } else {
-            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postRemove: user(${user}) could not be found` }));
+            throw new Error("Could not delete the note");
         }
-    });
+    }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in noteAPI.postRemove: ${err}` })));
 }
 
 /**
@@ -123,42 +72,25 @@ function postRemove(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postEdit(request, response) {
-    const user = request.params.user;
-    const userClass = request.params.class;
-    const noteName = request.params.note;
-    const body = request.body['body'];
-
-    client.db('final-kappa').listCollections().toArray((error, result) => {
-        if (error) {
-            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postEdit: ${error}` }));
-        }
-        
-        // if user is found in the database, then edit the requested note
-        if (result.filter(col => col.name === user).length === 1) {
-            const query = {
-                name: noteName,
-                class: userClass,
-                type: 'note',
-            };
-            const updateDocument = {
-                $set: { body: body }
-            }
-            client.db('final-kappa').collection(user).updateOne(query, updateDocument, (error, result) => {
-                if (error) {
-                    response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postEdit: ${error}` }));
-                }
-                response.end(JSON.stringify({ status: 200, result: "Edit note received!" }));
-            });
+    client.db("final-kappa").collection("files").updateOne({
+        user: request.params.user,
+        name: request.params.note,
+        type: "note"
+    }, {
+        $set: { body: request.body["body"] }
+    }).then(updated => {
+        console.log(updated);
+        if (updated.acknowledged) {
+            response.end(JSON.stringify({ status: 0, result: `Note has been updated` }));
         } else {
-            response.end(JSON.stringify({ status: 404, result: `Error in noteAPI.postEdit: user(${user}) could not be found` }));
+            throw new Error("Note could not be updated");
         }
-    });
+    }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in noteAPI.postEdit: ${err}` })));
 
 }
 
 module.exports = {
     getNote,
-    postCreate, postRemove, 
+    postCreate, postRemove,
     postEdit,
 };
-

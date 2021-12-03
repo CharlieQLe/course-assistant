@@ -1,222 +1,124 @@
 'use strict'
 
-const { client } = require('./initializeServer.js');
-
-// flashcards {
-//     "tags": [],
-//     "description": "",
-//     "flashcards": []
-// }
-
-// flashcard {
-//     "term": "",
-//     "definition": ""
-// }
-// ==============================================================
-
+const { client } = require("./initializeServer.js");
 
 /**
  * Process a get request to retrieve the data of a set of flashcards.
- * /api/users/:user/class/:class/flashcards/:flashcard
+ * /api/users/:user/flashcards/:flashcard
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function getFlashcards(request, response) {
-    const user = request.params.user;
-    const userClass = request.params.class;
-    const flashcardSetName = request.params.flashcard;
 
-
-    client.db('final-kappa').listCollections().toArray((error, result) => {
-        if (error) {
-            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.getFlashcards: ${error}` }));
+    client.db("final-kappa").collection("files").findOne({
+        user: request.params.user,
+        name: request.params.flashcard,
+        type: "flashcard"
+    }).then(exist => {
+        if (!exist) {
+            throw new Error("Flashcards could not be found");
         }
-        
-        // if user is found in the database, then get the set of flashcards
-        if (result.filter(col => col.name === user).length === 1) {
-            // get the set of flashcards in the database
-            client.db('final-kappa').collection(user).find({
-                name: flashcardSetName,
-                class: userClass,
-                type: 'flashcard'
-            }).toArray((error, result) => {
-                if (error) {
-                    response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.getFlashcards(after checking for user): ${error}` }));
-                }
-                
-                // if the set of flashcards could not be found
-                if (result.length === 0) {
-                    response.end(JSON.stringify({ status: 404, result: `class(${userClass}), or flashcard(${flashcardSetName}) could not be found` }));
-                    return;
-                }
-                response.end(JSON.stringify({ status: 200, result: result[0].flashcards }));
-            });
-        } else {
-            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.getFlashcards: user(${user}) could not be found` }));
-        }
+        response.end(JSON.stringify({ status: 0, result: exist.flashcards }));
+    }).catch(err => {
+        response.end(JSON.stringify({ status: -1, result: err.toString() }))
     });
-
-
 }
-
 
 /**
  * Process a post request to create a set of flashcards.
- * /api/users/:user/class/:class/flashcards/:flashcard/create
+ * /api/users/:user/flashcards/:flashcard/create
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postCreate(request, response) {
-    const user = request.params.user;
-    const userClass = request.params.class;
-    const flashcardSetName = request.params.flashcard;
-    const tags = request.body['tags'];
-    
-    client.db('final-kappa').listCollections().toArray((error, result) => {
-        if (error) {
-            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postCreate: ${error}` }));
-        }
-        
-        // if user is found in the database, then create the set of flashcard
-        if (result.filter(col => col.name === user).length === 1) {
-            const query = {
-                name: flashcardSetName,
-                class: userClass,
-                type: 'flashcard',
-                tags: tags,
-                flashcards: []
-            };
-            client.db('final-kappa').collection(user).insertOne(query, (error, result) => {
-                if (error) {
-                    response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postCreate: ${error}` }));
-                }
-                response.end(JSON.stringify({ status: 200, result: "Create a set of flashcards received!" }));
-            });
+    client.db("final-kappa").collection("files").insertOne({
+        user: request.params.user,
+        name: request.params.flashcard,
+        type: "flashcard",
+        tags: request.body['tags'],
+        flashcards: []
+    }).then(inserted => {
+        if (inserted.acknowledged) {
+            response.end(JSON.stringify({ status: 0, result: "Create flashcards received!" }));
         } else {
-            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postCreate: user(${user}) could not be found` }));
+            throw new Error("Could not create flashcards");
         }
-    });
-
+    }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in flashcardAPI.postCreate: ${err}` })));
 }
 
 /**
  * Process a post request to remove a set of flashcards.
- * /api/users/:user/class/:class/flashcards/:flashcard/remove
+ * /api/users/:user/flashcards/:flashcard/remove
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postRemove(request, response) {
-    const user = request.params.user;
-    const userClass = request.params.class;
-    const flashcardSetName = request.params.flashcard;
-
-    client.db('final-kappa').listCollections().toArray((error, result) => {
-        if (error) {
-            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemove: ${error}` }));
-        }
-        
-        // if user is found in the database, then remove the set of flashcard
-        if (result.filter(col => col.name === user).length === 1) {
-            const query = {
-                name: flashcardSetName,
-                class: userClass,
-                type: 'flashcard'
-            };
-            client.db('final-kappa').collection(user).deleteOne(query, (error, result) => {
-                if (error) {
-                    response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemove: ${error}` }));
-                }
-                response.end(JSON.stringify({ status: 200, result: "Remove set of flashcards received!" }));
-            });
+    client.db("final-kappa").collection("files").deleteOne({
+        user: request.params.user,
+        name: request.params.flashcard,
+        type: "flashcard"
+    }).then(deleted => {
+        if (deleted.acknowledged) {
+            response.end(JSON.stringify({ status: 0, result: "Deleted flashcards received!" }));
         } else {
-            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemove: user(${user}) could not be found` }));
+            throw new Error("Could not delete flashcards");
         }
-    });
+    }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in flashcardAPI.postRemove: ${err}` })));
 }
 
 
 /**
  * Process a post request to add a flash card.
- * /api/users/:user/class/:class/flashcards/:flashcard/addFlashcard
+ * /api/users/:user/flashcards/:flashcard/addFlashcard
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postAddFlashcard(request, response) {
-    const user = request.params.user;
-    const userClass = request.params.class;
-    const flashcardSetName = request.params.flashcard;
-    const term = request.body['term'];
-    const definition = request.body['definition'];
-
-    client.db('final-kappa').listCollections().toArray((error, result) => {
-        if (error) {
-            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postAddFlashcard: ${error}` }));
+    client.db("final-kappa").collection("files").updateOne({
+        user: request.params.user,
+        name: request.params.flashcard,
+        type: "flashcard"
+    }, {
+        $push: {
+            "flashcards": {
+                term: request.body['term'], 
+                definition: request.body['definition']
+            }
         }
-        
-        // if user is found in the database, then add the flashcard in the set
-        if (result.filter(col => col.name === user).length === 1) {
-            const query = {
-                name: flashcardSetName,
-                class: userClass, 
-                type: 'flashcard'
-            };
-            
-            const updateDocument = {
-                $push: { "flashcards": {term: term, definition: definition} }
-            };
-            
-            client.db('final-kappa').collection(user).updateOne(query, updateDocument, (error, result) => {
-                if (error) {
-                    response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postAddFlashcard: ${error}` }));
-                }
-                response.end(JSON.stringify({ status: 200, result: "Add flashcard received!" }));
-            });           
+    }).then(updated => {
+        if (updated.acknowledged) {
+            response.end(JSON.stringify({ status: 0, result: "Added flashcard to the flashcards set received!" }));
         } else {
-            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postAddFlashcard: user(${user}) could not be found` }));
+            throw new Error("Could not add flashcard to the flashcards set");
         }
-    });
+    }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in flashcardAPI.postAddFlashcard: ${err}` })));
 }
 
 /**
  * Process a post request to remove a flash card.
- * /api/users/:user/class/:class/flashcards/:flashcard/removeFlashcard
+ * /api/users/:user/flashcards/:flashcard/removeFlashcard
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postRemoveFlashcard(request, response) {
-    const user = request.params.user;
-    const userClass = request.params.class;
-    const flashcardSetName = request.params.flashcard;
-    const term = request.body['term'];
-    const definition = request.body['definition'];
-
-    client.db('final-kappa').listCollections().toArray((error, result) => {
-        if (error) {
-            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemoveFlashcard: ${error}` }));
+    client.db("final-kappa").collection("files").updateOne({
+        user: request.params.user,
+        name: request.params.flashcard,
+        type: "flashcard"
+    }, {
+        $pull: {
+            "flashcards": {
+                term: request.body['term'], 
+                definition: request.body['definition']
+            }
         }
-        
-        // if user is found in the database, then
-        if (result.filter(col => col.name === user).length === 1) {
-            const query = {
-                name: flashcardSetName,
-                class: userClass, 
-                type: 'flashcard'
-            };
-            
-            const updateDocument = {
-                $pull: { "flashcards": {term: term, definition: definition} }
-            };
-            
-            client.db('final-kappa').collection(user).updateOne(query, updateDocument, (error, result) => {
-                if (error) {
-                    response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemoveFlashcard: ${error}` }));
-                }
-                response.end(JSON.stringify({ status: 200, result: "Remove flashcard received!" }));
-            });
+    }).then(updated => {
+        if (updated.acknowledged) {
+            response.end(JSON.stringify({ status: 0, result: "Removed flashcard to the flashcards set received!" }));
         } else {
-            response.end(JSON.stringify({ status: 404, result: `Error in flashcardAPI.postRemoveFlashcard: user(${user}) could not be found` }));
+            throw new Error("Could not remove flashcard to the flashcards set");
         }
-    });
+    }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in flashcardAPI.postRemoveFlashcard: ${err}` })));
 }
 
 module.exports = {
@@ -224,6 +126,4 @@ module.exports = {
     postCreate, postRemove, 
     postAddFlashcard, postRemoveFlashcard
 };
-
-
 
