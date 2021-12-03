@@ -60,7 +60,7 @@ window.addEventListener('load', () => {
 				allTasks = obj.result;
 				// after GET request, then we render today's tasks
 				renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(day => {
-					if (day.date === `${new Date().getFullYear()}-${(new Date().getMonth()+1).toString().padStart(2, '0')}-${new Date().getDate()}`) {
+					if (day.date === `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`) {
 						return day;
 					}
 				}));
@@ -138,7 +138,8 @@ function renderDays(element, month, year) {
 					document.getElementById('selectedDay').innerHTML = dayDiv.innerHTML;
 					clickedDay = dayDiv.innerHTML;
 					
-					const date = `${clickedYear}-${clickedMonth+1}-${clickedDay}`;
+					const date = `${clickedYear}-${(clickedMonth+1).toString().padStart(2, '0')}-${(clickedDay).toString().padStart(2, '0')}`;
+					//console.log(date);
 					
 					// from allTasks array, get all days that matches this day
 					//BUG WITH SINGLE DIGIT DAYS MAY BE HERE
