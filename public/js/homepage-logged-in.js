@@ -25,8 +25,7 @@ allTasks.push({
 });
 
 //TODO
-//FIGURE OUT BUG WHERE SINGLE DIGIT DATES DONT WORK
-//FIGURE OUT BUG WHERE SOME MONTHS DONT HAVE ALL THEIR DAYS
+//FIGURE OUT BUG WHERE SINGLE DIGIT DATES DONT WORK USE PADSTART
 //FILTER OUT FUTURE TASKS
 
 // ON LOAD
@@ -50,7 +49,7 @@ window.addEventListener('load', () => {
 	// the user currently has, then update the allTasks array
 
 	// grab tasks from server
-    fetch(`/api/users/${split[1]}/tasks`)
+    fetch(`/api/users/${split[2]}/tasks`)
 		.then(response => {
 			return response.json();
 		}).then(obj => {
@@ -451,7 +450,7 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
 
 	// TODO, POST request: tell server to add a task and update allTasks array
 
-	fetch(`/api/users/${split[1]}/tasks/${taskName}/create`, {
+	fetch(`/api/users/${split[2]}/tasks/create`, {
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
@@ -503,7 +502,7 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 		time: taskTime
 	};
 
-	fetch(`/api/users/${split[1]}/tasks/${taskName}/edit`, { //POST the server with the edited values
+	fetch(`/api/users/${split[2]}/tasks/${taskName}/edit`, { //POST the server with the edited values
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
@@ -559,7 +558,7 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 
 	//TODO console.log to check numbers are accurate, add thens for error handelling
 
-	fetch(`/api/users/${split[1]}/tasks/${taskName}/remove`, { //POST the server and remove task from database
+	fetch(`/api/users/${split[2]}/tasks/${taskName}/remove`, { //POST the server and remove task from database
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
