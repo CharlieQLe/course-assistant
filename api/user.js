@@ -20,13 +20,34 @@ function postSignup(request, response) {
             if (existingUser) {
                 throw new Error("Email already in use!");
             } else {
-                const [salt, hash] = mc.hash(password);
+                return client.db('final-kappa').collectio('authentication').findOne({
+                    nextUser: {
+                        $exists: true
+                    }
+                })
+            }
+        })
+        .then(document => {
+            const [salt, hash] = mc.hash(password);
+            if (document) {
                 return client.db('final-kappa').collection('authentication').insertOne({
+                    user: document.nextUser,
                     name: name,
                     email: email,
                     salt: salt,
                     hash: hash
                 });
+            } else {
+                const [salt, hash] = mc.hash(password);
+                return client.db('final-kappa').collection('authentication').insertOne({
+                    nextUser: 0
+                }).then(_ => client.db('final-kappa').collection('authentication').insertOne({
+                    user: 0,
+                    name: name,
+                    email: email,
+                    salt: salt,
+                    hash: hash
+                }));
             }
         })
         .then(_ => response.end(JSON.stringify({ status: 0, result: `Success creating user!` })))

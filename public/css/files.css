@@ -1,0 +1,7 @@
+.page-content {
+    margin: auto;
+}
+
+.file-delete, .tag-delete {
+    float: right;
+}
