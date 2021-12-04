@@ -42,7 +42,8 @@ app.post("/api/users/:user/class/:class/remove", classAPI.postRemove);
 app.get("/api/users/:user/class/:class/search", classAPI.getSearch);
 
 // Set the file endpoints
-app.get("/api/users/:user/file/search", fileAPI.getSearch);
+app.get("/api/users/:user/files", fileAPI.getAll);
+app.post("/api/users/:user/files/search", fileAPI.postSearch);
 
 // Set the tag endpoints
 app.get("/api/users/:user/tags", tagAPI.getAll);

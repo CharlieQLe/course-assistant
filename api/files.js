@@ -3,56 +3,77 @@
 const { client } = require('./initializeServer.js');
 
 /**
+ * Process a get request to retrieve all files.
+ * 
+ * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
+ * @param {Response<any, Record<string, any>, number>} response 
+ */
+function getAll(request, response) {
+    client.db("final-kappa").collection("files").find({
+        user: request.params.user
+    })
+        .toArray()
+        .then(files => response.end(JSON.stringify({
+            statusCode: 0,
+            data: files.map(file => ({
+                name: file.name,
+                type: file.type,
+                tags: file.tags
+            }))
+        })))
+        .catch(err => response.end(JSON.stringify({ statusCode: -1, data: `Error retrieving files: ${err}` })));
+}
+
+/**
  * Process a get request to retrieve files.
  * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
-function getSearch(request, response) {
+function postSearch(request, response) {
     const user = request.params.user;
     const fileName = request.body['fileName'];
     const includeTags = request.body['includeTags'];
     const excludeTags = request.body['excludeTags'];
 
-    client.db('final-kappa').collection('collection').find({
+    client.db('final-kappa').collection('files').find({
         user: user,
-        fileName: {
-            $regex: `/^${fileName}/`,
-            $options: 'im'
-        },
-        tags: {
-            $all: includeTags,
-            $not: {
-                $all: excludeTags
-            }
+        name: {
+            $regex: `.*${fileName}.*`,
+            $options: 'i'
         }
     })
         .toArray()
         .then(documents => {
-            let found = documents.reduce((documents, document) => {
-                if (document.type === 'note') {
-                    documents.push({
-                        name: document.name,
-                        type: document.type,
-
-                        // TODO: Add other data
-                    });
-                } else if (document.type === 'flashcard') {
-                    documents.push({
-                        name: document.name,
-                        type: document.type,
-
-                        // TODO: Add other data
-                    });
-                }
-                return documents;
-            }, []);
             response.end(JSON.stringify({
-                status: 0,
-                result: found
+                statusCode: 0,
+                data: documents.reduce((documents, document) => {
+                    if (!includeTags.every(tag => document.tags.includes(tag)) || !excludeTags.every(tag => !document.tags.includes(tag))) {
+                        return documents;
+                    }
+                    
+                    if (document.type === 'note') {
+                        documents.push({
+                            name: document.name,
+                            type: document.type,
+                            tags: document.tags
+    
+                            // TODO: Add other data
+                        });
+                    } else if (document.type === 'flashcard') {
+                        documents.push({
+                            name: document.name,
+                            type: document.type,
+                            tags: document.tags
+    
+                            // TODO: Add other data
+                        });
+                    }
+                    return documents;
+                }, [])
             }));
         })
-        .catch(err => response.end(JSON.stringify({ status: -1, result: `Error searching: ${err}` })));
+        .catch(err => response.end(JSON.stringify({ statusCode: -1, data: `Error searching: ${err}` })));
 }
 
-module.exports = { getSearch }
+module.exports = { getAll, postSearch }
