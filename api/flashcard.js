@@ -4,19 +4,19 @@ const { client } = require("./initializeServer.js");
 
 /**
  * Process a get request to retrieve the data of a set of flashcards.
- * /api/users/:user/flashcards/:flashcard
+ * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function getFlashcards(request, response) {
-
+    // find if the user is in the database
     client.db("final-kappa").collection("files").findOne({
         user: request.params.user,
         name: request.params.flashcard,
         type: "flashcard"
     }).then(exist => {
         if (!exist) {
-            throw new Error("Flashcards could not be found");
+            throw "Flashcards could not be found";
         }
         response.end(JSON.stringify({ status: 0, result: exist.flashcards }));
     }).catch(err => {
@@ -26,29 +26,38 @@ function getFlashcards(request, response) {
 
 /**
  * Process a post request to create a set of flashcards.
- * /api/users/:user/flashcards/:flashcard/create
+ * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postCreate(request, response) {
-    client.db("final-kappa").collection("files").insertOne({
+    client.db("final-kappa").collection("files").findOne({
         user: request.params.user,
         name: request.params.flashcard,
-        type: "flashcard",
-        tags: request.body['tags'],
-        flashcards: []
+        type: "flashcard"
+    }).then(exist => {
+        if(exist) {
+            throw "Flashcards already exist";
+        }
+        return client.db("final-kappa").collection("files").insertOne({
+            user: request.params.user,
+            name: request.params.flashcard,
+            type: "flashcard",
+            tags: request.body['tags'],
+            flashcards: []
+        });
     }).then(inserted => {
         if (inserted.acknowledged) {
             response.end(JSON.stringify({ status: 0, result: "Create flashcards received!" }));
         } else {
-            throw new Error("Could not create flashcards");
+            throw "Could not create flashcards";
         }
     }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in flashcardAPI.postCreate: ${err}` })));
 }
 
 /**
  * Process a post request to remove a set of flashcards.
- * /api/users/:user/flashcards/:flashcard/remove
+ * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
@@ -61,42 +70,58 @@ function postRemove(request, response) {
         if (deleted.acknowledged) {
             response.end(JSON.stringify({ status: 0, result: "Deleted flashcards received!" }));
         } else {
-            throw new Error("Could not delete flashcards");
+            throw "Could not delete flashcards";
         }
     }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in flashcardAPI.postRemove: ${err}` })));
 }
 
 
 /**
- * Process a post request to add a flash card.
- * /api/users/:user/flashcards/:flashcard/addFlashcard
+ * Process a post request to add a flashcard.
+ * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postAddFlashcard(request, response) {
-    client.db("final-kappa").collection("files").updateOne({
+    // find a flashcard that has the same term and definition
+    client.db("final-kappa").collection("files").findOne({
         user: request.params.user,
         name: request.params.flashcard,
-        type: "flashcard"
-    }, {
-        $push: {
-            "flashcards": {
-                term: request.body['term'], 
-                definition: request.body['definition']
-            }
+        type: "flashcard",
+        flashcards: {
+                term: request.body["term"], 
+                definition: request.body["definition"]
         }
+    }).then(exist => {
+        // if there is a flashcard with the same term and definition, 
+        // throw an error, else add the flashcard to the set
+        if(exist) {
+            throw "duplicate flashcard term or definition";
+        }
+        return client.db("final-kappa").collection("files").updateOne({
+            user: request.params.user,
+            name: request.params.flashcard,
+            type: "flashcard"
+        }, {
+            $push: {
+                "flashcards": {
+                    term: request.body["term"], 
+                    definition: request.body["definition"]
+                }
+            }
+        });
     }).then(updated => {
         if (updated.acknowledged) {
             response.end(JSON.stringify({ status: 0, result: "Added flashcard to the flashcards set received!" }));
         } else {
-            throw new Error("Could not add flashcard to the flashcards set");
+            throw "Could not add flashcard to the flashcards set";
         }
     }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in flashcardAPI.postAddFlashcard: ${err}` })));
 }
 
 /**
- * Process a post request to remove a flash card.
- * /api/users/:user/flashcards/:flashcard/removeFlashcard
+ * Process a post request to remove a flashcard.
+ * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
  * @param {Response<any, Record<string, any>, number>} response 
  */
@@ -108,15 +133,15 @@ function postRemoveFlashcard(request, response) {
     }, {
         $pull: {
             "flashcards": {
-                term: request.body['term'], 
-                definition: request.body['definition']
+                term: request.body["term"], 
+                definition: request.body["definition"]
             }
         }
     }).then(updated => {
         if (updated.acknowledged) {
             response.end(JSON.stringify({ status: 0, result: "Removed flashcard to the flashcards set received!" }));
         } else {
-            throw new Error("Could not remove flashcard to the flashcards set");
+            throw "Could not remove flashcard to the flashcards set";
         }
     }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in flashcardAPI.postRemoveFlashcard: ${err}` })));
 }

@@ -9,24 +9,8 @@ let clickedDay = new Date().getDate();
 let clickedMonth = new Date().getMonth();	// months is off by 1, eg. January = 0, December = 11
 let clickedYear = new Date().getFullYear();
 let allTasks = []; // user tasks
-let futureTasks = []; //future tasks
 
-// FOR TESTING PURPOSES. REMOVE LATER
-allTasks.push({
-	name: 'atask',
-	description: 'a VERY LONG DESCRIPTION OF A TASK. THIS IS VERY IMPORTANT. DO ASAP',
-	date: '2021-12-10',
-	time: '23:10'
-}, {
-	name: 'aSecondTask',
-	description: 'description of task 2',
-	date: '2021-11-27',
-	time: '23:10'
-});
 
-//TODO
-//FIGURE OUT BUG WHERE SINGLE DIGIT DATES DONT WORK
-//FIGURE OUT BUG WHERE SOME MONTHS DONT HAVE ALL THEIR DAYS
 //FILTER OUT FUTURE TASKS
 
 // ON LOAD
@@ -50,7 +34,7 @@ window.addEventListener('load', () => {
 	// the user currently has, then update the allTasks array
 
 	// grab tasks from server
-    fetch(`/api/users/${split[1]}/tasks`)
+    fetch(`/api/users/${split[2]}/tasks`)
 		.then(response => {
 			return response.json();
 		}).then(obj => {
@@ -73,7 +57,11 @@ window.addEventListener('load', () => {
 				//MAYBE SORT FUTURE TASKS IN ORDER OF CLOSENESS TO CURRENT DATE 
 				//set future tasks to be greater than current date and also sorted a - b
 
-				renderTask(document.getElementById('futureTasks'), allTasks);	
+				renderTask(document.getElementById('futureTasks'), allTasks.filter(day => {
+					if(new Date(day.date).getTime() > new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`).getTime()) {
+						return day;
+					}
+				}));	
 			} else {
 				throw 'something went wrong with getting the tasks from the server: ' + obj.result;
 			}
@@ -139,10 +127,11 @@ function renderDays(element, month, year) {
 					document.getElementById('selectedDay').innerHTML = dayDiv.innerHTML;
 					clickedDay = dayDiv.innerHTML;
 					
-					const date = `${clickedYear}-${clickedMonth+1}-${clickedDay}`;
+					const date = `${clickedYear}-${(clickedMonth+1).toString().padStart(2, '0')}-${(clickedDay).toString().padStart(2, '0')}`;
+					//console.log(date);
 					
 					// from allTasks array, get all days that matches this day
-					//BUG WITH SINGLE DIGIT DAYS MAY BE HERE
+				
 					let clickedDayArray = allTasks.filter(task => task.date === date);
 					renderTask(document.getElementById('selectedDayTasks'), clickedDayArray);
 
@@ -451,7 +440,7 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
 
 	// TODO, POST request: tell server to add a task and update allTasks array
 
-	fetch(`/api/users/${split[1]}/tasks/${taskName}/create`, {
+	fetch(`/api/users/${split[2]}/tasks/create`, {
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
@@ -465,7 +454,11 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
 		}
 		allTasks.push(temp);
 		renderModalTasks(document.getElementById('modalTasksBody')); //re render task modal
-		renderTask(document.getElementById('futureTasks'), allTasks); //re render future tasks
+		renderTask(document.getElementById('futureTasks'), allTasks.filter(day => { //re render future tasks
+			if(new Date(day.date).getTime() > new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`).getTime()) {
+				return day;
+			}
+		}));
 		renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(day => { //re render selected days tasks
 			if (day.date === `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`) {
 				return day;
@@ -503,7 +496,7 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 		time: taskTime
 	};
 
-	fetch(`/api/users/${split[1]}/tasks/${taskName}/edit`, { //POST the server with the edited values
+	fetch(`/api/users/${split[2]}/tasks/edit`, { //POST the server with the edited values
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
@@ -522,7 +515,11 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 		currentlyEditingTask.description = taskDescription;
 
 		renderModalTasks(document.getElementById('modalTasksBody')); //re render tasks
-		renderTask(document.getElementById('futureTasks'), allTasks); //re render future tasks
+		renderTask(document.getElementById('futureTasks'), allTasks.filter(day => { //re render future tasks
+			if(new Date(day.date).getTime() > new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`).getTime()) {
+				return day;
+			}
+		}));
 		renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(day => { //re render selected days tasks
 			if (day.date === `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`) {
 				return day;
@@ -559,7 +556,7 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 
 	//TODO console.log to check numbers are accurate, add thens for error handelling
 
-	fetch(`/api/users/${split[1]}/tasks/${taskName}/remove`, { //POST the server and remove task from database
+	fetch(`/api/users/${split[2]}/tasks/remove`, { //POST the server and remove task from database
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
@@ -578,7 +575,11 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 				}
 			}
 			renderModalTasks(document.getElementById('modalTasksBody')); //re render task modal
-			renderTask(document.getElementById('futureTasks'), allTasks); //re render future tasks
+			renderTask(document.getElementById('futureTasks'), allTasks.filter(day => { //re render future tasks
+				if(new Date(day.date).getTime() > new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`).getTime()) {
+					return day;
+				}
+			}));
 			renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(day => { //re render selected days tasks
 				if (day.date === `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`) {
 					return day;
