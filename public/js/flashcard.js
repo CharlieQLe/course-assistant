@@ -3,8 +3,34 @@
 let flashcards = [];
 let review = [];
 
+const url = window.location.pathname;       // reads url
+const split = url.split('/');
+
+window.addEventListener('load', async function() {
+
+    // grab flashcards from server
+    fetch(`/api/users/${split[2]}/file/flashcards/${split[5]}`)
+    .then(response => {
+        return response.json();
+    }).then(obj => {
+        // if we get a status code of 0, set the client-side flashcard set
+        if (obj.status === 0) {
+            flashcards = obj.result;
+            renderFlashcards(document.getElementById('flashcard'));
+        } else {
+            throw 'something went wrong with getting the flashcards from the server: ' + obj.result;
+        }
+
+    }).catch(e => {
+		document.body.innerHTML = e;
+    });
+
+    // sets the file name of the flashcard
+    document.getElementById('flashcard-title').innerHTML = split[split.length-1].replace('%20', ' ');
+});
+
 /**
- * * make a bootstrap row with some additional classes
+ * make a bootstrap row with some additional classes
  * */
 function makeRow() {
     const row = document.createElement('div');
@@ -12,9 +38,9 @@ function makeRow() {
     return row;
 }
 
-// make a bootstrap col with some additional classes
 /**
  * make column with a certain size
+ * make a bootstrap col with some additional classes
  * @param {int} size 
  * @returns an HTML element
  */
@@ -38,8 +64,6 @@ function makeCol(size) {
 	</div>
 </div>
 */
-
-
 /**
 * renders the flashcards in the edit screen
 */
@@ -118,11 +142,8 @@ function makeEditFlashcard(flashcardObj) {
 		</div>
 	</div>
 </div>
-
 </div>
 */
-
-
 function makeCard(text) {
     const cardCol = makeCol(0);
     const card = document.createElement('div');
@@ -138,7 +159,6 @@ function makeCard(text) {
     cardCol.appendChild(card);
 
     return cardCol;
-
 }
 
 function makeButtons() {
@@ -155,7 +175,7 @@ function makeButtons() {
     const incorrect = document.createElement('button');
     incorrect.classList.add('btn', 'btn-danger');
     incorrect.innerText = 'Incorrect';
-	incorrect.setAttribute('type', 'button')
+	incorrect.setAttribute('type', 'button');
 
 	buttonWrap.appendChild(correct);
 	buttonWrap.appendChild(incorrect);
@@ -180,9 +200,6 @@ function renderFlashcards(element) {
 
             // rerenders flashcards after client deletes the flashcard in the edit screen
             renderFlashcards(document.getElementById('flashcard'));
-            
-            const url = window.location.pathname;       // reads url
-            const split = url.split('/');
 
             // post to server. tell server to delete this flashcard
             fetch(`/api/users/${split[2]}/file/flashcards/${split[5]}/removeFlashcard`, {
@@ -200,7 +217,7 @@ function renderFlashcards(element) {
             }).catch(e => {
 		        document.body.innerHTML = e;
             });
-        })
+        });
         
         element.appendChild(main);
     }
@@ -247,12 +264,11 @@ function renderStudyFlashcards(element) {
             } else {
                 cardParagraph.innerHTML = copyShuffle[i].term;
             }
-        })
+        });
 
         const correctButton = content.childNodes[1].firstChild.firstChild;
         const incorrectButton = content.childNodes[1].firstChild.childNodes[1];
         correctButton.addEventListener('click', () => {
-            
             // remove word from review if its in the array
             if (review.includes(copyShuffle[i])) {
                 review.splice(i, 1);
@@ -268,7 +284,6 @@ function renderStudyFlashcards(element) {
 
         });
         
-        
         if(i % 2 === 0) {
             // dummy flashcard on the right side if there is an odd number of flashcards
             const rightCard = makeCard('');
@@ -283,8 +298,7 @@ function renderStudyFlashcards(element) {
 
             rowOuter.appendChild(colOuterLeft);
             rowOuter.appendChild(colOuterRight);
-        } else {
-            
+        } else {  
             // remove the dummy flashcard from the screen
             rowOuter.removeChild(rowOuter.lastChild);
             colOuterRight.appendChild(content);
@@ -295,9 +309,7 @@ function renderStudyFlashcards(element) {
             element.appendChild(rowOuter);
         }
     }
-
 }
-
 
 function shuffle(array) {
     // Fisher-Yates shuffle, used for random decoder cipher below    
@@ -318,40 +330,11 @@ function shuffle(array) {
     return array;
 };
 
-window.addEventListener('load', async function() {
-    const url = window.location.pathname;       // reads url
-    const split = url.split('/');
-    // console.log(split);
-
-    // grab flashcards from server
-    fetch(`/api/users/${split[2]}/file/flashcards/${split[5]}`)
-    .then(response => {
-        return response.json();
-    }).then(obj => {
-        // if we get a status code of 0, set the client-side flashcard set
-        if (obj.status === 0) {
-            flashcards = obj.result;
-            renderFlashcards(document.getElementById('flashcard'));
-        } else {
-            throw 'something went wrong with getting the flashcards from the server: ' + obj.result;
-        }
-
-    }).catch(e => {
-		document.body.innerHTML = e;
-    });
-
-    // sets the file name of the flashcard
-    document.getElementById('flashcard-title').innerHTML = split[split.length-1].replace('%20', ' ');
-});
-
-
-
 // when client clicks on the initial add flashcard button, it adds an attribute 
 // to the modal button. Adding the attribute will close the modal 
 document.getElementById('add-flashcard-modal').addEventListener('shown.bs.modal', function (event) {
-    document.getElementById('add-flashcard-btn').setAttribute("data-bs-dismiss", "modal")
-})
-
+    document.getElementById('add-flashcard-btn').setAttribute("data-bs-dismiss", "modal");
+});
 
 // Event listener for the add flashcard modal. Receives the term and the description
 // from client after they click the add button
@@ -359,6 +342,7 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
     const t = document.getElementById('term-input').value;
     const d = document.getElementById('flashcard-desc-input').value;
 
+    // do not allow empty input fields
     if (t.length === 0 || d.length === 0) {
         return;
     }
@@ -367,9 +351,6 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
         term: t,
         definition: d
     }
-
-    const url = window.location.pathname;       // reads url
-    const split = url.split('/');
 
     // POST: add a flashcard to the set of flashcards
     fetch(`/api/users/${split[2]}/file/flashcards/${split[5]}/addFlashcard`, {
@@ -415,13 +396,9 @@ document.getElementById('edit-btn').addEventListener('click', () => {
     renderFlashcards(document.getElementById('flashcard'));
 });
 
-// 
+// clears the review array when button is clicked
 document.getElementById('reset-btn').addEventListener('click', () => {
     review = [];
-    renderStudyFlashcards(document.getElementById('flashcard'));
-});
-
-document.getElementById('reset-btn').addEventListener('click', () => {
     renderStudyFlashcards(document.getElementById('flashcard'));
 });
 

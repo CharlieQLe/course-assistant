@@ -83,7 +83,13 @@
 		<!-- Tasks Column -->
 		<div class="col-md-6">
 			<div class="row">
-				<h1 id = "selectedDayTaskHeader">Tasks for Selected Day:</h1>
+				<div class="d-flex justify-content-between">
+					<h1 id = "selectedDayTaskHeader">Tasks for Selected Day:</h1>
+					<h6><button class="btn btn-sm btn-primary" id="oldTasksButton" type="button"
+						data-bs-toggle="modal" data-bs-target="#oldModal" data-placement="top">
+						Old Tasks
+					</button></h6>
+				</div>
 				<div id="selectedDayTasks"></div>
 			</div>
 
@@ -164,6 +170,43 @@
 					<button type="button" id="submitEditTaskButton" class="btn btn-warning">Submit Edit</button>
 					<button type="button" id="deleteTaskButton" class="btn btn-danger">Delete Task</button>
 				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- Old Tasks Modal -->
+	<div class="modal fade" id="oldModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- Pop-up Header -->
+				<div class="modal-header">
+					<h5 class="modal-title">Old Tasks</h5>
+					<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+
+				<!-- Pop-up Body -->
+				<div class="modal-body">
+					<table class="table mb-4" id="">
+						<thead>
+							<tr>
+								<th scope="col">TASK</th>
+								<th scope="col">DESCRIPTION</th>
+								<th scope="col">DATE</th>
+								<th scope="col">TIME</th>
+							</tr>
+						</thead>
+						<tbody id="oldTasks"></tbody>
+					</table>
+				</div>
+
+				<!-- Pop-up Footer -->
+				<!-- <div class="modal-footer">
+					<div class="col-md-6">hi</div>
+				</div> -->
 
 			</div>
 		</div>

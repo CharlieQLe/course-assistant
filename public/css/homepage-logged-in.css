@@ -1,15 +1,12 @@
+body {
+	overflow-x: hidden;
+}
 #CalandarAndTasks {
-	/* background-color: orange; */
 	margin-top: 2%;
 }
 
-/* #Calandar {
-	/* font-family: Verdana, sans-serif; */
-	/* color: white; 
-} */
-
 #CalandarMonth {
-	background-color: rgb(70, 76, 109);
+	background-color: #2a3246;
 	height: 200px;
 }
 
@@ -17,19 +14,13 @@
 	/* color: #e66b6b; */
 	font-family: Georgia, 'Times New Roman', Times, serif;
 	font-size: larger;
-	color: rgb(70, 76, 109);
+	color: #2a3246;
 }
 
 #daysTable {
 	font-family: Georgia, 'Times New Roman', Times, serif;
 	color: black;
 }
-
-/* #calandarTopText {
-	font-family: Georgia, 'Times New Roman', Times, serif;
-	font-size: 26pt;
-	color: green;
-} */
 
 #selectedDay {
 	font-family: Georgia, 'Times New Roman', Times, serif;
@@ -78,7 +69,7 @@
 
 #days:hover {
 	color: white;
-	background-color: rgb(70, 76, 109);
+	background-color: #2a3246;
   	border-radius: 50%;
 }
 
@@ -92,7 +83,7 @@
 }
 
 #modalTasksHeader {
-	color: rgb(70, 76, 109);
+	color: #2a3246;
 	font-size: large;
 }
 
@@ -102,11 +93,11 @@
 }
 
 #selectedDayTaskHeader {
-	color: rgb(70, 76, 109);
+	color: #2a3246;
 	font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 #futureTaskHeader {
-	color: rgb(70, 76, 109);
+	color: #2a3246;
 	font-family: Georgia, 'Times New Roman', Times, serif;
 }

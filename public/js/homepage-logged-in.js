@@ -1,24 +1,20 @@
 'use strict'
 
-// CONTROL F TO FIND ALL THE TODOS
-
+let allTasks = []; // user tasks
 let currentlyEditingTask = null;
-const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 let clickedDay = new Date().getDate();
 let clickedMonth = new Date().getMonth();	// months is off by 1, eg. January = 0, December = 11
 let clickedYear = new Date().getFullYear();
-let allTasks = []; // user tasks
 
+const today = `${clickedYear}-${(clickedMonth+1).toString().padStart(2, '0')}-${(clickedDay).toString().padStart(2, '0')}`;
 
-//FILTER OUT FUTURE TASKS
+const url = window.location.pathname;       // reads url
+const split = url.split('/');
 
 // ON LOAD
 window.addEventListener('load', () => {
-
-	const url = window.location.pathname;       // reads url
-    const split = url.split('/');
-    // console.log(split);
 
 	// Displayed in the Dark Blue part of the Calandar
 	// on load, it displays the current day, month and year
@@ -28,52 +24,45 @@ window.addEventListener('load', () => {
 
 	// renders the days in the calandar
 	renderDays(document.getElementById('daysTable'), new Date().getMonth(), new Date().getFullYear());
-	
-	
-	// TODO: GET request to server asking for all the tasks
-	// the user currently has, then update the allTasks array
 
-	// grab tasks from server
+	// GET request: grab tasks the user currently has from server, then update allTasks array
     fetch(`/api/users/${split[2]}/tasks`)
 		.then(response => {
 			return response.json();
 		}).then(obj => {
-			// if we get a status code of 200, set the client-side task set 
-			// with task set from server
-			// console.log(obj)
+			// if we get no errors
 			if (obj.status === 0) {
 				allTasks = obj.result;
-				// after GET request, then we render today's tasks
+				
+				// render today's tasks
 				renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(day => {
-					if (day.date === `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`) {
+					if (new Date(day.date).getTime() === new Date(today).getTime()) {
 						return day;
 					}
 				}));
+				
 				// renders the tasks in modal
-				renderModalTasks(document.getElementById('modalTasksBody'));
+				renderModalTasks(document.getElementById('modalTasksBody'), allTasks.filter(task => {
+					if (new Date(task.date).getTime() >= new Date(today).getTime()) {
+						return task;
+					}
+				}));
 				// includes all tasks, including the tasks from selected tasks 
 
-				//TODO FIGURE OUT HOW TO FILTER OUT EXPIRED TASKS
-				//MAYBE SORT FUTURE TASKS IN ORDER OF CLOSENESS TO CURRENT DATE 
-				//set future tasks to be greater than current date and also sorted a - b
-
+				// TODO FIGURE OUT HOW TO FILTER OUT EXPIRED TASKS
 				renderTask(document.getElementById('futureTasks'), allTasks.filter(day => {
-					if(new Date(day.date).getTime() > new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`).getTime()) {
+					if(new Date(day.date).getTime() > new Date(today).getTime()) {
 						return day;
 					}
-				}));	
+				}));
 			} else {
 				throw 'something went wrong with getting the tasks from the server: ' + obj.result;
 			}
 		}).catch(e => {
-			// set page to 404 error if there is an error
-			document.body.innerHTML = '404' + ' ' + e;
-			// console.log(e);
+			// set page to error if there is an error
+			document.body.innerHTML = e;
 		});
-		// console.log(window.location.pathname);
-
 });
-
 
 
 // ================ CALENDAR =======================
@@ -90,24 +79,27 @@ window.addEventListener('load', () => {
 	</div>
 </div>
 */
-
-
 function renderDays(element, month, year) {
 	element.innerHTML = '';
 
 	const firstDay = (new Date(year, month)).getDay();
-	const lastDay = 32 - new Date(year, month, 32).getDate()
+	const lastDay = 32 - new Date(year, month, 32).getDate();
 
 	let day = 1;
 
 	for (let i = 0; i < 6; i++) {
+
+		// if last row and there are no days on this row,
+		// do not render it
+		if(i === 5 && day > lastDay) {
+			break;
+		}
 		const outerWrapper = document.createElement('div');
 		outerWrapper.classList.add('row', 'text-center');
 
 		const innerWrapper = document.createElement('div');
 		innerWrapper.classList.add('d-flex', 'justify-content-between');
 		outerWrapper.appendChild(innerWrapper);
-
 
 		for (let j = 0; j < 7; j++) {
 			const dayDiv = document.createElement('div');
@@ -120,7 +112,8 @@ function renderDays(element, month, year) {
 				day++;
 			}
 			
-			// when a day is clicked on the dayTable
+			// when a day is clicked on the dayTable, render
+			// tasks for that day
 			dayDiv.addEventListener('click', () => {
 				// if the dayDiv is an actual day, render new updated day
 				if(dayDiv.innerHTML !== '') {
@@ -128,16 +121,12 @@ function renderDays(element, month, year) {
 					clickedDay = dayDiv.innerHTML;
 					
 					const date = `${clickedYear}-${(clickedMonth+1).toString().padStart(2, '0')}-${(clickedDay).toString().padStart(2, '0')}`;
-					//console.log(date);
 					
 					// from allTasks array, get all days that matches this day
-				
 					let clickedDayArray = allTasks.filter(task => task.date === date);
 					renderTask(document.getElementById('selectedDayTasks'), clickedDayArray);
-
 				}
-			})
-
+			});
 			innerWrapper.appendChild(dayDiv);
 		}
 		element.appendChild(outerWrapper);
@@ -181,15 +170,6 @@ document.getElementById('next').addEventListener('click', () => {
 });
 
 
-
-
-// ==============================================
-// ==============================================
-// ==============================================
-// ==============================================
-// ==============================================
-// ==============================================
-// ==============================================
 // ==============================================
 // ==============================================
 // ==============================================
@@ -208,7 +188,7 @@ document.getElementById('next').addEventListener('click', () => {
 /**
  * Note: only tasks in the selected day's tasks or future tasks(not modals)
  * @param {obj} task task obj{name, description, class, date, time}
- * @returns an element
+ * @returns a task(in selected day/future task) element
  */
 function createTask(userTask) {
 	const taskHolder = document.createElement('div');
@@ -235,7 +215,6 @@ function createTask(userTask) {
 	editButton.setAttribute('data-bs-toggle', 'modal');
 	editButton.setAttribute('data-bs-target', '#tasksModal');
 	editButton.setAttribute('data-placement', 'top');
-	// editButton.setAttribute('title', 'Edit');		// The title attribute specifies extra information about an element.
 	const editButtonText = document.createElement('span');
 	editButtonText.innerHTML = ' Edit';
 	editButtonText.style.color = 'black';
@@ -248,8 +227,7 @@ function createTask(userTask) {
 	editButton.appendChild(editButtonText);
 	editButton.addEventListener('click', () => {
 		// when the edit button is clicked, display submit edit button and delete button
-		// then hide the add button
-		// this is done with the following 3 if statements
+		// then hide the add button(this is done with the following 3 if statements)
 		document.getElementById('tasksTitle').innerHTML = 'Edit Task';
 		const addTaskButton = document.getElementById("addTaskButton");
 		if (window.getComputedStyle(addTaskButton).display === "block") {
@@ -265,7 +243,6 @@ function createTask(userTask) {
 			deleteTaskButton.style.display = "block";
 		}
 
-
 		// when the user clicks the edit button of a task, in modal, 
 		// display the clicked tasks on the left of current tasks
 		document.getElementById('taskName').value = userTask.name;
@@ -273,14 +250,12 @@ function createTask(userTask) {
 		document.getElementById('taskTime').value = userTask.time;
 		document.getElementById('taskDescription').value = userTask.description;
 
-		//set variable equal to userTask for use in edit button
-
+		// global variable used to update this task for use in edit button
+		// update task by reference
 		currentlyEditingTask = userTask;
-
 	});
 
-	// mouseover and mouseout are the 2 events you need to create a hover effect
-	// for the button
+	// mouseover and mouseout are the 2 events you need to create a hover effect for the button
 	editButton.addEventListener('mouseover', () => {
 		editButton.style.backgroundColor = '#0d6efd';
 		editButton.style.border = 'none';
@@ -318,7 +293,7 @@ function createTask(userTask) {
  * @param {string} description description of the task
  * @param {string} date date when the task is due(yyyy-mm-dd)
  * @param {string} time time when the task is due(HH:mm), time is using 24 hour clock system(aka. military time)
- * @returns an element
+ * @returns a modal task element
  */
  function createModalTasks(name, description, date, time) {
 	const arr = [description, date, time];
@@ -348,27 +323,11 @@ function createTask(userTask) {
 	<option value="Three">Three</option>
 </select>
 */
-
-// render the options in the select form(select form
-// is the dropdown menu in task modal)
-// function renderSelectClassInModalTasks(element, classes) {
-// 	element.innerHTML = '';
-
-// 	const initialSelected = document.createElement('option');
-// 	initialSelected.setAttribute('selected', '');
-// 	initialSelected.innerHTML = 'Select Class';
-// 	element.appendChild(initialSelected);
-	
-// 	for(let i = 0; i < classes.length; i++) {
-// 		const option = document.createElement('option');
-// 		option.setAttribute('value', classes[i]);
-// 		option.innerHTML = classes[i];
-// 		element.appendChild(option);
-// 	}
-// }
-
-
-// either renders the selected day's tasks or future tasks(not modals)
+/**
+ * either renders the selected day's tasks or future tasks(not tasks in modal)
+ * @param {element} element DOM element
+ * @param {array} taskArray the array to render at the element
+ */
 function renderTask(element, taskArray) {
     element.innerHTML = '';
 
@@ -377,26 +336,30 @@ function renderTask(element, taskArray) {
     }
 }
 
-
-// renders all tasks(allTasks variable) in modals
-function renderModalTasks(element) {
+/**
+ * renders all tasks in modals
+ * @param {element} element DOM element 
+ * @param {array} tasks the tasks to render 
+ */
+function renderModalTasks(element, tasks) {
 	element.innerHTML = '';
-	
-    for (let i = 0; i < allTasks.length; i++) {
-		const taskHolder = createModalTasks(allTasks[i].name, allTasks[i].description, allTasks[i].date, allTasks[i].time);
+
+    for (let i = 0; i < tasks.length; i++) {
+		const taskHolder = createModalTasks(tasks[i].name, tasks[i].description, tasks[i].date, tasks[i].time);
         element.appendChild(taskHolder);
     }
 }
 
+// open modal when add new task button is clicked
 document.getElementById('addTaskOpenModal').addEventListener('click', () => {
-
-	// when user clicks the open modal, clear the tasks on the left side
+	// when user clicks the open modal, clear the input fields on the left side
 	document.getElementById('taskName').value = '';
 	document.getElementById('taskDate').value = '';
 	document.getElementById('taskTime').value = '';
 	document.getElementById('taskDescription').value = '';
 
 	document.getElementById('tasksTitle').innerHTML = 'Add a Task';
+
 	// if add task button is clicked, only display add button
 	const addTaskButton = document.getElementById("addTaskButton");
 	if (window.getComputedStyle(addTaskButton).display === "none") {
@@ -422,10 +385,6 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
     const taskTime = document.getElementById('taskTime').value;
     const taskDescription = document.getElementById('taskDescription').value;
 
-
-	const url = window.location.pathname;       // reads url
-    const split = url.split('/');
-
 	// stops user from adding tasks with some empty fields
 	if (taskName.length === 0 || taskDate.length === 0 || taskTime === 0 || taskDescription === 0) {
 		return;
@@ -438,8 +397,7 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
 		time: taskTime
 	};
 
-	// TODO, POST request: tell server to add a task and update allTasks array
-
+	// POST request: tell server to add a task, then update allTasks array
 	fetch(`/api/users/${split[2]}/tasks/create`, {
         method: 'POST', 
         body: JSON.stringify(temp), 
@@ -452,22 +410,27 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
 		if(obj.status !== 0) {
 			throw obj.result;
 		}
+
 		allTasks.push(temp);
-		renderModalTasks(document.getElementById('modalTasksBody')); //re render task modal
-		renderTask(document.getElementById('futureTasks'), allTasks.filter(day => { //re render future tasks
-			if(new Date(day.date).getTime() > new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`).getTime()) {
-				return day;
+		renderModalTasks(document.getElementById('modalTasksBody'), allTasks.filter(task => {
+			if (new Date(task.date).getTime() >= new Date(today).getTime()) {
+				return task;
+			}
+		})); //re render task modal
+		renderTask(document.getElementById('futureTasks'), allTasks.filter(task => { //re render future tasks
+			if(new Date(task.date).getTime() > new Date(today).getTime()) {
+				return task;
 			}
 		}));
-		renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(day => { //re render selected days tasks
-			if (day.date === `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`) {
-				return day;
+		renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(task => { //re render selected days tasks
+			if (task.date === `${clickedYear}-${(clickedMonth+1).toString().padStart(2, '0')}-${(clickedDay).toString().padStart(2, '0')}`) {
+				return task;
 			}
 		}));
 
 	}).catch(e => {
 		// set page to 404 error if there is an error
-		document.body.innerHTML = '404' + ' ' + e;
+		document.body.innerHTML = e;
 	});
 
 	// clear all fields in the add tasks(left side of task modal) 
@@ -475,19 +438,19 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
 	document.getElementById('taskDate').value = '';
 	document.getElementById('taskTime').value = '';
 	document.getElementById('taskDescription').value = '';
-	
 });
 
-
-
+// after clicking the submit button, update the changes for that task
 document.getElementById('submitEditTaskButton').addEventListener('click', () => {
 	const taskName = document.getElementById('taskName').value;
     const taskDate = document.getElementById('taskDate').value;
     const taskTime = document.getElementById('taskTime').value;
     const taskDescription = document.getElementById('taskDescription').value;
 
-	const url = window.location.pathname;       // reads url
-    const split = url.split('/');
+	// stops user from submitting tasks with some empty fields
+	if (taskName.length === 0 || taskDate.length === 0 || taskTime === 0 || taskDescription === 0) {
+		return;
+	}
 
 	const temp = {
 		name: taskName,
@@ -496,7 +459,8 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 		time: taskTime
 	};
 
-	fetch(`/api/users/${split[2]}/tasks/edit`, { //POST the server with the edited values
+	// POST the server with the edited values
+	fetch(`/api/users/${split[2]}/tasks/edit`, {
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
@@ -508,27 +472,31 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 			if(obj.status !== 0) {
 				throw obj.result;
 			}
-		//edit allTasks array
-		currentlyEditingTask.name = taskName;
-		currentlyEditingTask.date = taskDate;
-		currentlyEditingTask.time = taskTime;
-		currentlyEditingTask.description = taskDescription;
 
-		renderModalTasks(document.getElementById('modalTasksBody')); //re render tasks
-		renderTask(document.getElementById('futureTasks'), allTasks.filter(day => { //re render future tasks
-			if(new Date(day.date).getTime() > new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`).getTime()) {
-				return day;
-			}
-		}));
-		renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(day => { //re render selected days tasks
-			if (day.date === `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`) {
-				return day;
-			}
-		}));
+			//edit the task in the allTasks array
+			currentlyEditingTask.name = taskName;
+			currentlyEditingTask.date = taskDate;
+			currentlyEditingTask.time = taskTime;
+			currentlyEditingTask.description = taskDescription;
+
+			renderModalTasks(document.getElementById('modalTasksBody'), allTasks.filter(task => { // re render tasks
+				if (new Date(task.date).getTime() >= new Date(today).getTime()) {
+					return task;
+				}
+			}));
+			renderTask(document.getElementById('futureTasks'), allTasks.filter(task => { // re render future tasks
+				if(new Date(task.date).getTime() > new Date(today).getTime()) {
+					return task;
+				}
+			}));
+			renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(task => { // re render selected days tasks
+				if (task.date === `${clickedYear}-${(clickedMonth+1).toString().padStart(2, '0')}-${(clickedDay).toString().padStart(2, '0')}`) {
+					return task;
+				}
+			}));
 
 		}).catch(e => {
-			// set page to 404 error if there is an error
-			document.body.innerHTML = '404' + ' ' + e;
+			document.body.innerHTML = e;
 	});
 
 	// after submitting changes, clear all fields in the add tasks(left side of task modal) 
@@ -539,26 +507,10 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 });
 
 document.getElementById('deleteTaskButton').addEventListener('click', () => {
-	const taskName = document.getElementById('taskName').value;
-    const taskDate = document.getElementById('taskDate').value;
-    const taskTime = document.getElementById('taskTime').value;
-    const taskDescription = document.getElementById('taskDescription').value;
-
-	const url = window.location.pathname;       // reads url
-    const split = url.split('/');
-
-	const temp = {
-		name: taskName,
-		description: taskDescription,
-		date: taskDate,
-		time: taskTime
-	};
-
-	//TODO console.log to check numbers are accurate, add thens for error handelling
-
-	fetch(`/api/users/${split[2]}/tasks/remove`, { //POST the server and remove task from database
+	// POST the server and remove task from database
+	fetch(`/api/users/${split[2]}/tasks/remove`, {
         method: 'POST', 
-        body: JSON.stringify(temp), 
+        body: JSON.stringify(currentlyEditingTask), 
         headers: {
             'Content-Type': 'application/json',
         }
@@ -569,26 +521,31 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 				throw obj.result;
 			}
 			for(let i = 0; i < allTasks.length; i++) {
-				if(allTasks[i] === currentlyEditingTask) { 
+				if(currentlyEditingTask != null && allTasks[i] === currentlyEditingTask) { 
 					//search through allTasks array, if the values all match, delete the item at said index from client side storage
 					allTasks.splice(i, 1);
+					currentlyEditingTask = null;
+					break;
 				}
 			}
-			renderModalTasks(document.getElementById('modalTasksBody')); //re render task modal
-			renderTask(document.getElementById('futureTasks'), allTasks.filter(day => { //re render future tasks
-				if(new Date(day.date).getTime() > new Date(`${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`).getTime()) {
-					return day;
+			renderModalTasks(document.getElementById('modalTasksBody'), allTasks.filter(task => { // re render task modal
+				if (new Date(task.date).getTime() >= new Date(today).getTime()) {
+					return task;
 				}
 			}));
-			renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(day => { //re render selected days tasks
-				if (day.date === `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`) {
-					return day;
+			renderTask(document.getElementById('futureTasks'), allTasks.filter(task => { // re render future tasks
+				if(new Date(task.date).getTime() > new Date(today).getTime()) {
+					return task;
+				}
+			}));
+			renderTask(document.getElementById('selectedDayTasks'), allTasks.filter(task => { // re render selected days tasks
+				if (task.date === `${clickedYear}-${(clickedMonth+1).toString().padStart(2, '0')}-${(clickedDay).toString().padStart(2, '0')}`) {
+					return task;
 				}
 			}));
 
 		}).catch(e => {
-			// set page to 404 error if there is an error
-			document.body.innerHTML = '404' + ' ' + e;
+			document.body.innerHTML = e;
 	});
 
 	// after deleting a task, clear all fields in the add tasks(left side of task modal) 
@@ -596,4 +553,13 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 	document.getElementById('taskDate').value = '';
 	document.getElementById('taskTime').value = '';
 	document.getElementById('taskDescription').value = '';
+});
+
+// renders previous tasks(not todays tasks or future tasks)
+document.getElementById('oldTasksButton').addEventListener('click', () => {
+	renderModalTasks(document.getElementById('oldTasks'), allTasks.filter(task => {
+		if (new Date(task.date).getTime() < new Date(today).getTime()) {
+			return task;
+		}
+	}));
 });
