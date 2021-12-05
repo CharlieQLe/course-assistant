@@ -7,10 +7,19 @@ https://cs326-final-kappa.herokuapp.com/
 ## Overview
 
 Our application is called "Course Assistant" and is designed to help students of all grade levels better manage their class files and upcoming assignments as well as provide 
-study tools.  Upon logging in, the user is presented with a home page consisting of a calendar and the ability to add upcoming tasks.  They can assign these tasks to specific 
-days.  Future tasks, which are based on the current date, render in the bottom right.  Once a date of a task has passed, they will no longer render in this section.  
-Additionally, in the top right, there is a section titled "Tasks for Selected Day", which as the name suggests, renders all tasks for whatever day the user selects on the 
-calendar.  By default, the current date is selected.
+study tools. Upon logging in, the user is presented with a home page consisting of a calendar and the ability to add upcoming tasks. They can assign these tasks to specific 
+days. Future tasks, which are based on the current date, render in the bottom right. Once a date of a task has passed, they will no longer render in this section. Additionally, 
+in the top right, there is a section titled "Tasks for Selected Day", which as the name suggests, renders all tasks for whatever day the user selects on the calendar. By 
+default, the current date is selected. There is also, of course, the ability to edit and delete tasks as desired. The next part of our application is our file upload and tag 
+system.  From this page, the user is able to upload any files that they desire to have everything all in one place. They also have the ability to create tags and assign them
+to files for sorting purposes.  This way, if looking for a file for a specific class or type of file like a note, the user can simply sort by the desired tag and find their
+file quickly.  Finally, we also added two tools, flashcards and notepads, to better assist our application users. To open up a new notepad, the user simply selects, "create
+new note" from the file upload page which will then take them to the notepad page. Here, they can assign a title and write freely instead of having to open up a separate
+application to take notes. Additionally, our flashcards tool works in a similar manner. To create a new set, the user simply clicks the "create new flashcard set" button and
+will be taken to the flashcard creation page. The user can enter new terms as desired and then enter study mode. In study mode, the user can select whether or not they got
+the term right or wrong. Any wrong terms will be added to a new set and can be restudied. What makes our application so innovative is that it really is an all-in-one 
+assistant. In the past, there have been applications for uploading files, keeping track of tasks, and creating notes and flashcards. However, the ability to have all these
+tools in one spot is extremely helpful in our opinion and streamlines the organization of school courses. 
 
 ## Team Members
 
