@@ -317,7 +317,7 @@ files, tag creation, tag assignment, rendering uploaded files, and syncing every
 Matt Ferrara wrote the inital backend for the logged in homepage. This mostly consisted of getting the tasks to upload to the database. Jerry wrote the intial backend for the notepad and flashcard tools. This consisted of uploading 
 flashcards and note files to the database. Charlie wrote the intial backend for the tag and file upload page. This consisted of uploading the tags and files to the server. We ended up completely refactoring our backend database in
 favor of a more simplistic structure. Charlie played a large role in leading this refactoring and coming up with the idea, but all members were involved in the implementation. Authentication was a team effort that heavily relied on
-in class examples of authentication implentation.
+in class examples of authentication implementation.
 
 ## Conclusion
 
