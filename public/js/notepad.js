@@ -1,8 +1,8 @@
 
-window.addEventListener('load', async function() {
-	const url = window.location.pathname;       // reads url
-	const split = url.split('/');
+const url = window.location.pathname;       // reads url
+const split = url.split('/');
 
+window.addEventListener('load', async function() {
 	// GET request to server: asking for the file
 	fetch(`/api/users/${split[2]}/file/notes/${split[5]}`)
 	.then(response => {
@@ -22,15 +22,9 @@ window.addEventListener('load', async function() {
 		document.body.innerHTML = e;
     });
 
-})
+});
 
 document.getElementById('save-btn').addEventListener('click', () => {
-	const url = window.location.pathname;       // reads url
-	const split = url.split('/');
-	
-	// console.log(split);
-	// console.log(document.getElementById('notepad-textarea').value)
-
 	// post to server. tell server to save file
 	fetch(`/api/users/${split[2]}/file/notes/${split[5]}/edit`, {
 		method: 'POST', 
