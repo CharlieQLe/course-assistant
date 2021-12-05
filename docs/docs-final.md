@@ -162,7 +162,7 @@ curl https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NO
 Retrieve the data of a note.
 
 ```
-curl -X POST -d '{ "tags": [""] }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/create
+curl -X POST -d '{ "tags": ["tag1", "tag2"] }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/notes/NOTE/create
 ```
 Create a note.
 
@@ -186,7 +186,7 @@ Get the set of flashcards.
 
 
 ```
-curl -X POST -d '{ "tags": [""] }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/create
+curl -X POST -d '{ "tags": ["tag1", "tag2"] }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/create
 ```
 Create a set of flashcards.
 
@@ -208,9 +208,9 @@ Remove a term and definition to the set of flashcards.
 
 ## Database Documentation
 
-	DB (‘final-kappa’) // Database
+	DB ('final-kappa') // Database
 
-		AUTHENTICATION // One collection stores all authentication information
+		AUTHENTICATION('authentication') // One collection stores all authentication information
 
 			User 1 { // Each user has their authentication information stored in this collection
 
@@ -226,7 +226,7 @@ Remove a term and definition to the set of flashcards.
 
 			}
 
-		FILES // Another collection holds all files associatied with a specific user 
+		FILES('files') // Another collection holds all files associatied with a specific user 
 
 			File 1 (Note file) { // Each file has a unique id, user, name, tags, and type. Type determines what else is stored.
 
@@ -236,7 +236,7 @@ Remove a term and definition to the set of flashcards.
 
 				name: String // Name of file
 
-				type: String // Type of file --> Determines what other fields are stored. In this example, it is a note file.
+				type: String('note') // Type of file --> Determines what other fields are stored. In this example, it is a note file.
 				
 				tags: Array of strings // Tags associatied with file
 				
@@ -252,7 +252,7 @@ Remove a term and definition to the set of flashcards.
 
 				name: String // Name of file
 
-				type: String // Type of file --> Determines what other fields are stored. In this example, it is a flashcard file.
+				type: String('flashcard') // Type of file --> Determines what other fields are stored. In this example, it is a flashcard file.
 				
 				tags: Array of strings // Tags associatied with file
 				
@@ -260,23 +260,8 @@ Remove a term and definition to the set of flashcards.
 
 			}
 
-			File 3 (Normal file) { // Each file has a unique id, user, name, tags, and type. Type determines what else is stored. UPDATE THIS LATER NOT EXACTLY SURE YET
 
-				_id: String // Unique id assigned to every item in the database
-
-				user: String // User that the file belongs to
-
-				name: String // Name of file
-
-				type: String // Type of file --> Determines what other fields are stored. In this example, it is a note file.
-				
-				tags: Array of strings // Tags associatied with file
-				
-				body: String // Body of note file
-
-			}
-
-		TAGS // Another collection holds all tags created by a specific user
+		TAGS('tags') // Another collection holds all tags created by a specific user
 
 			Tag 1 { // Each tag has a unique id, user, and name
 
@@ -288,7 +273,7 @@ Remove a term and definition to the set of flashcards.
 
 			}
 
-		TASKS // Another collection holds all tasks created by a specific user
+		TASKS('tasks') // Another collection holds all tasks created by a specific user
 
 			Task 1 { // Each task has a unique id, name, user, description, date, time
 
@@ -320,14 +305,14 @@ Matt Ferrara wrote most of the HTML and CSS for the application homepage before 
 calendar, tasks, and the add task and edit task modals. Jia Hui Yu (Jerry) was wrote the HTML and CSS for the notepad page, flashcard tool, as well as the create flashcard and notes modals. He also wrote HTML and CSS for user profile 
 page used to edit profile information. Charlie Le wrote the HTML and CSS for the file upload page, as well as created modals for tag creation/assignment and file upload. He also wrot HTML and CSS for the navbar at the top of the page.
 
-### Front End Javascript
+### Front-End Javascript
 
 Matt Ferrara wrote most of the front end Javascript for the logged in homepage. This included the calendar, task creation, task editing, task deletion, rendering of current and future tasks, and syncing everything up to the backend. 
 Jerry also assisted with DOM surgery for this part as well and getting everything connected to the backend properly. Jerry wrote most of the front end Javascript for the notepad and flashcard tools. This included creating new note 
 files, creating new flashcard sets, as well as rendering the flashcard study mode and syncing everything up to the backend. Charlie wrote most of the front end Javascript for the file upload and tag system. This included uploading 
 files, tag creation, tag assignment, rendering uploaded files, and syncing everything up to the backend.
 
-### Back end Node.js and Authentication
+### Back-End Node.js and Authentication
 
 Matt Ferrara wrote the inital backend for the logged in homepage. This mostly consisted of getting the tasks to upload to the database. Jerry wrote the intial backend for the notepad and flashcard tools. This consisted of uploading 
 flashcards and note files to the database. Charlie wrote the intial backend for the tag and file upload page. This consisted of uploading the tags and files to the server. We ended up completely refactoring our backend database in
@@ -342,5 +327,5 @@ structure, the backend implementation of our project was also quite simple (it g
 There was a lot of troubleshooting getting things to render properly and other bugs that had to be fixed one by one. Of all parts, our front end also definitely evolved the most compared to our intial submission in Milestone 2. As far
 as what would have been nice to know before the project, in general, some concepts were taught too close to the deadlines for milestones. For example, we had a lab on Bootstrap the day before the HTML and CSS Milestone was due, which
 resulted in us teaching Bootstrap to ourselves. Even things like using MongoDB and backend implementation were taught pretty close to the due date for Milestone 3. It may have just been the way the course schedule worked out this 
-semester, but learning this concepts a little sooner would have been benefitial. Despite that, we would say we had most of the skills necessary taught to us at one point or another, so there is not anything specific we would have liked
+semester, but learning this concepts a little sooner would have been beneficial. Despite that, we would say we had most of the skills necessary taught to us at one point or another, so there is not anything specific we would have liked
 to know before hand.
