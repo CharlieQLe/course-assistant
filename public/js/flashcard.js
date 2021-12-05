@@ -9,7 +9,7 @@ const split = url.split('/');
 window.addEventListener('load', async function() {
 
     // grab flashcards from server
-    fetch(`/api/users/${split[2]}/file/flashcards/${split[5]}`)
+    fetch(`/api/users/${split[2]}/files/flashcards/${split[5]}`)
     .then(response => {
         return response.json();
     }).then(obj => {
@@ -202,7 +202,7 @@ function renderFlashcards(element) {
             renderFlashcards(document.getElementById('flashcard'));
 
             // post to server. tell server to delete this flashcard
-            fetch(`/api/users/${split[2]}/file/flashcards/${split[5]}/removeFlashcard`, {
+            fetch(`/api/users/${split[2]}/files/flashcards/${split[5]}/removeFlashcard`, {
                 method: 'POST', 
                 body: JSON.stringify(temp), 
                 headers: {
@@ -353,7 +353,7 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
     }
 
     // POST: add a flashcard to the set of flashcards
-    fetch(`/api/users/${split[2]}/file/flashcards/${split[5]}/addFlashcard`, {
+    fetch(`/api/users/${split[2]}/files/flashcards/${split[5]}/addFlashcard`, {
         method: 'POST', 
         body: JSON.stringify(temp), 
         headers: {
