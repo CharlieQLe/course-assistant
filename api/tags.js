@@ -9,21 +9,12 @@ const { client } = require('./initializeServer.js');
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function getAll(request, response) {
+    // Find all tags belonging to a user, then convert them to an array and  
     client.db("final-kappa").collection('tags').find({ 
         user: request.params.user
-    }).toArray((err, tags) => {
-        if (err) {
-            response.end(JSON.stringify({
-                statusCode: -1,
-                data: "Failed to search for every tag"
-            }));
-        } else {
-            response.end(JSON.stringify({
-                statusCode: 0,
-                data: tags.map(x => x.name)
-            }));
-        }
-    })
+    }).toArray()
+        .then(tags => response.end(JSON.stringify({ statusCode: 0, data: tags.map(tag => tag.name) })))
+        .catch(err => response.end(JSON.stringify({ statusCode: -1, data: `Error retrieving every tag: ${err}`})));
 }
 
 /**
@@ -33,8 +24,21 @@ function getAll(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postCreate(request, response) {
+    // Trim desired tag name for validity
+    let trimmed = request.params.tag.trim();
+    if (trimmed === '') {
+        response.end(JSON.stringify({
+            statusCode: -1,
+            data: "Error adding tag: invalid tag name."
+        }));
+        return;
+    }
+
+    // Start a promise to find an existing tag and:
+    //  - If the tag exists, throw an error.
+    //  - Otherwise, insert the tag. 
     client.db("final-kappa").collection('tags').findOne({
-        name: request.params.tag,
+        name: trimmed,
         user: request.params.user
     })
         .then(existingTag => {
@@ -42,7 +46,7 @@ function postCreate(request, response) {
                 throw new Error("tag already exists!");
             }
             return client.db("final-kappa").collection("tags").insertOne({
-                name: request.params.tag,
+                name: trimmed,
                 user: request.params.user
             }).then(_ => response.end(JSON.stringify({
                 statusCode: 0,
@@ -59,6 +63,7 @@ function postCreate(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postRemove(request, response) {
+    // Start a promise to delete a tag and remove the tag from every file.
     client.db("final-kappa").collection('tags').deleteOne({
         name: request.params.tag,
         user: request.params.user

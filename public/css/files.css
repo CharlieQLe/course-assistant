@@ -2,6 +2,10 @@
     margin: auto;
 }
 
-.file-delete, .tag-delete {
+.file-name, .tag-name {
+    line-height: 40px;
+}
+
+.delete-button {
     float: right;
 }

@@ -19,6 +19,7 @@ function getNote(request, response) {
         }
         response.end(JSON.stringify({ status: 0, result: exist.body }))
     }).catch(err => {
+        console.log('get note');
         response.end(JSON.stringify({ status: -1, result: err.toString() }))
     });
 }

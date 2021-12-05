@@ -4,7 +4,7 @@ const split = url.split('/');
 
 window.addEventListener('load', async function() {
 	// GET request to server: asking for the file
-	fetch(`/api/users/${split[2]}/file/notes/${split[5]}`)
+	fetch(`/api/users/${split[2]}/files/notes/${split[5]}`)
 	.then(response => {
         return response.json();
     }).then(obj => {
@@ -26,7 +26,7 @@ window.addEventListener('load', async function() {
 
 document.getElementById('save-btn').addEventListener('click', () => {
 	// post to server. tell server to save file
-	fetch(`/api/users/${split[2]}/file/notes/${split[5]}/edit`, {
+	fetch(`/api/users/${split[2]}/files/notes/${split[5]}/edit`, {
 		method: 'POST', 
 		body: JSON.stringify({ body: document.getElementById('notepad-textarea').value }), 
 		headers: {

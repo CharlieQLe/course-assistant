@@ -3,7 +3,6 @@
 const fileAPI = require('./api/files.js');
 const userAPI = require('./api/user.js');
 const taskAPI = require('./api/tasks.js');
-const classAPI = require('./api/class.js');
 const tagAPI = require('./api/tags.js');
 const noteAPI = require('./api/notepad.js');
 const flashcardAPI = require('./api/flashcard.js');
@@ -31,16 +30,8 @@ app.post("/api/users/:user/tasks/create", taskAPI.postCreate);
 app.post("/api/users/:user/tasks/edit", taskAPI.postEdit);
 app.post("/api/users/:user/tasks/remove", taskAPI.postRemove);
 
-// Set the class endpoints
-app.use("/users/:user/class", express.static('public', {index: 'class.html'}));       // serve html file
-app.get("/api/users/:user/class", classAPI.getAll);
-app.get("/api/users/:user/class/:class", classAPI.getClass);
-app.post("/api/users/:user/class/:class/create", classAPI.postCreate);
-app.post("/api/users/:user/class/:class/edit", classAPI.postEdit);
-app.post("/api/users/:user/class/:class/remove", classAPI.postRemove);
-app.get("/api/users/:user/class/:class/search", classAPI.getSearch);
-
 // Set the file endpoints
+app.use("/users/:user/files", express.static('public', {index: 'files.html'}));
 app.get("/api/users/:user/files", fileAPI.getAll);
 app.post("/api/users/:user/files/search", fileAPI.postSearch);
 
@@ -50,19 +41,19 @@ app.post("/api/users/:user/tags/:tag/create", tagAPI.postCreate);
 app.post("/api/users/:user/tags/:tag/remove", tagAPI.postRemove);
 
 // Set the note endpoints
-app.use("/users/:user/file/notes/:note", express.static('public', {index: 'notepad.html'}));    // serve html file
-app.get("/api/users/:user/file/notes/:note", noteAPI.getNote);
-app.post("/api/users/:user/file/notes/:note/create", noteAPI.postCreate);
-app.post("/api/users/:user/file/notes/:note/remove", noteAPI.postRemove);
-app.post("/api/users/:user/file/notes/:note/edit", noteAPI.postEdit);
+app.use("/users/:user/files/notes/:note", express.static('public', {index: 'notepad.html'}));    // serve html file
+app.get("/api/users/:user/files/notes/:note", noteAPI.getNote);
+app.post("/api/users/:user/files/notes/:note/create", noteAPI.postCreate);
+app.post("/api/users/:user/files/notes/:note/remove", noteAPI.postRemove);
+app.post("/api/users/:user/files/notes/:note/edit", noteAPI.postEdit);
 
 // Set the flashcard endpoints
-app.use("/users/:user/file/flashcards/:flashcard", express.static('public', {index: 'flashcard.html'}));    // serve html file
-app.get("/api/users/:user/file/flashcards/:flashcard", flashcardAPI.getFlashcards);
-app.post("/api/users/:user/file/flashcards/:flashcard/create", flashcardAPI.postCreate);
-app.post("/api/users/:user/file/flashcards/:flashcard/remove", flashcardAPI.postRemove);
-app.post("/api/users/:user/file/flashcards/:flashcard/addFlashcard", flashcardAPI.postAddFlashcard);
-app.post("/api/users/:user/file/flashcards/:flashcard/removeFlashcard", flashcardAPI.postRemoveFlashcard);
+app.use("/users/:user/files/flashcards/:flashcard", express.static('public', {index: 'flashcard.html'}));    // serve html file
+app.get("/api/users/:user/files/flashcards/:flashcard", flashcardAPI.getFlashcards);
+app.post("/api/users/:user/files/flashcards/:flashcard/create", flashcardAPI.postCreate);
+app.post("/api/users/:user/files/flashcards/:flashcard/remove", flashcardAPI.postRemove);
+app.post("/api/users/:user/files/flashcards/:flashcard/addFlashcard", flashcardAPI.postAddFlashcard);
+app.post("/api/users/:user/files/flashcards/:flashcard/removeFlashcard", flashcardAPI.postRemoveFlashcard);
 
 // Set the default handler
 app.get("*", defaultHandler);

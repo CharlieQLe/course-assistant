@@ -111,40 +111,35 @@
 					<form>
 						<!-- File chooser -->
 						<!-- <label for="exampleFormControlInput1" class="form-label">Email address</label> -->
-						<input type="text" class="form-control" id="createNoteInput" placeholder="note name">
+						<input type="text" class="form-control" id="noteLabelInput" placeholder="note name">
 						<br>
 
 						<!-- Add tags group -->
-						<div id="addTagsGroup">
+						<div>
 							<h5>Add Tags</h5>
-							<br>
-							<div class="label-no-count">added tags here</div>
-							<br>
+							<ul class="list-group" id="noteAddedTagList"></ul>
+                            <br>
 
 							<!-- Create/add tag inputs -->
 							<div class="row">
 
 								<!-- Add tag dropdown -->
 								<div class="dropdown col-auto">
-									<button class="btn btn-primary dropdown-toggle" type="button" id="noteAddTagButton"
+									<button class="btn btn-primary dropdown-toggle" type="button" id="noteAddTagDropdown"
 										data-bs-toggle="dropdown" aria-expanded="false">Add tag</button>
 
 									<!-- Dropdown of all tags -->
-									<ul class="dropdown-menu" aria-labelledby="noteAddTagButton">
-										<li class="dropdown-item">Tag 1</li>
-										<li class="dropdown-item">Tag 2</li>
-										<li class="dropdown-item">Tag 3</li>
-									</ul>
+									<ul class="dropdown-menu" aria-labelledby="noteAddTagDropdown" id="noteAddTagList"></ul>
 								</div>
 
 								<!-- Create tag text field -->
 								<div class="col">
-									<input type="text" id="createTagInput" class="form-control">
+									<input type="text" id="noteCreateTagInput" class="form-control">
 								</div>
 
 								<!-- Create tag button -->
 								<div class="col-auto">
-									<input type="button" class="btn btn-primary" id="createTagButton"
+									<input type="button" class="btn btn-primary" id="noteCreateTagButton"
 										value="Create Tag">
 								</div>
 							</div>
@@ -184,14 +179,13 @@
 					<form>
 						<!-- File chooser -->
 						<!-- <label for="exampleFormControlInput1" class="form-label">Email address</label> -->
-						<input type="text" class="form-control" id="createFlashcardInput" placeholder="flashcard name">
+						<input type="text" class="form-control" id="flashcardLabelInput" placeholder="flashcard name">
 						<br>
 
 						<!-- Add tags group -->
 						<div id="addTagsGroup">
 							<h5>Add Tags</h5>
-							<br>
-							<div class="label-no-count">added tags here</div>
+							<ul class="list-group" id="flashcardAddedTagList"></ul>
 							<br>
 
 							<!-- Create/add tag inputs -->
@@ -199,25 +193,21 @@
 
 								<!-- Add tag dropdown -->
 								<div class="dropdown col-auto">
-									<button class="btn btn-primary dropdown-toggle" type="button" id="flashcardAddTagButton"
+									<button class="btn btn-primary dropdown-toggle" type="button" id="flashcardAddTagDropdown"
 										data-bs-toggle="dropdown" aria-expanded="false">Add tag</button>
 
 									<!-- Dropdown of all tags -->
-									<ul class="dropdown-menu" aria-labelledby="flashcardAddTagButton">
-										<li class="dropdown-item">Tag 1</li>
-										<li class="dropdown-item">Tag 2</li>
-										<li class="dropdown-item">Tag 3</li>
-									</ul>
+									<ul class="dropdown-menu" aria-labelledby="flashcardAddTagDropdown" id="flashcardAddTagList"></ul>
 								</div>
 
 								<!-- Create tag text field -->
 								<div class="col">
-									<input type="text" id="createTagInput" class="form-control">
+									<input type="text" id="flashcardCreateTagInput" class="form-control">
 								</div>
 
 								<!-- Create tag button -->
 								<div class="col-auto">
-									<input type="button" class="btn btn-primary" id="createTagButton"
+									<input type="button" class="btn btn-primary" id="flashcardCreateTagButton"
 										value="Create Tag">
 								</div>
 							</div>
@@ -325,7 +315,7 @@
 				</div>
 
 				<!-- Body -->
-				<div class="modal-body">
+				<div class="modal-body overflow-auto">
 					<ul class="list-group" id="allTagList">
                     </ul>
 				</div>
