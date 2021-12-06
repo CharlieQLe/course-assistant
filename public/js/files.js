@@ -11,17 +11,12 @@ const fileNameInput = document.getElementById('fileNameInput');
 const includeTagInput = document.getElementById('includeTagInput');
 const excludeTagInput = document.getElementById('excludeTagInput');
 
-// Create note inputs
-const noteLabelInput = document.getElementById('noteLabelInput');
-const noteAddedTagList = document.getElementById('noteAddedTagList');
-const noteAddTagList = document.getElementById('noteAddTagList');
-const noteCreateTagInput = document.getElementById('noteCreateTagInput');
-
-// Create flashcard inputs
-const flashcardLabelInput = document.getElementById('flashcardLabelInput');
-const flashcardAddedTagList = document.getElementById('flashcardAddedTagList');
-const flashcardAddTagList = document.getElementById('flashcardAddTagList');
-const flashcardCreateTagInput = document.getElementById('flashcardCreateTagInput');
+// Create inputs
+const createTitle = document.getElementById('createTitle');
+const createLabelInput = document.getElementById('createLabelInput');
+const createAddedTagList = document.getElementById('createAddedTagList');
+const createAddTagList = document.getElementById('createAddTagList');
+const createCreateTagInput = document.getElementById('createCreateTagInput');
 
 // Tag inputs
 const allTagList = document.getElementById('allTagList');
@@ -55,56 +50,55 @@ document.getElementById('addTagButton').addEventListener('click', () => {
         .catch(console.log);
 });
 
-document.getElementById('createNoteModal').addEventListener('show.bs.modal', () => {
-    newFileTags = [];
-    modifyNoteTagsList();
-});
-
-document.getElementById('createFlashcardModal').addEventListener('show.bs.modal', () => {
-    newFileTags = [];
-    modifyFlashcardTagsList();
-});
-
-document.getElementById('noteCreateTagButton').addEventListener('click', () => {
-    createTag(noteCreateTagInput.value)
+document.getElementById('createCreateTagButton').addEventListener('click', () => {
+    createTag(createCreateTagInput.value)
         .then(_ => {
-            newFileTags.push(noteCreateTagInput.value);
-            modifyNoteTagsList();
-            noteCreateTagInput.value = "";
+            newFileTags.push(createCreateTagInput.value);
+            modifyNewFileTagsList();
+            createCreateTagInput.value = "";
             return getAllTags();
         })
         .catch(console.log);
 });
 
-document.getElementById('flashcardCreateTagButton').addEventListener('click', () => {
-    createTag(flashcardCreateTagInput.value)
-        .then(_ => {
-            newFileTags.push(flashcardCreateTagInput.value);
-            modifyFlashcardTagsList();
-            flashcardCreateTagInput.value = "";
-            return getAllTags();
-        })
-        .catch(console.log);
+document.getElementById('createNote').addEventListener('click', () => {
+    removeChildren(createTitle);
+    createTitle.appendChild(document.createTextNode("Create Note"));
+    createLabelInput.value = '';
+    createLabelInput.setAttribute('placeholder', 'note name');
+    newFileTags = [];
+    modifyNewFileTagsList();
+    const createCreateButton = document.getElementById('createCreateButton');
+    createCreateButton.replaceWith(createCreateButton.cloneNode(true));
+    document.getElementById('createCreateButton').addEventListener('click', () => {
+        createNote(createLabelInput.value)
+            .then(_ => {
+                window.open(encodeURI(`${regularPrefix}/files/notes/${createLabelInput.value}`), "_blank");
+                bootstrap.Modal.getInstance(document.getElementById('createModal')).hide();
+                return getFileSearch();
+            })
+            .catch(console.log);
+    });
 });
 
-document.getElementById('createNoteButton').addEventListener('click', () => {
-    createNote(noteLabelInput.value)
-        .then(_ => {
-            window.open(encodeURI(`${regularPrefix}/files/notes/${noteLabelInput.value}`), "_blank");
-            bootstrap.Modal.getInstance(document.getElementById('createNoteModal')).hide();
-            return getFileSearch();
-        })
-        .catch(console.log);
-});
-
-document.getElementById('createFlashcardButton').addEventListener('click', () => {
-    createFlashcards(flashcardLabelInput.value)
-        .then(_ => {
-            window.open(encodeURI(`${regularPrefix}/files/flashcards/${flashcardLabelInput.value}`), "_blank");
-            bootstrap.Modal.getInstance(document.getElementById('createFlashcardModal')).hide();
-            return getFileSearch();
-        })
-        .catch(console.log);
+document.getElementById('createFlashcard').addEventListener('click', () => {
+    removeChildren(createTitle);
+    createTitle.appendChild(document.createTextNode("Create Flashcard"));
+    createLabelInput.value = '';
+    createLabelInput.setAttribute('placeholder', 'flashcard name');
+    newFileTags = [];
+    modifyNewFileTagsList();
+    const createCreateButton = document.getElementById('createCreateButton');
+    createCreateButton.replaceWith(createCreateButton.cloneNode(true));
+    document.getElementById('createCreateButton').addEventListener('click', () => {
+        createFlashcards(createLabelInput.value)
+            .then(_ => {
+                window.open(encodeURI(`${regularPrefix}/files/flashcards/${createLabelInput.value}`), "_blank");
+                bootstrap.Modal.getInstance(document.getElementById('createModal')).hide();
+                return getFileSearch();
+            })
+            .catch(console.log);
+    });
 });
 
 // Retrieve tags
@@ -626,43 +620,24 @@ function modifyTagsModal(tags) {
  * @param {string[]} tags 
  */
 function modifyTagsDropdown(tags) {
-    removeChildren(noteAddTagList);
-    removeChildren(flashcardAddTagList);
+    removeChildren(createAddTagList);
     tags.forEach(tag => {
-        noteAddTagList.appendChild(createDropdownItem(tag, () => {
+        createAddTagList.appendChild(createDropdownItem(tag, () => {
             newFileTags.push(tag);
-            modifyNoteTagsList();
-        }));
-
-        flashcardAddTagList.appendChild(createDropdownItem(tag, () => {
-            newFileTags.push(tag);
-            modifyFlashcardTagsList();
+            modifyNewFileTagsList();
         }));
     });
 }
 
 /**
- * Modify the tag list for the create note modal with DOM surgery.
+ * Modify the tag list for the create modal with DOM surgery.
  */
-function modifyNoteTagsList() {
-    removeChildren(noteAddedTagList);
+function modifyNewFileTagsList() {
+    removeChildren(createAddedTagList);
     newFileTags.forEach(tag => {
-        noteAddedTagList.appendChild(createTagListItem(tag, () => {
+        createAddedTagList.appendChild(createTagListItem(tag, () => {
             newFileTags = newFileTags.filter(x => x != tag);
-            modifyNoteTagsList();
-        }));
-    });
-}
-
-/**
- * Modify the tag list for the create flashcard modal with DOM surgery.
- */
-function modifyFlashcardTagsList() {
-    removeChildren(flashcardAddedTagList);
-    newFileTags.forEach(tag => {
-        flashcardAddedTagList.appendChild(createTagListItem(tag, () => {
-            newFileTags = newFileTags.filter(x => x != tag);
-            modifyFlashcardTagsList();
+            modifyNewFileTagsList();
         }));
     });
 }
@@ -714,9 +689,9 @@ function modifyFiles(files) {
                         .then(_ => getFileSearch())
                         .catch(console.log);
                 } else {
-        
+
                     // todo
-        
+
                 }
                 bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
             });
