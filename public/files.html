@@ -85,7 +85,7 @@
 					</li>
 					<li class="nav-item px-1">
 						<button class="btn btn-outline-primary" type="button" data-bs-toggle="modal"
-							data-bs-target="#tagModal">Tags</button>
+							data-bs-target="#tagModal" id="showAllTags">Tags</button>
 					</li>
 				</ul>
 			</div>
@@ -235,97 +235,43 @@
 	<div id="tagModal" class="modal fade" tabindex="-1" role="dialog">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-
 				<!-- Header -->
 				<div class="modal-header">
 					<!-- Title -->
-					<h5 class="modal-title">Tags</h5>
+					<h5 class="modal-title" id="tagTitle">Tags</h5>
 
 					<!-- Close button -->
-					<button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
+					<button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 
 				<!-- Body -->
 				<div class="modal-body overflow-auto">
-					<ul class="list-group" id="allTagList">
+					<ul class="list-group" id="tagAllTagList">
                     </ul>
 				</div>
 
 				<!-- Footer -->
 				<div class="modal-footer">
-					<!-- Add tag group -->
 					<form class="center-group">
 						<div class="row">
+                            <div class="dropdown col-auto">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="tagAddTagButton" data-bs-toggle="dropdown" aria-expanded="false">Add tag</button>
+                                <ul class="dropdown-menu" aria-labelledby="tagAddTagButton" id="tagAddTagList"></ul>
+                            </div>
 							<div class="col">
-								<input type="text" class="form-control" id="addTagInput">
+								<input type="text" class="form-control" id="tagCreateTagInput">
 							</div>
 							<div class="col-auto">
-								<input type="button" class="btn btn-primary" id="addTagButton" value="Add Tag">
+								<input type="button" class="btn btn-primary" id="tagCreateTagButton" value="Add Tag">
 							</div>
 						</div>
 					</form>
 				</div>
-
 			</div>
 		</div>
 	</div>
 
-    <!-- File tags modal -->
-	<div id="fileTagModal" class="modal fade" tabindex="-1" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-
-				<!-- Header -->
-				<div class="modal-header">
-					<!-- Title -->
-					<h5 class="modal-title" id="fileTagModalTitle"></h5>
-
-					<!-- Close button -->
-					<button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-
-				<!-- Body -->
-				<div class="modal-body overflow-auto">
-					<ul class="list-group" id="fileAllTagList">
-                    </ul>
-				</div>
-
-				<!-- Footer -->
-				<div class="modal-footer">
-					<!-- Add tag group -->
-					<form class="center-group">
-                        <!-- Create/add tag inputs -->
-                        <div class="row">
-
-                            <!-- Add tag dropdown -->
-                            <div class="dropdown col-auto">
-                                <button class="btn btn-primary dropdown-toggle" type="button" id="fileAddTagButton"
-                                    data-bs-toggle="dropdown" aria-expanded="false">Add tag</button>
-
-                                <!-- Dropdown of all tags -->
-                                <ul class="dropdown-menu" aria-labelledby="fileAddTagButton" id="fileAddTagList"></ul>
-                            </div>
-
-                            <!-- Create tag text field -->
-                            <div class="col">
-                                <input type="text" id="fileCreateTagInput" class="form-control">
-                            </div>
-
-                            <!-- Create tag button -->
-                            <div class="col-auto">
-                                <input type="button" class="btn btn-primary" value="Create Tag" id="fileCreateTagButton"></input>
-                            </div>
-                        </div>
-					</form>
-				</div>
-
-			</div>
-		</div>
-	</div>
-
-    <!-- File deletion confirmation popup -->
+    <!-- Deletion confirmation popup -->
     <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
