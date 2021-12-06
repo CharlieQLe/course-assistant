@@ -761,6 +761,7 @@ function modifyFiles(files) {
                 return Promise.resolve().then(() => { throw "Unknown file type!" });
             };
 
+            updateTagList().catch(console.log);
             updateTagDropdown().catch(console.log);
 
             const tagCreateTagButton = document.getElementById('tagCreateTagButton');
