@@ -13,8 +13,8 @@ function getAll(request, response) {
     client.db("final-kappa").collection('tags').find({ 
         user: request.params.user
     }).toArray()
-        .then(tags => response.end(JSON.stringify({ statusCode: 0, data: tags.map(tag => tag.name) })))
-        .catch(err => response.end(JSON.stringify({ statusCode: -1, data: `Error retrieving every tag: ${err}`})));
+        .then(tags => response.end(JSON.stringify({ status: 0, result: tags.map(tag => tag.name) })))
+        .catch(err => response.end(JSON.stringify({ status: -1, result: `Error retrieving every tag: ${err}`})));
 }
 
 /**
@@ -28,8 +28,8 @@ function postCreate(request, response) {
     let trimmed = request.params.tag.trim();
     if (trimmed === '') {
         response.end(JSON.stringify({
-            statusCode: -1,
-            data: "Error adding tag: invalid tag name."
+            status: -1,
+            result: "Error adding tag: invalid tag name."
         }));
         return;
     }
@@ -49,8 +49,8 @@ function postCreate(request, response) {
                 name: trimmed,
                 user: request.params.user
             }).then(_ => response.end(JSON.stringify({
-                statusCode: 0,
-                data: "Added tag"
+                status: 0,
+                result: "Added tag"
             })));
         })
         .catch(err => response.end(`Error adding tag: ${err}`));
@@ -69,8 +69,8 @@ function postRemove(request, response) {
         user: request.params.user
     })
         .then(_ => client.db("final-kappa").collection('files').updateMany({ user: request.params.user }, { $pull: { tags: request.params.tag } }, { multi: true })
-            .then(_ => response.end(JSON.stringify({ statusCode: 0, data: "Deleted tag" }))))
-        .catch(err => response.end(JSON.stringify({ statusCode: -1, data: `Error deleting tag: ${err}` })));
+            .then(_ => response.end(JSON.stringify({ status: 0, result: "Deleted tag" }))))
+        .catch(err => response.end(JSON.stringify({ status: -1, result: `Error deleting tag: ${err}` })));
 }
 
 module.exports = { getAll, postCreate, postRemove };

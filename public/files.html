@@ -340,6 +340,61 @@
 		</div>
 	</div>
 
+    <!-- File tags modal -->
+	<div id="fileTagModal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- Header -->
+				<div class="modal-header">
+					<!-- Title -->
+					<h5 class="modal-title" id="fileTagModalTitle"></h5>
+
+					<!-- Close button -->
+					<button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+
+				<!-- Body -->
+				<div class="modal-body overflow-auto">
+					<ul class="list-group" id="fileAllTagList">
+                    </ul>
+				</div>
+
+				<!-- Footer -->
+				<div class="modal-footer">
+					<!-- Add tag group -->
+					<form class="center-group">
+                        <!-- Create/add tag inputs -->
+                        <div class="row">
+
+                            <!-- Add tag dropdown -->
+                            <div class="dropdown col-auto">
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="fileAddTagButton"
+                                    data-bs-toggle="dropdown" aria-expanded="false">Add tag</button>
+
+                                <!-- Dropdown of all tags -->
+                                <ul class="dropdown-menu" aria-labelledby="fileAddTagButton" id="fileAddTagList"></ul>
+                            </div>
+
+                            <!-- Create tag text field -->
+                            <div class="col">
+                                <input type="text" id="fileCreateTagInput" class="form-control">
+                            </div>
+
+                            <!-- Create tag button -->
+                            <div class="col-auto" id="fileCreateTagButtonContainer">
+                                <input type="button" class="btn btn-primary" id="fileCreateTagButton"
+                                    value="Create Tag">
+                            </div>
+                        </div>
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
 	<!-- Option 1: Bootstrap Bundle with Popper -->
 	<!-- <script src="./bootstrap-5.1.3-dist/js/bootstrap.bundle.min.js"></script> -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

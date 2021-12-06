@@ -26,11 +26,17 @@ const flashcardCreateTagInput = document.getElementById('flashcardCreateTagInput
 // Tag inputs
 const allTagList = document.getElementById('allTagList');
 const addTagInput = document.getElementById('addTagInput');
+const fileTagModalTitle = document.getElementById('fileTagModalTitle');
+const fileAllTagList = document.getElementById('fileAllTagList');
+const fileAddTagList = document.getElementById('fileAddTagList');
+const fileCreateTagInput = document.getElementById('fileCreateTagInput');
+const fileCreateTagButtonContainer = document.getElementById('fileCreateTagButtonContainer');
 
 // File display
 const fileList = document.getElementById('fileList');
 
 // Cache
+let foundTags = [];
 let newFileTags = [];
 
 // Events
@@ -38,7 +44,10 @@ document.getElementById('searchFilesButton').addEventListener('click', () => get
 
 document.getElementById('addTagButton').addEventListener('click', () => {
     createTag(addTagInput.value)
-        .then(_ => addTagInput.value = "")
+        .then(_ => {
+            addTagInput.value = "";
+            return getAllTags();
+        })
         .catch(console.log);
 });
 
@@ -57,7 +66,8 @@ document.getElementById('noteCreateTagButton').addEventListener('click', () => {
         .then(_ => {
             newFileTags.push(noteCreateTagInput.value);
             modifyNoteTagsList();
-            noteCreateTagInput.value = ""
+            noteCreateTagInput.value = "";
+            return getAllTags();
         })
         .catch(console.log);
 });
@@ -67,7 +77,8 @@ document.getElementById('flashcardCreateTagButton').addEventListener('click', ()
         .then(_ => {
             newFileTags.push(flashcardCreateTagInput.value);
             modifyFlashcardTagsList();
-            flashcardCreateTagInput.value = ""
+            flashcardCreateTagInput.value = "";
+            return getAllTags();
         })
         .catch(console.log);
 });
@@ -75,11 +86,8 @@ document.getElementById('flashcardCreateTagButton').addEventListener('click', ()
 document.getElementById('createNoteButton').addEventListener('click', () => {
     createNote(noteLabelInput.value)
         .then(_ => {
-            if (response.status === 0) {
-                window.open(encodeURI(`${regularPrefix}/files/notes/${noteLabelInput.value}`), "_blank");
-                return getFileSearch();
-            }
-            throw response.data;
+            window.open(encodeURI(`${regularPrefix}/files/notes/${noteLabelInput.value}`), "_blank");
+            return getFileSearch();
         })
         .catch(console.log);
 });
@@ -87,11 +95,8 @@ document.getElementById('createNoteButton').addEventListener('click', () => {
 document.getElementById('createFlashcardButton').addEventListener('click', () => {
     createFlashcards(flashcardLabelInput.value)
         .then(_ => {
-            if (response.status === 0) {
-                window.open(encodeURI(`${regularPrefix}/files/flashcards/${flashcardLabelInput.value}`), "_blank");
-                return getFileSearch();
-            }
-            throw response.data;
+            window.open(encodeURI(`${regularPrefix}/files/flashcards/${flashcardLabelInput.value}`), "_blank");
+            return getFileSearch();
         })
         .catch(console.log);
 });
@@ -113,11 +118,11 @@ function getAllFiles() {
     return fetch(`${apiPrefix}/files`)
         .then(response => response.json())
         .then(response => {
-            if (response.statusCode === 0) {
-                modifyFiles(response.data);
-                return Promise.resolve(response.data);
+            if (response.status === 0) {
+                modifyFiles(response.result);
+                return Promise.resolve(response.result);
             }
-            throw response.data;
+            throw response.result;
         });
 }
 
@@ -140,11 +145,11 @@ function getFileSearch() {
     })
         .then(response => response.json())
         .then(response => {
-            if (response.statusCode === 0) {
-                modifyFiles(response.data);
-                return Promise.resolve(response.data);
+            if (response.status === 0) {
+                modifyFiles(response.result);
+                return Promise.resolve(response.result);
             }
-            throw response.data;
+            throw response.result;
         });
 }
 
@@ -157,13 +162,13 @@ function getAllTags() {
     return fetch(`${apiPrefix}/tags`)
         .then(response => response.json())
         .then(response => {
-            if (response.statusCode === 0) {
-                modifyTagSearch(response.data);
-                modifyTagsModal(response.data);
-                modifyTagsDropdown(response.data);
-                return Promise.resolve(response.data);
+            if (response.status === 0) {
+                modifyTagSearch(response.result);
+                modifyTagsModal(response.result);
+                modifyTagsDropdown(response.result);
+                return Promise.resolve(response.result);
             }
-            throw response.data;
+            throw response.result;
         });
 }
 
@@ -187,10 +192,10 @@ function createTag(tagName) {
     })
         .then(response => response.json())
         .then(response => {
-            if (response.statusCode === 0) {
-                return getAllTags();
+            if (response.status === 0) {
+                return Promise.resolve(response.result);
             }
-            throw response.data;
+            throw response.result;
         });
 }
 
@@ -214,10 +219,10 @@ function deleteTag(tagName) {
     })
         .then(response => response.json())
         .then(response => {
-            if (response.statusCode === 0) {
-                return getAllTags();
+            if (response.status === 0) {
+                return Promise.resolve(response.result);
             }
-            throw response.data;
+            throw response.result;
         });
 }
 
@@ -232,15 +237,23 @@ function createNote(fileName) {
     if (fileName === '') {
         throw "File name is empty!";
     }
-    return fetch(`${apiPrefix}/files/notes/${fileName}/remove`, {
+    return fetch(`${apiPrefix}/files/notes/${fileName}/create`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({})
+        body: JSON.stringify({
+            body: '',
+            tags: newFileTags
+        })
     })
         .then(response => response.json())
-        .then(_ => getFileSearch());
+        .then(response => {
+            if (response.status === 0) {
+                return Promise.resolve(response.result);
+            }
+            throw response.result;
+        });
 }
 
 /**
@@ -254,6 +267,52 @@ function createFlashcards(fileName) {
     if (fileName === '') {
         throw "File name is empty!";
     }
+    return fetch(`${apiPrefix}/files/flashcards/${fileName}/create`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tags: newFileTags })
+    })
+        .then(response => response.json())
+        .then(response => {
+            if (response.status === 0) {
+                return Promise.resolve(response.result);
+            }
+            throw response.result;
+        });
+}
+
+/**
+ * Delete a note.
+ * 
+ * @param {string} fileName 
+ * @returns Promise<object>
+ */
+function deleteNote(fileName) {
+    return fetch(`${apiPrefix}/files/notes/${fileName}/remove`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({})
+    })
+        .then(response => response.json())
+        .then(response => {
+            if (response.status === 0) {
+                return Promise.resolve(response.result);
+            }
+            throw response.result;
+        });
+}
+
+/**
+ * Delete a flashcard set.
+ * 
+ * @param {string} fileName 
+ * @returns Promise<object>
+ */
+function deleteFlashcards(fileName) {
     return fetch(`${apiPrefix}/files/flashcards/${fileName}/remove`, {
         method: 'POST',
         headers: {
@@ -262,7 +321,154 @@ function createFlashcards(fileName) {
         body: JSON.stringify({})
     })
         .then(response => response.json())
-        .then(_ => getFileSearch());
+        .then(response => {
+            if (response.status === 0) {
+                return Promise.resolve(response.result);
+            }
+            throw response.result;
+        });
+}
+
+/**
+ * Get the tags of a note.
+ * 
+ * @param {string} fileName 
+ * @returns 
+ */
+function getTagsOfNote(fileName) {
+    return fetch(`${apiPrefix}/files/notes/${fileName}/tags`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({})
+    })
+        .then(response => response.json())
+        .then(response => {
+            if (response.status === 0) {
+                return Promise.resolve(response.result);
+            }
+            throw response.result;
+        });
+}
+
+/**
+ * Get the tags of a flashcard.
+ * 
+ * @param {string} fileName 
+ * @returns 
+ */
+function getTagsOfFlashcard(fileName) {
+    return fetch(`${apiPrefix}/files/flashcards/${fileName}/tags`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({})
+    })
+        .then(response => response.json())
+        .then(response => {
+            if (response.status === 0) {
+                return Promise.resolve(response.result);
+            }
+            throw response.result;
+        });
+}
+
+/**
+ * Add a tag to a note.
+ * 
+ * @param {string} fileName 
+ * @param {string} tag 
+ * @returns Promise<object>
+ */
+function addTagToNote(fileName, tag) {
+    return fetch(`${apiPrefix}/files/notes/${fileName}/tags/${tag}/add`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({})
+    })
+        .then(response => response.json())
+        .then(response => {
+            if (response.status === 0) {
+                return Promise.resolve(response.result);
+            }
+            throw response.result;
+        });
+}
+
+/**
+ * Add a tag to a set of flashcards.
+ * 
+ * @param {string} fileName 
+ * @param {string} tag 
+ * @returns Promise<object>
+ */
+function addTagToFlashcards(fileName, tag) {
+    return fetch(`${apiPrefix}/files/flashcards/${fileName}/tags/${tag}/add`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({})
+    })
+        .then(response => response.json())
+        .then(response => {
+            if (response.status === 0) {
+                return Promise.resolve(response.result);
+            }
+            throw response.result;
+        });
+}
+
+/**
+ * Remove a tag from a note.
+ * 
+ * @param {string} fileName 
+ * @param {string} tag 
+ * @returns Promise<object>
+ */
+function removeTagFromNote(fileName, tag) {
+    return fetch(`${apiPrefix}/files/notes/${fileName}/tags/${tag}/remove`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({})
+    })
+        .then(response => response.json())
+        .then(response => {
+            if (response.status === 0) {
+                return Promise.resolve(response.result);
+            }
+            throw response.result;
+        });
+}
+
+/**
+ * Remove a tag from a set of flashcards.
+ * 
+ * @param {string} fileName 
+ * @param {string} tag 
+ * @returns Promise<object>
+ */
+function removeTagFromFlashcards(fileName, tag) {
+    return fetch(`${apiPrefix}/files/flashcards/${fileName}/tags/${tag}/remove`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({})
+    })
+        .then(response => response.json())
+        .then(response => {
+            if (response.status === 0) {
+                return Promise.resolve(response.result);
+            }
+            throw response.result;
+        });
 }
 
 /*** DOM SURGERY FUNCTIONS ***/
@@ -288,7 +494,7 @@ function getSelected(element) {
  * 
  * @param {HTMLElement} element 
  */
-function clearChildren(element) {
+function removeChildren(element) {
     while (element.firstChild) {
         element.firstChild.remove();
     }
@@ -366,8 +572,8 @@ function createDropdownItem(label, onClick) {
  * @param {string[]} tags 
  */
 function modifyTagSearch(tags) {
-    clearChildren(includeTagInput);
-    clearChildren(excludeTagInput);
+    removeChildren(includeTagInput);
+    removeChildren(excludeTagInput);
     tags.forEach((tag, index) => {
         includeTagInput.appendChild(createOption(tag, index + 1));
         excludeTagInput.appendChild(createOption(tag, index + 1));
@@ -380,8 +586,8 @@ function modifyTagSearch(tags) {
  * @param {string[]} tags 
  */
 function modifyTagsModal(tags) {
-    clearChildren(allTagList);
-    tags.forEach(tag => allTagList.appendChild(createTagListItem(tag, () => deleteTag(tag).catch(console.log))));
+    removeChildren(allTagList);
+    tags.forEach(tag => allTagList.appendChild(createTagListItem(tag, () => deleteTag(tag).then(_ => getAllTags()).catch(console.log))));
 }
 
 /**
@@ -390,8 +596,8 @@ function modifyTagsModal(tags) {
  * @param {string[]} tags 
  */
 function modifyTagsDropdown(tags) {
-    clearChildren(noteAddTagList);
-    clearChildren(flashcardAddTagList);
+    removeChildren(noteAddTagList);
+    removeChildren(flashcardAddTagList);
     tags.forEach(tag => {
         noteAddTagList.appendChild(createDropdownItem(tag, () => {
             newFileTags.push(tag);
@@ -409,7 +615,7 @@ function modifyTagsDropdown(tags) {
  * Modify the tag list for the create note modal with DOM surgery.
  */
 function modifyNoteTagsList() {
-    clearChildren(noteAddedTagList);
+    removeChildren(noteAddedTagList);
     newFileTags.forEach(tag => {
         noteAddedTagList.appendChild(createTagListItem(tag, () => {
             newFileTags = newFileTags.filter(x => x != tag);
@@ -422,7 +628,7 @@ function modifyNoteTagsList() {
  * Modify the tag list for the create flashcard modal with DOM surgery.
  */
 function modifyFlashcardTagsList() {
-    clearChildren(flashcardAddedTagList);
+    removeChildren(flashcardAddedTagList);
     newFileTags.forEach(tag => {
         flashcardAddedTagList.appendChild(createTagListItem(tag, () => {
             newFileTags = newFileTags.filter(x => x != tag);
@@ -437,7 +643,7 @@ function modifyFlashcardTagsList() {
  * @param {object[]} files 
  */
 function modifyFiles(files) {
-    clearChildren(fileList);
+    removeChildren(fileList);
     files.forEach(file => {
         const fileItem = document.createElement('li');
         fileItem.classList.add('list-group-item');
@@ -461,13 +667,112 @@ function modifyFiles(files) {
         fileItem.appendChild(fileNameLabel);
 
         // Delete file button
-        fileItem.appendChild(createDangerButton(() => {
-            if (file.type === "note") {
-                createNote(file.name).catch(console.log);
-            } else if (file.type === "flashcard") {
-                createFlashcards(file.name).catch(console.log);
+        if (file.type === "note") {
+            fileItem.appendChild(createDangerButton(() => {
+                deleteNote(file.name)
+                    .then(response => {
+                        if (response.status === 0) {
+                            return getFileSearch();
+                        }
+                        throw response.result;
+                    })
+                    .catch(console.log);
+            }));
+        } else if (file.type === "flashcard") {
+            fileItem.appendChild(createDangerButton(() => {
+                deleteFlashcards(file.name)
+                    .then(response => {
+                        if (response.status === 0) {
+                            return getFileSearch();
+                        }
+                        throw response.result;
+                    })
+                    .catch(console.log);
+            }));
+        } else {
+
+            // todo
+
+        }
+
+        // Open file tags button
+        const tagsButton = document.createElement('button');
+        tagsButton.classList.add('open-button', 'btn', 'btn-outline-primary');
+        tagsButton.setAttribute('type', 'button');
+        tagsButton.setAttribute('data-bs-toggle', 'modal');
+        tagsButton.setAttribute('data-bs-target', '#fileTagModal');
+        tagsButton.appendChild(document.createTextNode('Tags'));
+        tagsButton.addEventListener('click', () => {
+            removeChildren(fileTagModalTitle);
+            fileTagModalTitle.appendChild(document.createTextNode(`Tags for "${file.name}"`));
+
+            const modifyFileTagsList = () => {
+                let promise;
+                if (file.type === 'note') {
+                    promise = getTagsOfNote(file.name);
+                } else if (file.type === 'flashcard') {
+                    promise = getTagsOfFlashcard(file.name);
+                } else {
+                    promise = Promise.resolve().then(() => {
+                        throw "Unknown file type!"
+                    });
+                }
+                promise.then(tags => {
+                    removeChildren(fileAllTagList);
+                    tags.forEach(tag => {
+                        fileAllTagList.appendChild(createTagListItem(tag, () => {
+                            let promise;
+                            if (file.type === 'note') {
+                                promise = removeTagFromNote(file.name, tag);
+                            } else if (file.type === 'flashcard') {
+                                promise = removeTagFromFlashcards(file.name, tag);
+                            } else {
+                                promise = Promise.resolve().then(_ => {
+                                    throw "Unknown file type!"
+                                });
+                            }
+                            promise.then(_ => modifyFileTagsList())
+                                .catch(console.log);
+                        }));
+                    });
+                }).catch(console.log);
             }
-        }));
+
+            const modifyFileTagsDropdown = () => {
+                getAllTags()
+                    .then(tags => {
+                        removeChildren(fileAddTagList);
+                        tags.forEach(tag => {
+                            fileAddTagList.appendChild(createDropdownItem(tag, () => {
+                                addTagToNote(file.name, tag)
+                                    .then(_ => modifyFileTagsList())
+                                    .catch(console.log);
+                            }));
+                        });
+                    })
+                    .catch(console.log);
+            };
+
+            modifyFileTagsDropdown();
+            modifyFileTagsList();
+
+            removeChildren(fileCreateTagButtonContainer);
+            const fileCreateTagButton = document.createElement('input');
+            fileCreateTagButton.classList.add('btn', 'btn-primary');
+            fileCreateTagButton.value = 'Create Tag';
+            fileCreateTagButton.setAttribute('type', 'button');
+            fileCreateTagButton.addEventListener('click', () => {
+                createTag(fileCreateTagInput.value)
+                    .then(_ => addTagToNote(file.name, fileCreateTagInput.value).then(_ => {
+                        modifyFileTagsList();
+                        fileCreateTagInput.value = '';
+                        return modifyFileTagsDropdown();
+                    }))
+                    .catch(console.log);
+            });
+            fileCreateTagButtonContainer.appendChild(fileCreateTagButton);
+        });
+        fileItem.appendChild(tagsButton);
 
         // Open file button
         const openButton = document.createElement('button');
