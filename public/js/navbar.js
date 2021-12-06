@@ -17,29 +17,20 @@
 			<ul class="navbar-nav" id="classNavList">
 
 				<li class="nav-item">
-					<a class="nav-link" href="./home.html">Home</a>
+					<a class="nav-link" href="">Home</a>
 				</li>
 
 				<li class="nav-item">
-					<a class="nav-link active" aria-current="page" href="#class-1">Class 1</a>
-				</li>
-
-				<li class="nav-item">
-					<a class="nav-link" href="#class-2">Class 2</a>
+					<a class="nav-link active" aria-current="page" href="">files</a>
 				</li>
 			</ul>
-
-			// add class button
-			<form class="d-flex ms-auto logo-icon-padded">
-				<button class="btn btn-outline-success" type="button" data-bs-toggle="modal" data-bs-target="#addClassModal">Add Class</button>
-			</form>
 
 			<!-- user profile buttons -->
 			<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
 				data-bs-toggle="dropdown" aria-expanded="false">
 				Name
 			</button>
-			<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+			<ul class="ms-auto dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
 				<li><a class="dropdown-item" href="./user-profile.html">Edit Profile</a></li>
 				<li><a class="dropdown-item" href="#">Log Out</a></li>
 			</ul>
@@ -49,29 +40,15 @@
 </nav>
 */
 
+const url = window.location.pathname;       // reads url
+const split = url.split('/');
 
 window.addEventListener('load', () => {
-	const url = window.location.pathname;       // reads url
-	const split = url.split('/');
+	console.log(split)
+	renderNavbar(document.getElementById('navbar'), split[2]);
+});
 
-	// TODO
-	// will look at url for the user
-	const user = 'user1';
-
-	// GET request to server to search the classes
-	const classArr = ['Class 1', 'Class 2'];
-	
-	// will look at the url for the class, then find the class in in the 
-	// array received from the GET request
-	const active = 1;
-
-	renderNavbar(document.getElementById('navbar'), user, classArr, active);
-})
-
-
-
-
-function renderNavbar(element, user, classArr, active) {
+function renderNavbar(element, user) {
 	element.innerHTML = '';
 	const navbar = document.createElement('nav');
 	navbar.classList.add('navbar', 'navbar-expand-lg', 'navbar-light', 'bg-light');
@@ -89,10 +66,7 @@ function renderNavbar(element, user, classArr, active) {
 	logo.setAttribute('width', '24');
 	logo.setAttribute('height', '24');
 	logo.addEventListener('click', () => {
-		const url = window.location.pathname;       // reads url
-		const split = url.split('/');
 		window.location.href = `/${split[1]}/${split[2]}`;
- 
 	});
 	logo.addEventListener('mouseover', () => {
 		logo.style.cursor = 'pointer';
@@ -106,7 +80,7 @@ function renderNavbar(element, user, classArr, active) {
 	// brand
 	const brand = document.createElement('div');
 	brand.classList.add('navbar-brand');
-	brand.innerHTML = 'Course Assistant'
+	brand.innerHTML = 'Course Assistant';
 
 	// the button will appear on the navbar when the screen size 
 	// becomes smaller. 
@@ -127,54 +101,40 @@ function renderNavbar(element, user, classArr, active) {
 	collapse.classList.add('collapse', 'navbar-collapse');
 	collapse.setAttribute('id', 'navbarNav');
 
-	const classes = document.createElement('ul');
-	classes.classList.add('navbar-nav');
+	const ul = document.createElement('ul');
+	ul.classList.add('navbar-nav');
 	
 	const home = document.createElement('li');
 	home.classList.add('nav-item');
 	const homeAnchor = document.createElement('a');
 	homeAnchor.classList.add('nav-link');
 	homeAnchor.addEventListener('click', () => {
-		const url = window.location.pathname;       // reads url
-		const split = url.split('/');
 		window.location.href = `/${split[1]}/${split[2]}`;
 	});
 	homeAnchor.innerHTML = 'Home';
-	home.appendChild(homeAnchor);
-	classes.appendChild(home);
-
-	for(let i = 0; i < classArr.length; i++) {
-		const li = document.createElement('li');
-		li.classList.add('nav-item');
-		const a = document.createElement('a');
-		a.classList.add('nav-link');
-		a.setAttribute('href', `#${classArr[i]}`);
-		a.innerHTML = classArr[i];
-		li.appendChild(a);
-		classes.appendChild(li);
-		
-		if(i === active) {
-			a.setAttribute('aria-current', 'page');
-			a.classList.add('active');
-		}
+	if (split[split.length-2] !== 'files' && split[split.length-2] !== 'profile') {
+		homeAnchor.classList.add('active');
 	}
-	collapse.appendChild(classes);
-
-	// add class button
-	const addClassForm = document.createElement('form');
-	addClassForm.classList.add('d-flex', 'ms-auto', 'logo-icon-padded');
-	const addClassButton = document.createElement('button');
-	addClassButton.classList.add('btn', 'btn-outline-success');
-	addClassButton.setAttribute('type', 'button');
-	addClassButton.setAttribute('data-bs-toggle', 'modal');
-	addClassButton.setAttribute('data-bs-target', '#addClassModal');
-	addClassButton.innerHTML = 'Add Class';
-	addClassForm.appendChild(addClassButton);
-	collapse.appendChild(addClassForm);
+	home.appendChild(homeAnchor);
+	ul.appendChild(home);
+	const li = document.createElement('li');
+	li.classList.add('nav-item');
+	const a = document.createElement('a');
+	a.classList.add('nav-link');
+	a.innerHTML = 'files';
+	if (split[split.length - 2] === 'files') {
+		a.classList.add('active');
+	}
+	a.addEventListener('click', () => {
+		window.location.href = `/${split[1]}/${split[2]}/files`;
+	})
+	li.appendChild(a);
+	ul.appendChild(li);
+	collapse.appendChild(ul);
 	
 	// user profile buttons
 	const userProfileButton = document.createElement('button');
-	userProfileButton.classList.add('btn', 'btn-secondary', 'dropdown-toggle');
+	userProfileButton.classList.add('ms-auto', 'btn', 'btn-secondary', 'dropdown-toggle');
 	userProfileButton.setAttribute('type', 'button');
 	userProfileButton.setAttribute('id', 'dropdownMenuButton1');
 	userProfileButton.setAttribute('data-bs-toggle', 'dropdown');
@@ -191,9 +151,7 @@ function renderNavbar(element, user, classArr, active) {
 	const editProfile = document.createElement('a');
 	editProfile.classList.add('dropdown-item');
 	editProfile.addEventListener('click', () => {
-		const url = window.location.pathname;       // reads url
-		const split = url.split('/');
-		window.location.href = `/${split[1]}/${split[2]}/user-profile.html`;
+		window.location.href = `/${split[1]}/${split[2]}/profile`;
 	});
 	editProfile.innerHTML = 'Edit Profile';
 	editProfileLi.appendChild(editProfile);
@@ -202,7 +160,7 @@ function renderNavbar(element, user, classArr, active) {
 	const logout = document.createElement('a');
 	logout.classList.add('dropdown-item');
 	logout.addEventListener('click', () => {
-		window.location.href = "/index.html";
+		window.location.href = "/";
 	});
 	logout.innerHTML = 'Log out';
 	logoutLi.appendChild(logout);
