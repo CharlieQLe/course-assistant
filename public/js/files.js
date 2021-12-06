@@ -19,12 +19,11 @@ const createAddTagList = document.getElementById('createAddTagList');
 const createCreateTagInput = document.getElementById('createCreateTagInput');
 
 // Tag inputs
-const allTagList = document.getElementById('allTagList');
-const addTagInput = document.getElementById('addTagInput');
-const fileTagModalTitle = document.getElementById('fileTagModalTitle');
-const fileAllTagList = document.getElementById('fileAllTagList');
-const fileAddTagList = document.getElementById('fileAddTagList');
-const fileCreateTagInput = document.getElementById('fileCreateTagInput');
+const tagTitle = document.getElementById('tagTitle');
+const tagAllTagList = document.getElementById('tagAllTagList');
+const tagAddTagButton = document.getElementById('tagAddTagButton');
+const tagAddTagList = document.getElementById('tagAddTagList');
+const tagCreateTagInput = document.getElementById('tagCreateTagInput');
 
 // Delete elements
 const deleteTitle = document.getElementById('deleteTitle');
@@ -39,73 +38,127 @@ let foundTags = [];
 let newFileTags = [];
 
 // Events
-document.getElementById('searchFilesButton').addEventListener('click', () => getFileSearch().catch(console.log));
+window.addEventListener('load', () => {
+    document.getElementById('searchFilesButton').addEventListener('click', () => getFileSearch().catch(console.log));
 
-document.getElementById('addTagButton').addEventListener('click', () => {
-    createTag(addTagInput.value)
-        .then(_ => {
-            addTagInput.value = "";
-            return getAllTags();
-        })
-        .catch(console.log);
-});
+    document.getElementById('createNote').addEventListener('click', () => {
+        removeChildren(createTitle);
+        createTitle.appendChild(document.createTextNode("Create Note"));
+        createLabelInput.value = '';
+        createLabelInput.setAttribute('placeholder', 'note name');
+        newFileTags = [];
+        modifyNewFileTagsList();
+        const createCreateButton = document.getElementById('createCreateButton');
+        createCreateButton.replaceWith(createCreateButton.cloneNode(true));
+        document.getElementById('createCreateButton').addEventListener('click', () => {
+            createNote(createLabelInput.value)
+                .then(_ => {
+                    window.open(encodeURI(`${regularPrefix}/files/notes/${createLabelInput.value}`), "_blank");
+                    bootstrap.Modal.getInstance(document.getElementById('createModal')).hide();
+                    return getFileSearch();
+                })
+                .catch(console.log);
+        });
+    });
 
-document.getElementById('createCreateTagButton').addEventListener('click', () => {
-    createTag(createCreateTagInput.value)
-        .then(_ => {
-            newFileTags.push(createCreateTagInput.value);
-            modifyNewFileTagsList();
-            createCreateTagInput.value = "";
-            return getAllTags();
-        })
-        .catch(console.log);
-});
+    document.getElementById('createFlashcard').addEventListener('click', () => {
+        removeChildren(createTitle);
+        createTitle.appendChild(document.createTextNode("Create Flashcard"));
+        createLabelInput.value = '';
+        createLabelInput.setAttribute('placeholder', 'flashcard name');
+        newFileTags = [];
+        modifyNewFileTagsList();
+        const createCreateButton = document.getElementById('createCreateButton');
+        createCreateButton.replaceWith(createCreateButton.cloneNode(true));
+        document.getElementById('createCreateButton').addEventListener('click', () => {
+            createFlashcards(createLabelInput.value)
+                .then(_ => {
+                    window.open(encodeURI(`${regularPrefix}/files/flashcards/${createLabelInput.value}`), "_blank");
+                    bootstrap.Modal.getInstance(document.getElementById('createModal')).hide();
+                    return getFileSearch();
+                })
+                .catch(console.log);
+        });
+    });
 
-document.getElementById('createNote').addEventListener('click', () => {
-    removeChildren(createTitle);
-    createTitle.appendChild(document.createTextNode("Create Note"));
-    createLabelInput.value = '';
-    createLabelInput.setAttribute('placeholder', 'note name');
-    newFileTags = [];
-    modifyNewFileTagsList();
-    const createCreateButton = document.getElementById('createCreateButton');
-    createCreateButton.replaceWith(createCreateButton.cloneNode(true));
-    document.getElementById('createCreateButton').addEventListener('click', () => {
-        createNote(createLabelInput.value)
+    document.getElementById('createCreateTagButton').addEventListener('click', () => {
+        createTag(createCreateTagInput.value)
             .then(_ => {
-                window.open(encodeURI(`${regularPrefix}/files/notes/${createLabelInput.value}`), "_blank");
-                bootstrap.Modal.getInstance(document.getElementById('createModal')).hide();
-                return getFileSearch();
+                newFileTags.push(createCreateTagInput.value);
+                modifyNewFileTagsList();
+                createCreateTagInput.value = "";
+                return getAllTags();
             })
             .catch(console.log);
     });
-});
 
-document.getElementById('createFlashcard').addEventListener('click', () => {
-    removeChildren(createTitle);
-    createTitle.appendChild(document.createTextNode("Create Flashcard"));
-    createLabelInput.value = '';
-    createLabelInput.setAttribute('placeholder', 'flashcard name');
-    newFileTags = [];
-    modifyNewFileTagsList();
-    const createCreateButton = document.getElementById('createCreateButton');
-    createCreateButton.replaceWith(createCreateButton.cloneNode(true));
-    document.getElementById('createCreateButton').addEventListener('click', () => {
-        createFlashcards(createLabelInput.value)
-            .then(_ => {
-                window.open(encodeURI(`${regularPrefix}/files/flashcards/${createLabelInput.value}`), "_blank");
-                bootstrap.Modal.getInstance(document.getElementById('createModal')).hide();
-                return getFileSearch();
-            })
-            .catch(console.log);
+    document.getElementById('showAllTags').addEventListener('click', () => {
+        function reloadTags() {
+            return getAllTags().then(tags => {
+                updateTagSearch(tags);
+                updateTagsDropdown(tags);
+                removeChildren(tagAllTagList);
+                tags.forEach(tag => {
+                    const tagItem = document.createElement('li');
+                    tagItem.classList.add('list-group-item');
+                    const tagName = document.createElement('span');
+                    tagName.classList.add('tag-name');
+                    tagName.appendChild(document.createTextNode(tag));
+                    tagItem.appendChild(tagName);
+                    const deleteButton = createDangerButton(() => {
+                        removeChildren(deleteTitle);
+                        deleteTitle.appendChild(document.createTextNode("Delete Tag"));
+                        removeChildren(deleteMessage);
+                        deleteMessage.appendChild(document.createTextNode(`Are you sure you want to remove "${tag}?"`));
+                        const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+                        confirmDeleteButton.replaceWith(confirmDeleteButton.cloneNode(true));
+                        document.getElementById('confirmDeleteButton').addEventListener('click', () => {
+                            deleteTag(tag)
+                                .then(_ => reloadTags())
+                                .catch(console.log);
+                            bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+                            bootstrap.Modal.getInstance(document.getElementById('tagModal')).show();
+                        });
+                    });
+                    deleteButton.setAttribute('data-bs-toggle', 'modal');
+                    deleteButton.setAttribute('data-bs-target', '#deleteModal');
+                    tagItem.appendChild(deleteButton);
+                    tagAllTagList.appendChild(tagItem);
+                });
+            });
+        }
+
+        reloadTags().catch(console.log);
+
+        removeChildren(tagTitle);
+        tagTitle.appendChild(document.createTextNode('Tags'));
+        tagCreateTagInput.value = '';
+        tagAddTagButton.style.display = 'none';
+        const tagCreateTagButton = document.getElementById('tagCreateTagButton');
+        tagCreateTagButton.replaceWith(tagCreateTagButton.cloneNode(true));
+        document.getElementById('tagCreateTagButton').addEventListener('click', () => {
+            createTag(tagCreateTagInput.value)
+                .then(_ => {
+                    tagCreateTagInput.value = "";
+                    return reloadTags();
+                })
+                .catch(console.log);
+        });
     });
-});
 
-// Retrieve tags
-getAllTags().catch(console.log);
+    // Retrieve tags
+    getAllTags()
+        .then(tags => {
+            updateTagSearch(tags);
+            updateTagsDropdown(tags);
+        })
+        .catch(console.log);
 
-// Retrieve files
-getAllFiles().catch(console.log);
+    // Retrieve files
+    getAllFiles().catch(console.log);
+})
+
+
 
 /*** PROMISES ***/
 
@@ -163,9 +216,6 @@ function getAllTags() {
         .then(response => response.json())
         .then(response => {
             if (response.status === 0) {
-                modifyTagSearch(response.result);
-                modifyTagsModal(response.result);
-                modifyTagsDropdown(response.result);
                 return Promise.resolve(response.result);
             }
             throw response.result;
@@ -571,7 +621,7 @@ function createDropdownItem(label, onClick) {
  * 
  * @param {string[]} tags 
  */
-function modifyTagSearch(tags) {
+function updateTagSearch(tags) {
     removeChildren(includeTagInput);
     removeChildren(excludeTagInput);
     tags.forEach((tag, index) => {
@@ -581,45 +631,11 @@ function modifyTagSearch(tags) {
 }
 
 /**
- * Modify the tags modal with DOM surgery.
- * 
- * @param {string[]} tags 
- */
-function modifyTagsModal(tags) {
-    removeChildren(allTagList);
-    tags.forEach(tag => {
-        const tagItem = document.createElement('li');
-        tagItem.classList.add('list-group-item');
-        const tagName = document.createElement('span');
-        tagName.classList.add('tag-name');
-        tagName.appendChild(document.createTextNode(tag));
-        tagItem.appendChild(tagName);
-        let deleteButton = createDangerButton(() => {
-            removeChildren(deleteTitle);
-            deleteTitle.appendChild(document.createTextNode("Delete Tag"));
-            removeChildren(deleteMessage);
-            deleteMessage.appendChild(document.createTextNode(`Are you sure you want to remove "${tag}?"`));
-            const confirmDeleteButton = document.getElementById('confirmDeleteButton');
-            confirmDeleteButton.replaceWith(confirmDeleteButton.cloneNode(true));
-            document.getElementById('confirmDeleteButton').addEventListener('click', () => {
-                deleteTag(tag).then(_ => getAllTags()).catch(console.log);
-                bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
-                bootstrap.Modal.getInstance(document.getElementById('tagModal')).show();
-            });
-        });
-        deleteButton.setAttribute('data-bs-toggle', 'modal');
-        deleteButton.setAttribute('data-bs-target', '#deleteModal');
-        tagItem.appendChild(deleteButton);
-        allTagList.appendChild(tagItem);
-    });
-}
-
-/**
  * Modify all of the tag dropdowns with DOM surgery.
  * 
  * @param {string[]} tags 
  */
-function modifyTagsDropdown(tags) {
+function updateTagsDropdown(tags) {
     removeChildren(createAddTagList);
     tags.forEach(tag => {
         createAddTagList.appendChild(createDropdownItem(tag, () => {
@@ -705,71 +721,85 @@ function modifyFiles(files) {
         tagsButton.classList.add('open-button', 'btn', 'btn-outline-primary');
         tagsButton.setAttribute('type', 'button');
         tagsButton.setAttribute('data-bs-toggle', 'modal');
-        tagsButton.setAttribute('data-bs-target', '#fileTagModal');
+        tagsButton.setAttribute('data-bs-target', '#tagModal');
         tagsButton.appendChild(document.createTextNode('Tags'));
         tagsButton.addEventListener('click', () => {
-            removeChildren(fileTagModalTitle);
-            fileTagModalTitle.appendChild(document.createTextNode(`Tags for "${file.name}"`));
-
-            const modifyFileTagsList = () => {
+            function modifyFileTagsList() {
                 let promise;
                 if (file.type === 'note') {
                     promise = getTagsOfNote(file.name);
                 } else if (file.type === 'flashcard') {
                     promise = getTagsOfFlashcard(file.name);
                 } else {
-                    promise = Promise.resolve().then(() => {
-                        throw "Unknown file type!"
-                    });
+                    promise = Promise.resolve().then(() => { throw "Unknown file type!" });
                 }
-                promise.then(tags => {
-                    removeChildren(fileAllTagList);
+                return promise.then(tags => {
+                    removeChildren(tagAllTagList);
                     tags.forEach(tag => {
-                        fileAllTagList.appendChild(createTagListItem(tag, () => {
+                        tagAllTagList.appendChild(createTagListItem(tag, () => {
                             let promise;
                             if (file.type === 'note') {
                                 promise = removeTagFromNote(file.name, tag);
                             } else if (file.type === 'flashcard') {
                                 promise = removeTagFromFlashcards(file.name, tag);
                             } else {
-                                promise = Promise.resolve().then(_ => {
-                                    throw "Unknown file type!"
-                                });
+                                promise = Promise.resolve().then(_ => { throw "Unknown file type!" });
                             }
-                            promise.then(_ => modifyFileTagsList())
-                                .catch(console.log);
+                            promise.then(_ => modifyFileTagsList()).catch(console.log);
                         }));
                     });
-                }).catch(console.log);
+                });
             }
 
-            const modifyFileTagsDropdown = () => {
-                getAllTags()
+            function modifyFileTagsDropdown() {
+                return getAllTags()
                     .then(tags => {
-                        removeChildren(fileAddTagList);
+                        removeChildren(tagAddTagList);
                         tags.forEach(tag => {
-                            fileAddTagList.appendChild(createDropdownItem(tag, () => {
-                                addTagToNote(file.name, tag)
-                                    .then(_ => modifyFileTagsList())
-                                    .catch(console.log);
+                            tagAddTagList.appendChild(createDropdownItem(tag, () => {
+                                let promise;
+                                if (file.type === "note") {
+                                    promise = addTagToNote(file.name, tag);
+                                } else if (file.type === 'flashcard') {
+                                    promise = addTagToFlashcard(file.name, tag);
+                                } else {
+                                    promise = Promise.resolve().then(() => { throw "Unknown file type!" });
+                                }
+                                promise.then(_ => modifyFileTagsList()).catch(console.log);
                             }));
                         });
-                    })
-                    .catch(console.log);
+                    });
             };
 
-            modifyFileTagsDropdown();
-            modifyFileTagsList();
+            modifyFileTagsDropdown().catch(console.log);
+            modifyFileTagsList().catch(console.log);
 
-            const fileCreateTagButton = document.getElementById('fileCreateTagButton');
-            fileCreateTagButton.replaceWith(fileCreateTagButton.cloneNode(true));
-            document.getElementById('fileCreateTagButton').addEventListener('click', () => {
-                createTag(fileCreateTagInput.value)
-                    .then(_ => addTagToNote(file.name, fileCreateTagInput.value).then(_ => {
-                        modifyFileTagsList();
-                        fileCreateTagInput.value = '';
-                        return modifyFileTagsDropdown();
-                    }))
+            removeChildren(tagTitle);
+            tagTitle.appendChild(document.createTextNode(`Tags for "${file.name}"`));
+            tagCreateTagInput.value = '';
+            tagAddTagButton.style.display = 'inline';
+
+            const tagCreateTagButton = document.getElementById('tagCreateTagButton');
+            tagCreateTagButton.replaceWith(tagCreateTagButton.cloneNode(true));
+            document.getElementById('tagCreateTagButton').addEventListener('click', () => {
+                createTag(tagCreateTagInput.value)
+                    .then(_ => {
+                        let promise;
+                        if (file.type === "note") {
+                            promise = addTagToNote(file.name, tagCreateTagInput.value);
+                        } else if (file.type === "flashcard") {
+                            promise = addTagToFlashcards(file.name, tagCreateTagInput.value);
+                        } else {
+                            promise = Promise.resolve().then(() => { throw "Unknown file type!" });
+                        }
+                        return promise.then(_ => getAllTags().then(tags => {
+                            tagCreateTagInput.value = "";
+                            updateTagSearch(tags);
+                            updateTagsDropdown(tags);
+                            modifyFileTagsDropdown();
+                            modifyFileTagsList();
+                        }));
+                    })
                     .catch(console.log);
             });
         });
