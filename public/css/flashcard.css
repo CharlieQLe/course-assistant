@@ -1,8 +1,7 @@
 .container {
-	background-color: #E7E7E7;
+	background: linear-gradient(to bottom, #e7e7e7 0%, #BABAC0 100%);
 	height: 550px;
 	margin-top: 3em;
-	position: relative;
 }
 
 .word-wrap {
@@ -28,13 +27,11 @@
 
 .flashcard-btns {
 	bottom: 0;
-	margin-left: auto;
-	margin-right: auto;
+	margin-top: 2px;
 	left: 0;
 	right: 0;
 	text-align: center;
-	position: absolute;
-
+	position: relative;
 }
 
 #study-flashcard-card {

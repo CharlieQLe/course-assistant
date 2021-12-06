@@ -78,29 +78,33 @@
 	<!-- flashcards webapge -->
 	<div class="container">
 		<p id="flashcard-title">TITLE</p>
-		<div id="flashcard">
-
-		</div>
+		<div id="flashcard"></div>
 
 		<!-- STUDY AND ADD FLASHCARD BUTTON -->
-		<div class="row d-flex justify-content-center flex-nowrap p-4 flashcard-btns" id="study-and-flashcard">
+		<div class="row d-flex p-2 flashcard-btns">
 			<form>
-				<button type="button" class="btn btn-primary mt-3" id="study-btn">Study</button>
-
-				<button type="button" class="btn btn-light mt-3" id="add-flashcard-btn-outer" data-bs-toggle="modal"
+				<div class="" id="study-and-flashcard">
+				<button type="button" class="btn btn-primary" id="study-btn">Study</button>
+				<button type="button" class="btn btn-light" id="add-flashcard-btn-outer" data-bs-toggle="modal"
 					data-bs-target="#add-flashcard-modal">Add Flashcard</button>
+				</div>
+				<div class="invisible" id="review-missed-term">
+					<button type="button" class="btn btn-dark" id="reset-btn">Reset</button>
+					<button type="button" class="btn btn-primary" id="review-missed-term-btn">Review Missed Terms</button>
+					<button type="button" class="btn btn-danger" id="edit-btn">Edit</button>
+				</div>
 			</form>
 		</div>
 
 
 		<!-- REVIEW MISSED TERMS BUTTON -->
-		<div class="row d-flex justify-content-center flex-nowrap p-4 flashcard-btns invisible" id="review-missed-term">
-			<form>
+		<!-- <div class="row d-flex justify-content-center flex-nowrap p-2 flashcard-btns" id="review-missed-term">
+			<form id="review-missed-term">
 				<button type="button" class="btn btn-dark" id="reset-btn">Reset</button>
 				<button type="button" class="btn btn-primary" id="review-missed-term-btn">Review Missed Terms</button>
 				<button type="button" class="btn btn-danger" id="edit-btn">Edit</button>
 			</form>
-		</div>
+		</div> -->
 	</div>
 
 

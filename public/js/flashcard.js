@@ -6,7 +6,7 @@ let review = [];
 const url = window.location.pathname;       // reads url
 const split = url.split('/');
 
-window.addEventListener('load', async function() {
+window.addEventListener('load', function() {
 
     // grab flashcards from server
     fetch(`/api/users/${split[2]}/files/flashcards/${split[5]}`)
@@ -26,7 +26,7 @@ window.addEventListener('load', async function() {
     });
 
     // sets the file name of the flashcard
-    document.getElementById('flashcard-title').innerHTML = split[split.length-1].replace('%20', ' ');
+    document.getElementById('flashcard-title').innerHTML = split[split.length-2].replace('%20', ' ');
 });
 
 /**
@@ -184,12 +184,38 @@ function makeButtons() {
     return colButton;
 }
 
+function makeFlashcardHeader() {
+    const main = document.createElement('div');
+    main.classList.add('row', 'd-flex', 'justify-content-center', 'flex-nowrap', 'p');
+
+	const term = makeCol(3);
+    term.classList.add('text-primary');
+	term.innerText = 'Term';
+
+	const definition = makeCol(3);
+    definition.classList.add('text-primary');
+	definition.innerText = 'Definition';
+
+    // junk to make header align with the terms and flashcards below
+	const filler = makeCol(1);
+
+	main.appendChild(term);
+	main.appendChild(definition);
+    main.appendChild(filler);
+    return main;
+}
 
 /**
  * renders the flashcards in the edit screen
  */
 function renderFlashcards(element) {
     element.innerHTML = '';
+    const header = makeFlashcardHeader();
+    element.appendChild(header);
+
+    if (flashcards.length === 0) {
+        element.innerHTML = 'There are currently no flashcards';
+    }
 
     for (let i = 0; i < flashcards.length; i++) {
         const main = makeEditFlashcard(flashcards[i]);
@@ -225,6 +251,12 @@ function renderFlashcards(element) {
 
 function renderReview(element) {
     element.innerHTML = '';
+    const header = makeFlashcardHeader();
+    element.appendChild(header);
+
+    if (review.length === 0) {
+        element.innerHTML = 'There are no flashcards to review';
+    }
 
     for(let i = 0 ; i < review.length; i++) {
         const main = makeEditFlashcard(review[i]);
@@ -237,6 +269,10 @@ function renderReview(element) {
 function renderStudyFlashcards(element) {
     element.innerHTML = '';
     
+    if (flashcards.length === 0) {
+        element.innerHTML = 'There are currently no flashcards';
+    }
+
     let rowOuter = makeRow();
     
     const copy = JSON.parse(JSON.stringify(flashcards));
@@ -384,15 +420,27 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
 
 // the study button is displayed when you are in th editing flashcard section
 document.getElementById('study-btn').addEventListener('click', () => {
+    const studyAndAddFlashcardButton = document.getElementById("study-and-flashcard");
+    if (window.getComputedStyle(studyAndAddFlashcardButton).display === "block") {
+        document.getElementById('study-and-flashcard').style.display = "none";
+        document.getElementById('review-missed-term').style.display = "block";
+    }
     document.getElementById('study-and-flashcard').classList.toggle("invisible");
     document.getElementById('review-missed-term').classList.toggle("invisible");
+
     renderStudyFlashcards(document.getElementById('flashcard'));
 });
 
 // The edit button is displayed when you are in the study section of the flashcards
 document.getElementById('edit-btn').addEventListener('click', () => {
+    const studyAndAddFlashcardButton = document.getElementById("study-and-flashcard");
+    if (window.getComputedStyle(studyAndAddFlashcardButton).display === "none") {
+        document.getElementById('study-and-flashcard').style.display = "block";
+        document.getElementById('review-missed-term').style.display = "none";
+    }
     document.getElementById('study-and-flashcard').classList.toggle("invisible");
     document.getElementById('review-missed-term').classList.toggle("invisible");
+
     renderFlashcards(document.getElementById('flashcard'));
 });
 
