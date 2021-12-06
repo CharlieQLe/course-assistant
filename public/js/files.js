@@ -704,10 +704,6 @@ function modifyFiles(files) {
                     deleteFlashcards(file.name)
                         .then(_ => getFileSearch())
                         .catch(console.log);
-                } else {
-
-                    // todo
-
                 }
                 bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
             });
@@ -724,60 +720,48 @@ function modifyFiles(files) {
         tagsButton.setAttribute('data-bs-target', '#tagModal');
         tagsButton.appendChild(document.createTextNode('Tags'));
         tagsButton.addEventListener('click', () => {
-            function modifyFileTagsList() {
-                let promise;
-                if (file.type === 'note') {
-                    promise = getTagsOfNote(file.name);
-                } else if (file.type === 'flashcard') {
-                    promise = getTagsOfFlashcard(file.name);
-                } else {
-                    promise = Promise.resolve().then(() => { throw "Unknown file type!" });
-                }
-                return promise.then(tags => {
-                    removeChildren(tagAllTagList);
-                    tags.forEach(tag => {
-                        tagAllTagList.appendChild(createTagListItem(tag, () => {
-                            let promise;
-                            if (file.type === 'note') {
-                                promise = removeTagFromNote(file.name, tag);
-                            } else if (file.type === 'flashcard') {
-                                promise = removeTagFromFlashcards(file.name, tag);
-                            } else {
-                                promise = Promise.resolve().then(_ => { throw "Unknown file type!" });
-                            }
-                            promise.then(_ => modifyFileTagsList()).catch(console.log);
-                        }));
-                    });
-                });
-            }
-
-            function modifyFileTagsDropdown() {
-                return getAllTags()
-                    .then(tags => {
-                        removeChildren(tagAddTagList);
-                        tags.forEach(tag => {
-                            tagAddTagList.appendChild(createDropdownItem(tag, () => {
-                                let promise;
-                                if (file.type === "note") {
-                                    promise = addTagToNote(file.name, tag);
-                                } else if (file.type === 'flashcard') {
-                                    promise = addTagToFlashcard(file.name, tag);
-                                } else {
-                                    promise = Promise.resolve().then(() => { throw "Unknown file type!" });
-                                }
-                                promise.then(_ => modifyFileTagsList()).catch(console.log);
-                            }));
-                        });
-                    });
-            };
-
-            modifyFileTagsDropdown().catch(console.log);
-            modifyFileTagsList().catch(console.log);
-
             removeChildren(tagTitle);
             tagTitle.appendChild(document.createTextNode(`Tags for "${file.name}"`));
             tagCreateTagInput.value = '';
             tagAddTagButton.style.display = 'inline';
+
+            function updateTagList() {
+                if (file.type === 'note') {
+                    return getTagsOfNote(file.name)
+                        .then(tags => {
+                            removeChildren(tagAllTagList);
+                            tags.forEach(tag => {
+                                tagAllTagList.appendChild(createTagListItem(tag, () => removeTagFromNote(file.name, tag).then(_ => updateTagList()).catch(console.log)));
+                            });
+                        });
+                } else if (file.type === 'flashcard') {
+                    return getTagsOfFlashcard(file.name)
+                        .then(tags => {
+                            removeChildren(tagAllTagList);
+                            tags.forEach(tag => {
+                                tagAllTagList.appendChild(createTagListItem(tag, () => removeTagFromFlashcards(file.name, tag).then(_ => updateTagList()).catch(console.log)));
+                            });
+                        });
+                }
+                return Promise.resolve(() => { throw "Unknown file type!" });
+            }
+
+            function updateTagDropdown() {
+                if (file.type === 'note') {
+                    return getAllTags().then(tags => {
+                        removeChildren(tagAddTagList);
+                        tags.forEach(tag => tagAddTagList.appendChild(createDropdownItem(tag, () => addTagToNote(file.name, tag).then(_ => updateTagList()).catch(console.log))));
+                    });
+                } else if (file.type === 'flashcard') {
+                    return getAllTags().then(tags => {
+                        removeChildren(tagAddTagList);
+                        tags.forEach(tag => tagAddTagList.appendChild(createDropdownItem(tag, () => addTagToFlashcards(file.name, tag).then(_ => updateTagList()).catch(console.log))));
+                    });
+                }
+                return Promise.resolve().then(() => { throw "Unknown file type!" });
+            };
+
+            updateTagDropdown().catch(console.log);
 
             const tagCreateTagButton = document.getElementById('tagCreateTagButton');
             tagCreateTagButton.replaceWith(tagCreateTagButton.cloneNode(true));
@@ -796,8 +780,7 @@ function modifyFiles(files) {
                             tagCreateTagInput.value = "";
                             updateTagSearch(tags);
                             updateTagsDropdown(tags);
-                            modifyFileTagsDropdown();
-                            modifyFileTagsList();
+                            return updateTagDropdown();
                         }));
                     })
                     .catch(console.log);

@@ -177,7 +177,7 @@ function postRemoveFlashcard(request, response) {
  function postAddTag(request, response) {
     client.db("final-kappa").collection("files").updateOne({
         user: request.params.user,
-        name: request.params.note,
+        name: request.params.flashcard,
         type: "flashcard"
     }, {
         $addToSet: { tags: request.params.tag }
@@ -199,7 +199,7 @@ function postRemoveFlashcard(request, response) {
  function postRemoveTag(request, response) {
     client.db("final-kappa").collection("files").updateOne({
         user: request.params.user,
-        name: request.params.note,
+        name: request.params.flashcard,
         type: "flashcard"
     }, {
         $pull: { tags: request.params.tag }
