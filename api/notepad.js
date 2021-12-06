@@ -93,11 +93,55 @@ function postEdit(request, response) {
             throw "Note could not be updated";
         }
     }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in noteAPI.postEdit: ${err}` })));
+}
 
+/**
+ * Process a post request to add a tag to a note.
+ * 
+ * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
+ * @param {Response<any, Record<string, any>, number>} response 
+ */
+function postAddTag(request, response) {
+    client.db("final-kappa").collection("files").updateOne({
+        user: request.params.user,
+        name: request.params.note,
+        type: "note"
+    }, {
+        $addToSet: { tags: request.params.tag }
+    }).then(updated => {
+        if (updated.acknowledged) {
+            response.end(JSON.stringify({ status: 0, result: `Note has been updated` }));
+        } else {
+            throw "Note could not be updated";
+        }
+    }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in noteAPI.postAddTag: ${err}` })));
+}
+
+/**
+ * Process a post request to remove a tag from a note.
+ * 
+ * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
+ * @param {Response<any, Record<string, any>, number>} response 
+ */
+ function postRemoveTag(request, response) {
+    client.db("final-kappa").collection("files").updateOne({
+        user: request.params.user,
+        name: request.params.note,
+        type: "note"
+    }, {
+        $pull: { tags: request.params.tag }
+    }).then(updated => {
+        if (updated.acknowledged) {
+            response.end(JSON.stringify({ status: 0, result: `Note has been updated` }));
+        } else {
+            throw "Note could not be updated";
+        }
+    }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in noteAPI.postRemoveTag: ${err}` })));
 }
 
 module.exports = {
     getNote,
     postCreate, postRemove,
     postEdit,
+    postAddTag, postRemoveTag
 };
