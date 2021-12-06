@@ -6,6 +6,10 @@
     line-height: 40px;
 }
 
-.delete-button {
+.open-button, .delete-button {
     float: right;
+}
+
+.open-button {
+    margin-right: 1em;
 }
