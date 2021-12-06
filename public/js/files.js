@@ -34,7 +34,8 @@ const fileList = document.getElementById('fileList');
 let newFileTags = [];
 
 // Events
-document.getElementById('searchFilesButton').addEventListener('click', getFileSearch);
+document.getElementById('searchFilesButton').addEventListener('click', () => getFileSearch().catch(console.log));
+
 document.getElementById('addTagButton').addEventListener('click', () => {
     createTag(addTagInput.value)
         .then(_ => addTagInput.value = "")
@@ -46,31 +47,9 @@ document.getElementById('createNoteModal').addEventListener('show.bs.modal', () 
     modifyNoteTagsList();
 });
 
-document.getElementById('createNoteButton').addEventListener('click', () => {
-    let name = noteLabelInput.value.trim();
-    if (name !== '') {
-        fetch(encodeURI(`${apiPrefix}/files/notes/${name}/create`), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                tags: newFileTags,
-                body: ""
-            })
-        })
-            .then(response => response.json())
-            .then(response => {
-                if (response.status === 0) {
-                    getFileSearch();
-                    console.log(`${regularPrefix}/files/notes/${name}`);
-                    window.open(`${regularPrefix}/files/notes/${name}`, "_blank");
-                } else {
-                    console.log(response);
-                }
-            })
-            .catch(console.log)
-    }
+document.getElementById('createFlashcardModal').addEventListener('show.bs.modal', () => {
+    newFileTags = [];
+    modifyFlashcardTagsList();
 });
 
 document.getElementById('noteCreateTagButton').addEventListener('click', () => {
@@ -83,10 +62,6 @@ document.getElementById('noteCreateTagButton').addEventListener('click', () => {
         .catch(console.log);
 });
 
-document.getElementById('createFlashcardModal').addEventListener('show.bs.modal', () => {
-    newFileTags = [];
-    modifyFlashcardTagsList();
-});
 document.getElementById('flashcardCreateTagButton').addEventListener('click', () => {
     createTag(flashcardCreateTagInput.value)
         .then(_ => {
@@ -97,27 +72,28 @@ document.getElementById('flashcardCreateTagButton').addEventListener('click', ()
         .catch(console.log);
 });
 
-document.getElementById('createFlashcardButton').addEventListener('click', () => {
-    let name = flashcardLabelInput.value.trim();
-    if (name !== '') {
-        fetch(encodeURI(`${apiPrefix}/files/flashcards/${name}/create`), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ tags: newFileTags })
+document.getElementById('createNoteButton').addEventListener('click', () => {
+    createNote(noteLabelInput.value)
+        .then(_ => {
+            if (response.status === 0) {
+                window.open(encodeURI(`${regularPrefix}/files/notes/${noteLabelInput.value}`), "_blank");
+                return getFileSearch();
+            }
+            throw response.data;
         })
-            .then(response => response.json())
-            .then(response => {
-                if (response.status === 0) {
-                    getFileSearch();
-                    window.open(encodeURI(`${regularPrefix}/files/flashcards/${name}`), "_blank");
-                } else {
-                    console.log(response);
-                }
-            })
-            .catch(console.log)
-    }
+        .catch(console.log);
+});
+
+document.getElementById('createFlashcardButton').addEventListener('click', () => {
+    createFlashcards(flashcardLabelInput.value)
+        .then(_ => {
+            if (response.status === 0) {
+                window.open(encodeURI(`${regularPrefix}/files/flashcards/${flashcardLabelInput.value}`), "_blank");
+                return getFileSearch();
+            }
+            throw response.data;
+        })
+        .catch(console.log);
 });
 
 // Retrieve tags
@@ -252,6 +228,10 @@ function deleteTag(tagName) {
  * @returns 
  */
 function createNote(fileName) {
+    fileName = fileName.trim();
+    if (fileName === '') {
+        throw "File name is empty!";
+    }
     return fetch(`${apiPrefix}/files/notes/${fileName}/remove`, {
         method: 'POST',
         headers: {
@@ -270,6 +250,10 @@ function createNote(fileName) {
  * @returns 
  */
 function createFlashcards(fileName) {
+    fileName = fileName.trim();
+    if (fileName === '') {
+        throw "File name is empty!";
+    }
     return fetch(`${apiPrefix}/files/flashcards/${fileName}/remove`, {
         method: 'POST',
         headers: {
