@@ -134,6 +134,15 @@ function createOption(name, index) {
     return option;
 }
 
+function createOpenButton(onClick, label='Open') {
+    const button = document.createElement('button');
+    button.classList.add('open-button', 'btn', 'btn-primary');
+    button.setAttribute('type', 'button');
+    button.appendChild(document.createTextNode(label));
+    button.addEventListener('click', onClick);
+    return button;
+}
+
 function createDeleteButton(onClick, label='Delete') {
     const button = document.createElement('button');
     button.classList.add('delete-button', 'btn', 'btn-outline-danger');
@@ -312,6 +321,7 @@ function renderFiles(files) {
         fileName.classList.add('file-name');
         fileName.appendChild(document.createTextNode(file.name));
         display.appendChild(fileName);
+        
         display.appendChild(createDeleteButton(() => {
             if (file.type === "note") {
                 fetch(`${apiPrefix}/files/notes/${file.name}/remove`, {
@@ -337,6 +347,14 @@ function renderFiles(files) {
                     .catch(console.log);
             }
         }));
+
+        display.appendChild(createOpenButton(() => {
+            if (file.type === 'note') {
+                window.open(encodeURI(`${regularPrefix}/files/notes/${file.name}`), "_blank");
+            } else if (file.type === 'flashcard') {
+                window.open(encodeURI(`${regularPrefix}/files/flashcards/${file.name}`), "_blank");
+            }
+        }, `Open ${file.type}`));
         
         fileList.append(display);
     });
