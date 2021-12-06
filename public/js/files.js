@@ -30,11 +30,10 @@ const fileTagModalTitle = document.getElementById('fileTagModalTitle');
 const fileAllTagList = document.getElementById('fileAllTagList');
 const fileAddTagList = document.getElementById('fileAddTagList');
 const fileCreateTagInput = document.getElementById('fileCreateTagInput');
-const fileCreateTagButtonContainer = document.getElementById('fileCreateTagButtonContainer');
 
-// Delete modal
-const deleteModal = document.getElementById('deleteModal');
-const fileDeleteMessage = document.getElementById('fileDeleteMessage');
+// Delete elements
+const deleteTitle = document.getElementById('deleteTitle');
+const deleteMessage = document.getElementById('deleteMessage');
 const confirmDeleteButton = document.getElementById('confirmDeleteButton');
 
 // File display
@@ -92,6 +91,7 @@ document.getElementById('createNoteButton').addEventListener('click', () => {
     createNote(noteLabelInput.value)
         .then(_ => {
             window.open(encodeURI(`${regularPrefix}/files/notes/${noteLabelInput.value}`), "_blank");
+            bootstrap.Modal.getInstance(document.getElementById('createNoteModal')).hide();
             return getFileSearch();
         })
         .catch(console.log);
@@ -101,6 +101,7 @@ document.getElementById('createFlashcardButton').addEventListener('click', () =>
     createFlashcards(flashcardLabelInput.value)
         .then(_ => {
             window.open(encodeURI(`${regularPrefix}/files/flashcards/${flashcardLabelInput.value}`), "_blank");
+            bootstrap.Modal.getInstance(document.getElementById('createFlashcardModal')).hide();
             return getFileSearch();
         })
         .catch(console.log);
@@ -592,7 +593,31 @@ function modifyTagSearch(tags) {
  */
 function modifyTagsModal(tags) {
     removeChildren(allTagList);
-    tags.forEach(tag => allTagList.appendChild(createTagListItem(tag, () => deleteTag(tag).then(_ => getAllTags()).catch(console.log))));
+    tags.forEach(tag => {
+        const tagItem = document.createElement('li');
+        tagItem.classList.add('list-group-item');
+        const tagName = document.createElement('span');
+        tagName.classList.add('tag-name');
+        tagName.appendChild(document.createTextNode(tag));
+        tagItem.appendChild(tagName);
+        let deleteButton = createDangerButton(() => {
+            removeChildren(deleteTitle);
+            deleteTitle.appendChild(document.createTextNode("Delete Tag"));
+            removeChildren(deleteMessage);
+            deleteMessage.appendChild(document.createTextNode(`Are you sure you want to remove "${tag}?"`));
+            const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+            confirmDeleteButton.replaceWith(confirmDeleteButton.cloneNode(true));
+            document.getElementById('confirmDeleteButton').addEventListener('click', () => {
+                deleteTag(tag).then(_ => getAllTags()).catch(console.log);
+                bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+                bootstrap.Modal.getInstance(document.getElementById('tagModal')).show();
+            });
+        });
+        deleteButton.setAttribute('data-bs-toggle', 'modal');
+        deleteButton.setAttribute('data-bs-target', '#deleteModal');
+        tagItem.appendChild(deleteButton);
+        allTagList.appendChild(tagItem);
+    });
 }
 
 /**
@@ -673,25 +698,27 @@ function modifyFiles(files) {
 
         // Delete file button
         const deleteButton = createDangerButton(() => {
-            removeChildren(fileDeleteMessage);
-            fileDeleteMessage.appendChild(document.createTextNode(`Are you sure you want to remove "${file.name}?"`));
+            removeChildren(deleteTitle);
+            deleteTitle.appendChild(document.createTextNode("Delete File"));
+            removeChildren(deleteMessage);
+            deleteMessage.appendChild(document.createTextNode(`Are you sure you want to remove "${file.name}?"`));
             const confirmDeleteButton = document.getElementById('confirmDeleteButton');
             confirmDeleteButton.replaceWith(confirmDeleteButton.cloneNode(true));
             document.getElementById('confirmDeleteButton').addEventListener('click', () => {
                 if (file.type === "note") {
                     deleteNote(file.name)
-                            .then(_ => getFileSearch())
-                            .catch(console.log);
+                        .then(_ => getFileSearch())
+                        .catch(console.log);
                 } else if (file.type === "flashcard") {
                     deleteFlashcards(file.name)
-                            .then(_ => getFileSearch())
-                            .catch(console.log);
+                        .then(_ => getFileSearch())
+                        .catch(console.log);
                 } else {
         
                     // todo
         
                 }
-                bootstrap.Modal.getInstance(deleteModal).hide();
+                bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
             });
         });
         deleteButton.setAttribute('data-bs-toggle', 'modal');
@@ -759,12 +786,9 @@ function modifyFiles(files) {
             modifyFileTagsDropdown();
             modifyFileTagsList();
 
-            removeChildren(fileCreateTagButtonContainer);
-            const fileCreateTagButton = document.createElement('input');
-            fileCreateTagButton.classList.add('btn', 'btn-primary');
-            fileCreateTagButton.value = 'Create Tag';
-            fileCreateTagButton.setAttribute('type', 'button');
-            fileCreateTagButton.addEventListener('click', () => {
+            const fileCreateTagButton = document.getElementById('fileCreateTagButton');
+            fileCreateTagButton.replaceWith(fileCreateTagButton.cloneNode(true));
+            document.getElementById('fileCreateTagButton').addEventListener('click', () => {
                 createTag(fileCreateTagInput.value)
                     .then(_ => addTagToNote(file.name, fileCreateTagInput.value).then(_ => {
                         modifyFileTagsList();
@@ -773,7 +797,6 @@ function modifyFiles(files) {
                     }))
                     .catch(console.log);
             });
-            fileCreateTagButtonContainer.appendChild(fileCreateTagButton);
         });
         fileItem.appendChild(tagsButton);
 
