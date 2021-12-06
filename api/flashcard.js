@@ -146,9 +146,55 @@ function postRemoveFlashcard(request, response) {
     }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in flashcardAPI.postRemoveFlashcard: ${err}` })));
 }
 
+
+/**
+ * Process a post request to add a tag to a flashcard.
+ * 
+ * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
+ * @param {Response<any, Record<string, any>, number>} response 
+ */
+ function postAddTag(request, response) {
+    client.db("final-kappa").collection("files").updateOne({
+        user: request.params.user,
+        name: request.params.note,
+        type: "flashcard"
+    }, {
+        $addToSet: { tags: request.params.tag }
+    }).then(updated => {
+        if (updated.acknowledged) {
+            response.end(JSON.stringify({ status: 0, result: `Flashcard set has been updated` }));
+        } else {
+            throw "Flashcard set could not be updated";
+        }
+    }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in flashcardAPI.postAddTag: ${err}` })));
+}
+
+/**
+ * Process a post request to remove a tag from a flashcard.
+ * 
+ * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
+ * @param {Response<any, Record<string, any>, number>} response 
+ */
+ function postRemoveTag(request, response) {
+    client.db("final-kappa").collection("files").updateOne({
+        user: request.params.user,
+        name: request.params.note,
+        type: "flashcard"
+    }, {
+        $pull: { tags: request.params.tag }
+    }).then(updated => {
+        if (updated.acknowledged) {
+            response.end(JSON.stringify({ status: 0, result: `Flashcard set has been updated` }));
+        } else {
+            throw "Flashcard set could not be updated";
+        }
+    }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in flashcardAPI.postAddTag: ${err}` })));
+}
+
 module.exports = {
     getFlashcards,
     postCreate, postRemove, 
-    postAddFlashcard, postRemoveFlashcard
+    postAddFlashcard, postRemoveFlashcard,
+    postAddTag, postRemoveTag
 };
 
