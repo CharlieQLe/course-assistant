@@ -121,7 +121,7 @@ function renderNavbar(element, user) {
 	li.classList.add('nav-item');
 	const a = document.createElement('a');
 	a.classList.add('nav-link');
-	a.innerHTML = 'files';
+	a.innerHTML = 'Files';
 	if (split[split.length - 2] === 'files') {
 		a.classList.add('active');
 	}
