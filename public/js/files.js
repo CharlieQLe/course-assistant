@@ -134,11 +134,24 @@ function createOption(name, index) {
     return option;
 }
 
-function createDeleteButton(onClick, label='Delete') {
+function createOpenButton(onClick, icon='') {
+    const button = document.createElement('button');
+    button.classList.add('open-button', 'btn', 'btn-primary');
+    button.setAttribute('type', 'button');
+    button.appendChild(document.createTextNode('Open'));
+    button.addEventListener('click', onClick);
+    return button;
+}
+
+function createDeleteButton(onClick) {
     const button = document.createElement('button');
     button.classList.add('delete-button', 'btn', 'btn-outline-danger');
     button.setAttribute('type', 'button');
-    button.appendChild(document.createTextNode(label));
+    
+    const i = document.createElement('i');
+    i.classList.add('bi', 'bi-trash');
+    button.appendChild(i);
+    
     button.addEventListener('click', onClick);
     return button;
 }
@@ -308,10 +321,23 @@ function renderFiles(files) {
     files.forEach(file => {
         const display = document.createElement('li');
         display.classList.add('list-group-item');
+
+        const i = document.createElement('i');
+        i.classList.add('bi');
+        if (file.type === 'note') {
+            i.classList.add('bi-card-text');
+        } else if (file.type === 'flashcard') {
+            i.classList.add('bi-archive');
+        } else {
+            i.classList.add('bi-file-earmark');
+        }
+        display.appendChild(i);
+
         const fileName = document.createElement('span');
         fileName.classList.add('file-name');
         fileName.appendChild(document.createTextNode(file.name));
         display.appendChild(fileName);
+        
         display.appendChild(createDeleteButton(() => {
             if (file.type === "note") {
                 fetch(`${apiPrefix}/files/notes/${file.name}/remove`, {
@@ -335,6 +361,14 @@ function renderFiles(files) {
                     .then(response => response.json())
                     .then(_ => retrieveSearch())
                     .catch(console.log);
+            }
+        }));
+
+        display.appendChild(createOpenButton(() => {
+            if (file.type === 'note') {
+                window.open(encodeURI(`${regularPrefix}/files/notes/${file.name}`), "_blank");
+            } else if (file.type === 'flashcard') {
+                window.open(encodeURI(`${regularPrefix}/files/flashcards/${file.name}`), "_blank");
             }
         }));
         
