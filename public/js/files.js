@@ -670,23 +670,13 @@ function modifyFiles(files) {
         if (file.type === "note") {
             fileItem.appendChild(createDangerButton(() => {
                 deleteNote(file.name)
-                    .then(response => {
-                        if (response.status === 0) {
-                            return getFileSearch();
-                        }
-                        throw response.result;
-                    })
+                    .then(_ => getFileSearch())
                     .catch(console.log);
             }));
         } else if (file.type === "flashcard") {
             fileItem.appendChild(createDangerButton(() => {
                 deleteFlashcards(file.name)
-                    .then(response => {
-                        if (response.status === 0) {
-                            return getFileSearch();
-                        }
-                        throw response.result;
-                    })
+                    .then(_ => getFileSearch())
                     .catch(console.log);
             }));
         } else {
