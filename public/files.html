@@ -382,7 +382,9 @@
                             </div>
 
                             <!-- Create tag button -->
-                            <div class="col-auto" id="fileCreateTagButtonContainer"></div>
+                            <div class="col-auto">
+                                <input type="button" class="btn btn-primary" value="Create Tag" id="fileCreateTagButton"></input>
+                            </div>
                         </div>
 					</form>
 				</div>
@@ -398,14 +400,14 @@
 				<!-- Header -->
 				<div class="modal-header">
 					<!-- Title -->
-					<h5 class="modal-title">Delete file</h5>
+					<h5 class="modal-title" id="deleteTitle"></h5>
 
 					<!-- Close button -->
 					<button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 
 				<!-- Body -->
-				<div class="modal-body" id="fileDeleteMessage"></div>
+				<div class="modal-body" id="deleteMessage"></div>
 
 				<!-- Footer -->
 				<div class="modal-footer">
