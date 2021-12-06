@@ -46,6 +46,7 @@ app.get("/api/users/:user/files/notes/:note", noteAPI.getNote);
 app.post("/api/users/:user/files/notes/:note/create", noteAPI.postCreate);
 app.post("/api/users/:user/files/notes/:note/remove", noteAPI.postRemove);
 app.post("/api/users/:user/files/notes/:note/edit", noteAPI.postEdit);
+app.post("/api/users/:user/files/notes/:note/tags", noteAPI.getTags);
 app.post("/api/users/:user/files/notes/:note/tags/:tag/add", noteAPI.postAddTag);
 app.post("/api/users/:user/files/notes/:note/tags/:tag/remove", noteAPI.postRemoveTag);
 
@@ -56,6 +57,7 @@ app.post("/api/users/:user/files/flashcards/:flashcard/create", flashcardAPI.pos
 app.post("/api/users/:user/files/flashcards/:flashcard/remove", flashcardAPI.postRemove);
 app.post("/api/users/:user/files/flashcards/:flashcard/addFlashcard", flashcardAPI.postAddFlashcard);
 app.post("/api/users/:user/files/flashcards/:flashcard/removeFlashcard", flashcardAPI.postRemoveFlashcard);
+app.post("/api/users/:user/files/flashcards/:flashcard/tags", flashcardAPI.getTags);
 app.post("/api/users/:user/files/flashcards/:flashcard/tags/:tag/add", flashcardAPI.postAddTag);
 app.post("/api/users/:user/files/flashcards/:flashcard/tags/:tag/remove", flashcardAPI.postRemoveTag);
 

@@ -146,6 +146,27 @@ function postRemoveFlashcard(request, response) {
     }).catch(err => response.end(JSON.stringify( {status: -1, result: `Error in flashcardAPI.postRemoveFlashcard: ${err}` })));
 }
 
+/**
+ * Process a get request to retrieve the tags of a set of flashcards.
+ * 
+ * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
+ * @param {Response<any, Record<string, any>, number>} response 
+ */
+ function getTags(request, response) {
+    // find if the user is in the database
+    client.db("final-kappa").collection("files").findOne({
+        user: request.params.user,
+        name: request.params.flashcard,
+        type: "flashcard"
+    }).then(exist => {
+        if (!exist) {
+            throw "Flashcards could not be found";
+        }
+        response.end(JSON.stringify({ status: 0, result: exist.tags }));
+    }).catch(err => {
+        response.end(JSON.stringify({ status: -1, result: err.toString() }))
+    });
+}
 
 /**
  * Process a post request to add a tag to a flashcard.
@@ -195,6 +216,7 @@ module.exports = {
     getFlashcards,
     postCreate, postRemove, 
     postAddFlashcard, postRemoveFlashcard,
+    getTags,
     postAddTag, postRemoveTag
 };
 

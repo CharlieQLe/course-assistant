@@ -15,14 +15,14 @@ function getAll(request, response) {
     })
         .toArray()
         .then(files => response.end(JSON.stringify({
-            statusCode: 0,
-            data: files.map(file => ({
+            status: 0,
+            result: files.map(file => ({
                 name: file.name,
                 type: file.type,
                 tags: file.tags
             }))
         })))
-        .catch(err => response.end(JSON.stringify({ statusCode: -1, data: `Error retrieving files: ${err}` })));
+        .catch(err => response.end(JSON.stringify({ status: -1, result: `Error retrieving files: ${err}` })));
 }
 
 /**
@@ -44,12 +44,12 @@ function postSearch(request, response) {
         .toArray()
         .then(documents => {
             response.end(JSON.stringify({
-                statusCode: 0,
-                data: documents.filter(document => request.body['includeTags'].every(tag => document.tags.includes(tag)) && request.body['excludeTags'].every(tag => !document.tags.includes(tag)))
+                status: 0,
+                result: documents.filter(document => request.body['includeTags'].every(tag => document.tags.includes(tag)) && request.body['excludeTags'].every(tag => !document.tags.includes(tag)))
                                 .map(document => ({ name: document.name, type: document.type, tags: document.tags }))
             }));
         })
-        .catch(err => response.end(JSON.stringify({ statusCode: -1, data: `Error searching: ${err}` })));
+        .catch(err => response.end(JSON.stringify({ status: -1, result: `Error searching: ${err}` })));
 }
 
 module.exports = { getAll, postSearch }

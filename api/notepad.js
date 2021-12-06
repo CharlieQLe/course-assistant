@@ -96,6 +96,27 @@ function postEdit(request, response) {
 }
 
 /**
+ * Process a get request to retrieve the tags of a note.
+ * 
+ * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
+ * @param {Response<any, Record<string, any>, number>} response 
+ */
+ function getTags(request, response) {
+    client.db("final-kappa").collection("files").findOne({
+        user: request.params.user,
+        name: request.params.note,
+        type: "note"
+    }).then(exist => {
+        if (!exist) {
+            throw "Note could not be found";
+        }
+        response.end(JSON.stringify({ status: 0, result: exist.tags }))
+    }).catch(err => {
+        response.end(JSON.stringify({ status: -1, result: err.toString() }))
+    });
+}
+
+/**
  * Process a post request to add a tag to a note.
  * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
@@ -143,5 +164,6 @@ module.exports = {
     getNote,
     postCreate, postRemove,
     postEdit,
+    getTags,
     postAddTag, postRemoveTag
 };
