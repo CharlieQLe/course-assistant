@@ -6,6 +6,10 @@
     line-height: 40px;
 }
 
+.file-name {
+    margin-left: 1em;
+}
+
 .open-button, .delete-button {
     float: right;
 }
