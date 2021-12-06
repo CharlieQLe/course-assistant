@@ -134,7 +134,7 @@ function createOption(name, index) {
     return option;
 }
 
-function createOpenButton(onClick, icon='') {
+function createOpenButton(onClick) {
     const button = document.createElement('button');
     button.classList.add('open-button', 'btn', 'btn-primary');
     button.setAttribute('type', 'button');
