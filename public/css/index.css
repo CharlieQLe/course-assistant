@@ -1,4 +1,11 @@
+#welcometext {
+    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 60pt;
+    color: white;
 
+}
+
+body {background-color: #2a3246;}
 
 .px200 {
     height: 200px;
