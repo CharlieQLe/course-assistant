@@ -164,7 +164,6 @@
 	<div id="createFlashcardModal" class="modal fade" tabindex="-1" role="dialog">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-
 				<!-- Header -->
 				<div class="modal-header">
 					<!-- Title -->
@@ -384,6 +383,45 @@
 
                             <!-- Create tag button -->
                             <div class="col-auto" id="fileCreateTagButtonContainer"></div>
+                        </div>
+					</form>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+    <!-- File deletion confirmation popup -->
+    <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<!-- Header -->
+				<div class="modal-header">
+					<!-- Title -->
+					<h5 class="modal-title">Delete file</h5>
+
+					<!-- Close button -->
+					<button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+
+				<!-- Body -->
+				<div class="modal-body" id="fileDeleteMessage"></div>
+
+				<!-- Footer -->
+				<div class="modal-footer">
+					<!-- Add tag group -->
+					<form class="center-group">
+                        <!-- Create/add tag inputs -->
+                        <div class="row">
+                            <!-- Cancel button -->
+                            <div class="col-auto">
+                                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+
+                            <!-- Delete button -->
+                            <div class="col-auto">
+                                <button class="btn btn-danger" type="button" id="confirmDeleteButton">Delete</button>
+                            </div>
                         </div>
 					</form>
 				</div>

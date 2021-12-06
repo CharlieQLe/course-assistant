@@ -32,6 +32,11 @@ const fileAddTagList = document.getElementById('fileAddTagList');
 const fileCreateTagInput = document.getElementById('fileCreateTagInput');
 const fileCreateTagButtonContainer = document.getElementById('fileCreateTagButtonContainer');
 
+// Delete modal
+const deleteModal = document.getElementById('deleteModal');
+const fileDeleteMessage = document.getElementById('fileDeleteMessage');
+const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+
 // File display
 const fileList = document.getElementById('fileList');
 
@@ -667,23 +672,31 @@ function modifyFiles(files) {
         fileItem.appendChild(fileNameLabel);
 
         // Delete file button
-        if (file.type === "note") {
-            fileItem.appendChild(createDangerButton(() => {
-                deleteNote(file.name)
-                    .then(_ => getFileSearch())
-                    .catch(console.log);
-            }));
-        } else if (file.type === "flashcard") {
-            fileItem.appendChild(createDangerButton(() => {
-                deleteFlashcards(file.name)
-                    .then(_ => getFileSearch())
-                    .catch(console.log);
-            }));
-        } else {
-
-            // todo
-
-        }
+        const deleteButton = createDangerButton(() => {
+            removeChildren(fileDeleteMessage);
+            fileDeleteMessage.appendChild(document.createTextNode(`Are you sure you want to remove "${file.name}?"`));
+            const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+            confirmDeleteButton.replaceWith(confirmDeleteButton.cloneNode(true));
+            document.getElementById('confirmDeleteButton').addEventListener('click', () => {
+                if (file.type === "note") {
+                    deleteNote(file.name)
+                            .then(_ => getFileSearch())
+                            .catch(console.log);
+                } else if (file.type === "flashcard") {
+                    deleteFlashcards(file.name)
+                            .then(_ => getFileSearch())
+                            .catch(console.log);
+                } else {
+        
+                    // todo
+        
+                }
+                bootstrap.Modal.getInstance(deleteModal).hide();
+            });
+        });
+        deleteButton.setAttribute('data-bs-toggle', 'modal');
+        deleteButton.setAttribute('data-bs-target', '#deleteModal');
+        fileItem.appendChild(deleteButton);
 
         // Open file tags button
         const tagsButton = document.createElement('button');
