@@ -19,7 +19,6 @@ function getNote(request, response) {
         }
         response.end(JSON.stringify({ status: 0, result: exist.body }))
     }).catch(err => {
-        console.log('get note');
         response.end(JSON.stringify({ status: -1, result: err.toString() }))
     });
 }
@@ -88,7 +87,6 @@ function postEdit(request, response) {
     }, {
         $set: { body: request.body["body"] }
     }).then(updated => {
-        console.log(updated);
         if (updated.acknowledged) {
             response.end(JSON.stringify({ status: 0, result: `Note has been updated` }));
         } else {

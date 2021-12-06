@@ -2,7 +2,7 @@
 const url = window.location.pathname;       // reads url
 const split = url.split('/');
 
-window.addEventListener('load', async function() {
+window.addEventListener('load', function() {
 	// GET request to server: asking for the file
 	fetch(`/api/users/${split[2]}/files/notes/${split[5]}`)
 	.then(response => {
@@ -12,7 +12,7 @@ window.addEventListener('load', async function() {
             document.getElementById('notepad-textarea').value = obj.result;
 
 			// sets the file name of the notes
-			document.getElementById('notepad-title').innerHTML = split[split.length-1];
+			document.getElementById('notepad-title').innerHTML = split[split.length-2].replace('%20', ' ');
         } else {
             throw 'something went wrong with getting the notes from the server: ' + obj.result;
         }
