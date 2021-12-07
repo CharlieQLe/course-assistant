@@ -26,6 +26,7 @@ app.use(express.urlencoded({ 'extended': true })); // allow URLencoded data
  * @param {*} next 
  */
  function checkLoggedIn(req, res, next) {
+    //  console.log(req.isAuthenticated())
     if (req.isAuthenticated()) {
         if (req.user === req.params.user) {
             next();
@@ -130,10 +131,12 @@ app.post('/signup', async (req, res, next) => {
 
 app.post('/login', passport.authenticate('local', { 'successRedirect': '/users', 'failureRedirect': '/' }));
 
+// goes back to req.user(itself)
+app.get('/login', (req, res) => res.redirect(`/users/${req.user}`));
+
 // Handle the URL
 app.get('/logout', (req, res) => {
     req.logout();
-    res.redirect('/');
 });
 
 // Set the user endpoints
