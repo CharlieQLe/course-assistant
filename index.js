@@ -137,6 +137,7 @@ app.get('/login', (req, res) => res.redirect(`/users/${req.user}`));
 // Handle the URL
 app.get('/logout', (req, res) => {
     req.logout();
+    res.redirect('/');
 });
 
 // Set the user endpoints
