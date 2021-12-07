@@ -3,90 +3,6 @@
 const { client, mc } = require("./initializeServer");
 
 /**
- * Process a post request to sign up.
- * 
- * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
- * @param {Response<any, Record<string, any>, number>} response 
- */
-function postSignup(request, response) {
-    const name = request.body['name'];
-    const email = request.body['email'];
-    const password = request.body['password'];
-
-    client.db('final-kappa').collection('authentication').findOne({
-        email: email
-    })
-        .then(existingUser => {
-            if (existingUser) {
-                throw new Error("Email already in use!");
-            } else {
-                return client.db('final-kappa').collectio('authentication').findOne({
-                    nextUser: {
-                        $exists: true
-                    }
-                })
-            }
-        })
-        .then(document => {
-            const [salt, hash] = mc.hash(password);
-            if (document) {
-                return client.db('final-kappa').collection('authentication').insertOne({
-                    user: document.nextUser,
-                    name: name,
-                    email: email,
-                    salt: salt,
-                    hash: hash
-                });
-            } else {
-                const [salt, hash] = mc.hash(password);
-                return client.db('final-kappa').collection('authentication').insertOne({
-                    nextUser: 0
-                }).then(_ => client.db('final-kappa').collection('authentication').insertOne({
-                    user: 0,
-                    name: name,
-                    email: email,
-                    salt: salt,
-                    hash: hash
-                }));
-            }
-        })
-        .then(_ => response.end(JSON.stringify({ status: 0, result: `Success creating user!` })))
-        .catch(err => response.end(JSON.stringify({ status: -1, result: `Error creating user: ${err}` })));
-}
-
-/**
- * Process a post request to log in.
- * 
- * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
- * @param {Response<any, Record<string, any>, number>} response 
- */
-function postLogin(request, response) {
-    const email = request.params.email;
-    const password = request.params.password;
-
-    client.db('final-kappa').collection('authentication').findOne({
-        email: email
-    })
-        .then(existingUser => {
-            if (existingUser) {
-                if (mc.check(password, existingUser.salt, existingUser.hash)) {
-
-                    // todo: authentiate
-
-                    response.end(JSON.stringify({ status: 0, result: `Success logging in!` }));
-                } else {
-                    throw new Error("Password doesn't match");
-                }
-            } else {
-                throw new Error("User doesn't exist");
-                
-            }
-        })
-        .catch(err => response.end(JSON.stringify({ status: -1, result: `Error logging in: ${err}` })));
-
-}
-
-/**
  * Process a get request to retrieve user data.
  * 
  * @param {Request<{}, any, any, qs.ParsedQs, Record<string, any>} request 
@@ -95,9 +11,7 @@ function postLogin(request, response) {
 function getData(request, response) {
     const user = request.params.user;
 
-    client.db('final-kappa').collection('authentication').findOne({
-        user: user
-    })
+    client.db('final-kappa').collection('users').findOne({ userId: user })
         .then(existingUser => {
             if (existingUser) {
                 response.end(JSON.stringify({
@@ -121,30 +35,42 @@ function getData(request, response) {
  * @param {Response<any, Record<string, any>, number>} response 
  */
 function postEdit(request, response) {
-    const user = request.params.user;   // get user name from url
-    
-    const nameToChange = request.body['name'];  // get name from json obj received from fetch
-    const emailToChange = request.body['email'];
+    const user = request.params.user;
+    let nameToChange = request.body['name'].trim();
+    let emailToChange = request.body['email'].trim();
     const passwordToChange = request.body['password'];
-    const [salt, hash] = mc.hash(passwordToChange);
-    
-    client.db('final-kappa').collection('authentication').updateOne({
-        user: user
-    }, {
-        $set: {
-            name: nameToChange,
-            email: emailToChange,
-            salt: salt,
-            hash: hash
-        }
-    })
-        .then(_ => {
-            response.end(JSON.stringify({
-                status: 0,
-                result: "Successfully edited user!"
-            }));
-        })
-        .catch(err => response.end(JSON.stringify({ status: -1, result: `Error editing user: ${err}` })));
+    let [salt, hash] = mc.hash(passwordToChange);
+
+    client.db('final-kappa').collection('users').findOne({ userId: user })
+        .then(existingUser => {
+            if (!existingUser) {
+                throw "User not found";
+            }
+            if (nameToChange === '') {
+                nameToChange = existingUser.name;
+            }
+            if (emailToChange === '') {
+                emailToChange = existingUser.email;
+            }
+            if (passwordToChange === '') {
+                salt = existingUser.salt;
+                hash = existingUser.hash;
+            }
+            return client.db('final-kappa').collection('users').updateOne({ userId: user }, {
+                $set: {
+                    name: nameToChange,
+                    email: emailToChange,
+                    salt: salt,
+                    hash: hash
+                }
+            })
+                .then(_ => {
+                    response.end(JSON.stringify({
+                        status: 0,
+                        result: "Successfully edited user!"
+                    }));
+                })
+        }).catch(err => response.end(JSON.stringify({ status: -1, result: `Error editing user: ${err}` })));
 }
 
 /**
@@ -155,21 +81,18 @@ function postEdit(request, response) {
  */
 function postDelete(request, response) {
     const user = request.params.user;
-    client.db('final-kappa').collection('authentication').deleteOne({
-        user: user
-    })
-        .then(_ => {
-            let promises = [];
-            promises.push(client.db('final-kappa').collection('collection').deleteMany({
-                user: user
-            }));
-            promises.push(client.db('final-kappa').collection('tasks').deleteMany({
-                user: user
-            }));
-            return Promise.all(promises);
+    client.db('final-kappa').collection('users').deleteOne({ userId: user })
+        .then(result => {
+            if (!result.acknowledged) {
+                throw "Could not delete user";
+            }
+            return Promise.all([
+                client.db('final-kappa').collection('files').deleteMany({ user: user }),
+                client.db('final-kappa').collection('tasks').deleteMany({ user: user })
+            ]);
         })
         .then(_ => response.end(JSON.stringify({ status: 0, result: "Successfully deleted user!" })))
         .catch(err => response.end(JSON.stringify({ status: -1, result: `Error retrieving data: ${err}` })));
 }
 
-module.exports = { postSignup, postLogin, getData, postEdit, postDelete };
+module.exports = { getData, postEdit, postDelete };
