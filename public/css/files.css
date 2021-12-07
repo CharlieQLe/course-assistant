@@ -17,3 +17,8 @@
 .open-button {
     margin-right: 1em;
 }
+
+#toastContainer {
+    margin-bottom: 2em;
+    z-index: 7000;
+}
