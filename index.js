@@ -26,11 +26,13 @@ app.use(express.urlencoded({ 'extended': true })); // allow URLencoded data
  * @param {*} next 
  */
 function checkLoggedIn(req, res, next) {
+    console.log(req.user)
+    console.log(req.params.user)
     if (req.isAuthenticated()) {
         if (req.user === req.params.user) {
             next();
         } else {
-            res.redirect(`/users/${req.user}`);
+            res.redirect('/login');
         }
     } else {
         res.redirect('/');
@@ -128,6 +130,12 @@ app.post('/signup', async (req, res) => {
     }
 });
 app.post('/login', passport.authenticate('local', { 'successRedirect': '/users', 'failureRedirect': '/' }));
+
+// Handle the URL 
+app.get('/login',
+(req, res) => res.redirect(`/users/${req.user}`));
+
+
 app.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/');
