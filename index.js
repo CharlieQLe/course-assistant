@@ -25,7 +25,7 @@ app.use(express.urlencoded({ 'extended': true })); // allow URLencoded data
  * @param {*} res 
  * @param {*} next 
  */
-function checkLoggedIn(req, res, next) {
+ function checkLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
         if (req.user === req.params.user) {
             next();
@@ -92,7 +92,7 @@ passport.serializeUser((user, done) => done(null, user));
 // Convert a unique identifier to a user object.
 passport.deserializeUser((uid, done) => done(null, uid));
 
-app.post('/signup', async (req, res) => {
+app.post('/signup', async (req, res, next) => {
     const name = req.body['name'];
     const email = req.body['email'];
     const password = req.body['password'];
@@ -121,14 +121,15 @@ app.post('/signup', async (req, res) => {
         if (!result.acknowledged) {
             throw "Could not create user!";
         }
-        res.redirect(307, '/login');
+        next();
     } catch (error) {
         console.log(error);
         res.redirect('/');
     }
-});
+}, passport.authenticate('local', { 'successRedirect': '/users', 'failureRedirect': '/' }));
+
 app.post('/login', passport.authenticate('local', { 'successRedirect': '/users', 'failureRedirect': '/' }));
-app.get('/login', (req, res) => res.redirect(`/users/${req.user}`));
+
 // Handle the URL
 app.get('/logout', (req, res) => {
     req.logout();
@@ -136,7 +137,7 @@ app.get('/logout', (req, res) => {
 });
 
 // Set the user endpoints
-app.get('/users', checkLoggedIn, (req, res) => res.redirect(`/users/${req.user}`));
+app.get('/users', checkLoggedIn, (req, res) => { res.redirect(`/users/${req.user}`)});
 app.use("/users/:user/", checkLoggedIn, express.static('public', { index: 'home.html' }));       // serve html file
 app.use("/users/:user/profile", checkLoggedIn, express.static('public', { index: 'user-profile.html' }));    // serve html file
 app.get("/api/users/:user", apiCheckLoggedIn, userAPI.getData);
