@@ -130,6 +130,8 @@ app.post('/signup', async (req, res, next) => {
 
 app.post('/login', passport.authenticate('local', { 'successRedirect': '/users', 'failureRedirect': '/' }));
 
+app.get('/login', (req, res) => res.redirect(`/users/${req.user}`));
+
 // Handle the URL
 app.get('/logout', (req, res) => {
     req.logout();
