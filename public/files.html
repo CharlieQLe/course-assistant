@@ -2,34 +2,34 @@
 <html lang="en">
 
 <head>
-	<!-- Required meta tags -->
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<!-- Bootstrap CSS -->
-	<!-- <link href="./bootstrap-5.1.3-dist/css/bootstrap.min.css" rel="stylesheet"> -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <!-- <link href="./bootstrap-5.1.3-dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
-	<!-- CSS -->
+    <!-- CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-	<link href="./css/header.css" rel="stylesheet">
-	<link href="./css/modals.css" rel="stylesheet">
+    <link href="./css/header.css" rel="stylesheet">
+    <link href="./css/modals.css" rel="stylesheet">
     <link href="./css/files.css" rel="stylesheet">
 
-	<!-- JS -->
-	<script type="module" src="./js/navbar.js" defer></script>
-	<script type="module" src="./js/files.js" defer></script>
+    <!-- JS -->
+    <script type="module" src="./js/navbar.js" defer></script>
+    <script type="module" src="./js/files.js" defer></script>
 
-	<title>Course Assistant - Class</title>
+    <title>Course Assistant - Class</title>
 </head>
 
 <body>
-	<!-- Page navbar -->
-	<div id="navbar"></div>
+    <!-- Page navbar -->
+    <div id="navbar"></div>
 
     <!-- Page content -->
-	<div class="container page-content">
+    <div class="container page-content">
         <div class="row align-items-center">
             <form class="col">
                 <div>
@@ -56,241 +56,174 @@
 
             <div class="col-10">
                 <ul class="list-group" id="fileList">
-                </ul>      
+                </ul>
             </div>
         </div>
     </div>
 
-	<!-- Page footer -->
-	<nav class="navbar fixed-bottom navbar-expand-lg navbar-light bg-light">
-		<div class="container-fluid">
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-				aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarSupportedContent">
-				<ul class="navbar-nav mx-auto">
-					<li class="nav-item px-1">
-						<button class="btn btn-primary" type="button" data-bs-toggle="modal"
-							data-bs-target="#createModal" id="createNote">Create Note</button>
-					</li>
-					<li class="nav-item px-1">
-						<button class="btn btn-primary" type="button" data-bs-toggle="modal"
-							data-bs-target="#createModal" id="createFlashcard">Create Flashcard</button>
-					</li>
-					<li class="nav-item px-1">
-						<button class="btn btn-primary" type="button" data-bs-toggle="modal"
-							data-bs-target="#uploadModal">Upload</button>
-					</li>
-					<li class="nav-item px-1">
-						<button class="btn btn-outline-primary" type="button" data-bs-toggle="modal"
-							data-bs-target="#tagModal" id="showAllTags">Tags</button>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+    <!-- Page footer -->
+    <nav class="navbar fixed-bottom navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item px-1">
+                        <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                            data-bs-target="#createModal" id="createNote">Create Note</button>
+                    </li>
+                    <li class="nav-item px-1">
+                        <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                            data-bs-target="#createModal" id="createFlashcard">Create Flashcard</button>
+                    </li>
+                    <li class="nav-item px-1">
+                        <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                            data-bs-target="#uploadModal">Upload</button>
+                    </li>
+                    <li class="nav-item px-1">
+                        <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal"
+                            data-bs-target="#tagModal" id="showAllTags">Tags</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
     <!-- Create File Modal -->
-	<div id="createModal" class="modal fade" tabindex="-1" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
+    <div id="createModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
 
-				<!-- Header -->
-				<div class="modal-header">
-					<!-- Title -->
-					<h5 class="modal-title" id="createTitle"></h5>
+                <!-- Header -->
+                <div class="modal-header">
+                    <!-- Title -->
+                    <h5 class="modal-title" id="createTitle"></h5>
 
-					<!-- Close button -->
-					<button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
+                    <!-- Close button -->
+                    <button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
 
-				<!-- Body -->
-				<div class="modal-body">
-					<form>
-						<!-- File chooser -->
-						<input type="text" class="form-control" id="createLabelInput" placeholder="">
-						<br>
+                <!-- Body -->
+                <div class="modal-body">
+                    <form>
+                        <!-- File chooser -->
+                        <input type="text" class="form-control" id="createLabelInput" placeholder="">
+                        <br>
 
-						<!-- Add tags group -->
-						<div>
-							<h5>Add Tags</h5>
-							<ul class="list-group" id="createAddedTagList"></ul>
+                        <!-- Add tags group -->
+                        <div>
+                            <h5>Add Tags</h5>
+                            <ul class="list-group" id="createAddedTagList"></ul>
                             <br>
 
-							<!-- Create/add tag inputs -->
-							<div class="row">
+                            <!-- Create/add tag inputs -->
+                            <div class="row">
 
-								<!-- Add tag dropdown -->
-								<div class="dropdown col-auto">
-									<button class="btn btn-primary dropdown-toggle" type="button" id="createAddTagDropdown"
-										data-bs-toggle="dropdown" aria-expanded="false">Add tag</button>
+                                <!-- Add tag dropdown -->
+                                <div class="dropdown col-auto">
+                                    <button class="btn btn-primary dropdown-toggle" type="button"
+                                        id="createAddTagDropdown" data-bs-toggle="dropdown" aria-expanded="false">Add
+                                        tag</button>
 
-									<!-- Dropdown of all tags -->
-									<ul class="dropdown-menu" aria-labelledby="addTagDropdown" id="createAddTagList"></ul>
-								</div>
+                                    <!-- Dropdown of all tags -->
+                                    <ul class="dropdown-menu" aria-labelledby="addTagDropdown" id="createAddTagList">
+                                    </ul>
+                                </div>
 
-								<!-- Create tag text field -->
-								<div class="col">
-									<input type="text" id="createCreateTagInput" class="form-control">
-								</div>
+                                <!-- Create tag text field -->
+                                <div class="col">
+                                    <input type="text" id="createCreateTagInput" class="form-control">
+                                </div>
 
-								<!-- Create tag button -->
-								<div class="col-auto">
-									<input type="button" class="btn btn-primary" id="createCreateTagButton"
-										value="Create Tag">
-								</div>
-							</div>
-						</div>
-						<br>
-					</form>
-				</div>
+                                <!-- Create tag button -->
+                                <div class="col-auto">
+                                    <input type="button" class="btn btn-primary" id="createCreateTagButton"
+                                        value="Create Tag">
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                    </form>
+                </div>
 
-				<div class="modal-footer">
-					<form>
-						<!-- Upload button -->
-						<button type="button" class="btn btn-primary" id="createCreateButton">Create</button>
-					</form>
-				</div>
+                <div class="modal-footer">
+                    <form>
+                        <!-- Upload button -->
+                        <button type="button" class="btn btn-primary" id="createCreateButton">Create</button>
+                    </form>
+                </div>
 
-			</div>
-		</div>
-	</div>
+            </div>
+        </div>
+    </div>
 
-	<!-- Upload modal -->
-	<div id="uploadModal" class="modal fade" tabindex="-1" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
+    <!-- Tags modal -->
+    <div id="tagModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <!-- Header -->
+                <div class="modal-header">
+                    <!-- Title -->
+                    <h5 class="modal-title" id="tagTitle">Tags</h5>
 
-				<!-- Header -->
-				<div class="modal-header">
-					<!-- Title -->
-					<h5 class="modal-title">Upload</h5>
+                    <!-- Close button -->
+                    <button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
 
-					<!-- Close button -->
-					<button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-
-				<!-- Body -->
-				<div class="modal-body">
-					<form>
-						<!-- File chooser -->
-						<input type="file" class="form-control" id="uploadFileChooser">
-						<br>
-
-						<!-- Add tags group -->
-						<div id="addTagsGroup">
-							<h5>Add Tags</h5>
-							<br>
-							<div class="label-no-count">added tags here</div>
-							<br>
-
-							<!-- Create/add tag inputs -->
-							<div class="row">
-
-								<!-- Add tag dropdown -->
-								<div class="dropdown col-auto">
-									<button class="btn btn-primary dropdown-toggle" type="button" id="uploadAddTagButton"
-										data-bs-toggle="dropdown" aria-expanded="false">Add tag</button>
-
-									<!-- Dropdown of all tags -->
-									<ul class="dropdown-menu" aria-labelledby="uploadAddTagButton">
-										<li class="dropdown-item">Tag 1</li>
-										<li class="dropdown-item">Tag 2</li>
-										<li class="dropdown-item">Tag 3</li>
-									</ul>
-								</div>
-
-								<!-- Create tag text field -->
-								<div class="col">
-									<input type="text" id="fileCreateTagInput" class="form-control">
-								</div>
-
-								<!-- Create tag button -->
-								<div class="col-auto">
-									<input type="button" class="btn btn-primary" id="createTagButton"
-										value="Create Tag">
-								</div>
-							</div>
-						</div>
-						<br>
-					</form>
-				</div>
-
-				<div class="modal-footer">
-					<form>
-						<!-- Upload button -->
-						<button type="button" class="btn btn-primary" id="uploadFileButton">Upload</button>
-					</form>
-				</div>
-
-			</div>
-		</div>
-	</div>
-    
-	<!-- Tags modal -->
-	<div id="tagModal" class="modal fade" tabindex="-1" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<!-- Header -->
-				<div class="modal-header">
-					<!-- Title -->
-					<h5 class="modal-title" id="tagTitle">Tags</h5>
-
-					<!-- Close button -->
-					<button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-
-				<!-- Body -->
-				<div class="modal-body overflow-auto">
-					<ul class="list-group" id="tagAllTagList">
+                <!-- Body -->
+                <div class="modal-body overflow-auto">
+                    <ul class="list-group" id="tagAllTagList">
                     </ul>
-				</div>
+                </div>
 
-				<!-- Footer -->
-				<div class="modal-footer">
-					<form class="center-group">
-						<div class="row">
+                <!-- Footer -->
+                <div class="modal-footer">
+                    <form class="center-group">
+                        <div class="row">
                             <div class="dropdown col-auto">
-                                <button class="btn btn-primary dropdown-toggle" type="button" id="tagAddTagButton" data-bs-toggle="dropdown" aria-expanded="false">Add tag</button>
+                                <button class="btn btn-primary dropdown-toggle" type="button" id="tagAddTagButton"
+                                    data-bs-toggle="dropdown" aria-expanded="false">Add tag</button>
                                 <ul class="dropdown-menu" aria-labelledby="tagAddTagButton" id="tagAddTagList"></ul>
                             </div>
-							<div class="col">
-								<input type="text" class="form-control" id="tagCreateTagInput">
-							</div>
-							<div class="col-auto">
-								<input type="button" class="btn btn-primary" id="tagCreateTagButton" value="Create Tag">
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+                            <div class="col">
+                                <input type="text" class="form-control" id="tagCreateTagInput">
+                            </div>
+                            <div class="col-auto">
+                                <input type="button" class="btn btn-primary" id="tagCreateTagButton" value="Create Tag">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Deletion confirmation popup -->
     <div id="deleteModal" class="modal fade" tabindex="-1" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<!-- Header -->
-				<div class="modal-header">
-					<!-- Title -->
-					<h5 class="modal-title" id="deleteTitle"></h5>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <!-- Header -->
+                <div class="modal-header">
+                    <!-- Title -->
+                    <h5 class="modal-title" id="deleteTitle"></h5>
 
-					<!-- Close button -->
-					<button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
+                    <!-- Close button -->
+                    <button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
 
-				<!-- Body -->
-				<div class="modal-body" id="deleteMessage"></div>
+                <!-- Body -->
+                <div class="modal-body" id="deleteMessage"></div>
 
-				<!-- Footer -->
-				<div class="modal-footer">
-					<!-- Add tag group -->
-					<form class="center-group">
+                <!-- Footer -->
+                <div class="modal-footer">
+                    <!-- Add tag group -->
+                    <form class="center-group">
                         <!-- Create/add tag inputs -->
                         <div class="row">
                             <!-- Cancel button -->
@@ -303,18 +236,28 @@
                                 <button class="btn btn-danger" type="button" id="confirmDeleteButton">Delete</button>
                             </div>
                         </div>
-					</form>
-				</div>
+                    </form>
+                </div>
 
-			</div>
-		</div>
-	</div>
+            </div>
+        </div>
+    </div>
 
-	<!-- Option 1: Bootstrap Bundle with Popper -->
-	<!-- <script src="./bootstrap-5.1.3-dist/js/bootstrap.bundle.min.js"></script> -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-		crossorigin="anonymous"></script>
+    <div class="position-fixed bottom-0 start-50 translate-middle p-3" id="toastContainer">
+        <div id="dangerToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+            <div class="d-flex">
+                <div class="toast-body" id="dangerToastBody"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <!-- <script src="./bootstrap-5.1.3-dist/js/bootstrap.bundle.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

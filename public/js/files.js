@@ -37,9 +37,13 @@ const fileList = document.getElementById('fileList');
 let foundTags = [];
 let newFileTags = [];
 
+// Toast
+const dangerToastBody = document.getElementById('dangerToastBody');
+const dangerToast = new bootstrap.Toast(document.getElementById('dangerToast'));
+
 // Events
 window.addEventListener('load', () => {
-    document.getElementById('searchFilesButton').addEventListener('click', () => getFileSearch().catch(console.log));
+    document.getElementById('searchFilesButton').addEventListener('click', () => getFileSearch().catch(showDangerToast));
 
     document.getElementById('createNote').addEventListener('click', () => {
         removeChildren(createTitle);
@@ -57,7 +61,7 @@ window.addEventListener('load', () => {
                     bootstrap.Modal.getInstance(document.getElementById('createModal')).hide();
                     return getFileSearch();
                 })
-                .catch(console.log);
+                .catch(showDangerToast);
         });
     });
 
@@ -77,7 +81,7 @@ window.addEventListener('load', () => {
                     bootstrap.Modal.getInstance(document.getElementById('createModal')).hide();
                     return getFileSearch();
                 })
-                .catch(console.log);
+                .catch(showDangerToast);
         });
     });
 
@@ -89,7 +93,7 @@ window.addEventListener('load', () => {
                 createCreateTagInput.value = "";
                 return getAllTags();
             })
-            .catch(console.log);
+            .catch(showDangerToast);
     });
 
     document.getElementById('showAllTags').addEventListener('click', () => {
@@ -115,7 +119,7 @@ window.addEventListener('load', () => {
                         document.getElementById('confirmDeleteButton').addEventListener('click', () => {
                             deleteTag(tag)
                                 .then(_ => reloadTags())
-                                .catch(console.log);
+                                .catch(showDangerToast);
                             bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
                             bootstrap.Modal.getInstance(document.getElementById('tagModal')).show();
                         });
@@ -128,7 +132,7 @@ window.addEventListener('load', () => {
             });
         }
 
-        reloadTags().catch(console.log);
+        reloadTags().catch(showDangerToast);
 
         removeChildren(tagTitle);
         tagTitle.appendChild(document.createTextNode('Tags'));
@@ -142,7 +146,7 @@ window.addEventListener('load', () => {
                     tagCreateTagInput.value = "";
                     return reloadTags();
                 })
-                .catch(console.log);
+                .catch(showDangerToast);
         });
     });
 
@@ -152,13 +156,11 @@ window.addEventListener('load', () => {
             updateTagSearch(tags);
             updateTagsDropdown(tags);
         })
-        .catch(console.log);
+        .catch(showDangerToast);
 
     // Retrieve files
-    getAllFiles().catch(console.log);
+    getAllFiles().catch(showDangerToast);
 })
-
-
 
 /*** PROMISES ***/
 
@@ -285,7 +287,7 @@ function deleteTag(tagName) {
 function createNote(fileName) {
     fileName = fileName.trim();
     if (fileName === '') {
-        throw "File name is empty!";
+        return Promise.resolve().then(() => { throw "File name is empty!" });
     }
     return fetch(`${apiPrefix}/files/notes/${fileName}/create`, {
         method: 'POST',
@@ -315,7 +317,7 @@ function createNote(fileName) {
 function createFlashcards(fileName) {
     fileName = fileName.trim();
     if (fileName === '') {
-        throw "File name is empty!";
+        return Promise.resolve(() => { throw "File name is empty!" });
     }
     return fetch(`${apiPrefix}/files/flashcards/${fileName}/create`, {
         method: 'POST',
@@ -699,11 +701,11 @@ function modifyFiles(files) {
                 if (file.type === "note") {
                     deleteNote(file.name)
                         .then(_ => getFileSearch())
-                        .catch(console.log);
+                        .catch(showDangerToast);
                 } else if (file.type === "flashcard") {
                     deleteFlashcards(file.name)
                         .then(_ => getFileSearch())
-                        .catch(console.log);
+                        .catch(showDangerToast);
                 }
                 bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
             });
@@ -731,7 +733,7 @@ function modifyFiles(files) {
                         .then(tags => {
                             removeChildren(tagAllTagList);
                             tags.forEach(tag => {
-                                tagAllTagList.appendChild(createTagListItem(tag, () => removeTagFromNote(file.name, tag).then(_ => updateTagList()).catch(console.log)));
+                                tagAllTagList.appendChild(createTagListItem(tag, () => removeTagFromNote(file.name, tag).then(_ => updateTagList()).catch(showDangerToast)));
                             });
                         });
                 } else if (file.type === 'flashcard') {
@@ -739,7 +741,7 @@ function modifyFiles(files) {
                         .then(tags => {
                             removeChildren(tagAllTagList);
                             tags.forEach(tag => {
-                                tagAllTagList.appendChild(createTagListItem(tag, () => removeTagFromFlashcards(file.name, tag).then(_ => updateTagList()).catch(console.log)));
+                                tagAllTagList.appendChild(createTagListItem(tag, () => removeTagFromFlashcards(file.name, tag).then(_ => updateTagList()).catch(showDangerToast)));
                             });
                         });
                 }
@@ -750,19 +752,19 @@ function modifyFiles(files) {
                 if (file.type === 'note') {
                     return getAllTags().then(tags => {
                         removeChildren(tagAddTagList);
-                        tags.forEach(tag => tagAddTagList.appendChild(createDropdownItem(tag, () => addTagToNote(file.name, tag).then(_ => updateTagList()).catch(console.log))));
+                        tags.forEach(tag => tagAddTagList.appendChild(createDropdownItem(tag, () => addTagToNote(file.name, tag).then(_ => updateTagList()).catch(showDangerToast))));
                     });
                 } else if (file.type === 'flashcard') {
                     return getAllTags().then(tags => {
                         removeChildren(tagAddTagList);
-                        tags.forEach(tag => tagAddTagList.appendChild(createDropdownItem(tag, () => addTagToFlashcards(file.name, tag).then(_ => updateTagList()).catch(console.log))));
+                        tags.forEach(tag => tagAddTagList.appendChild(createDropdownItem(tag, () => addTagToFlashcards(file.name, tag).then(_ => updateTagList()).catch(showDangerToast))));
                     });
                 }
                 return Promise.resolve().then(() => { throw "Unknown file type!" });
             };
 
-            updateTagList().catch(console.log);
-            updateTagDropdown().catch(console.log);
+            updateTagList().catch(showDangerToast);
+            updateTagDropdown().catch(showDangerToast);
 
             const tagCreateTagButton = document.getElementById('tagCreateTagButton');
             tagCreateTagButton.replaceWith(tagCreateTagButton.cloneNode(true));
@@ -784,7 +786,7 @@ function modifyFiles(files) {
                             return updateTagDropdown();
                         }));
                     })
-                    .catch(console.log);
+                    .catch(showDangerToast);
             });
         });
         fileItem.appendChild(tagsButton);
@@ -804,4 +806,15 @@ function modifyFiles(files) {
         fileItem.appendChild(openButton);
         fileList.append(fileItem);
     });
+}
+
+/**
+ * Show a danger toast with the specified message.
+ * 
+ * @param {string} message 
+ */
+function showDangerToast(message) {
+    removeChildren(dangerToastBody);
+    dangerToastBody.appendChild(document.createTextNode(message));
+    dangerToast.show();
 }
