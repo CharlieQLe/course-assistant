@@ -88,10 +88,13 @@ function postDelete(request, response) {
             }
             return Promise.all([
                 client.db('final-kappa').collection('files').deleteMany({ user: user }),
-                client.db('final-kappa').collection('tasks').deleteMany({ user: user })
+                client.db('final-kappa').collection('tasks').deleteMany({ user: user }),
+                client.db('final-kappa').collection('tags').deleteMany({ user: user })
             ]);
         })
-        .then(_ => response.end(JSON.stringify({ status: 0, result: "Successfully deleted user!" })))
+        .then(_ => {
+            response.end(JSON.stringify({ status: 0, result: "Successfully deleted user!" }));
+        })
         .catch(err => response.end(JSON.stringify({ status: -1, result: `Error retrieving data: ${err}` })));
 }
 

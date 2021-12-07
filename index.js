@@ -121,19 +121,15 @@ app.post('/signup', async (req, res) => {
         if (!result.acknowledged) {
             throw "Could not create user!";
         }
-        res.redirect('/login');
+        res.redirect(307, '/login');
     } catch (error) {
         console.log(error);
         res.redirect('/');
     }
 });
 app.post('/login', passport.authenticate('local', { 'successRedirect': '/users', 'failureRedirect': '/' }));
-
-// Handle the URL 
-app.get('/login',
-(req, res) => res.redirect(`/users/${req.user}`));
-
-
+app.get('/login', (req, res) => res.redirect(`/users/${req.user}`));
+// Handle the URL
 app.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/');

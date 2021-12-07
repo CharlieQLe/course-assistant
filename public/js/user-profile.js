@@ -63,5 +63,13 @@ document.getElementById('save-password-btn').addEventListener('click', () => {
 });
 
 document.getElementById('delete-account-btn').addEventListener('click', () => {
-
+    fetch(`/api/users/${split[2]}/delete`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({})
+    }).then(_ => {
+        window.location.href = '/logout';
+    }).catch(console.log);
 });
