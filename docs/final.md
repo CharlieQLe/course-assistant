@@ -333,35 +333,44 @@ to know before hand.
 ## Grading Rubric
 
 Authentication           ___ / 15 pts
-	• Successfully create a user through sign up
-	• Authentication is secure and bug free
-	• Successfully login a user
-	• User profile page allows for edits and is fully functional
+
+• Successfully create a user through sign up
+• Authentication is secure and bug free
+• Successfully login a user
+• User profile page allows for edits and is fully functional
+
 Overall Polish           ___ / 10 pts
-	• Application is user friendly, appears professional, and functions well without bugs for optimal user experience 
-	• Application accomplishes most of what it set out to do in the design phase 
-	• Navbar is functional to allow for easy navigation
-	• File names make sense, code is easy to follow, linted, and commented
+
+• Application is user friendly, appears professional, and functions well without bugs for optimal user experience 
+• Application accomplishes most of what it set out to do in the design phase 
+• Navbar is functional to allow for easy navigation
+• File names make sense, code is easy to follow, linted, and commented
+
 Homepage           ___ / 25 pts
-	• Add task modal accurately allows for the creation of tasks 
-	• Editing and deleting tasks is fully functional
-	• Calendar renders properly, defaults to current date, and is functional without bugs
-	• Tasks for currently selected day render properly when specified day is clicked
-	• Future tasks render properly and only displays upcoming tasks (not ones on current date or ones that have passed)
-	• Old tasks properly render in modal when button is clicked
+
+• Add task modal accurately allows for the creation of tasks 
+• Editing and deleting tasks is fully functional
+• Calendar renders properly, defaults to current date, and is functional without bugs
+• Tasks for currently selected day render properly when specified day is clicked
+• Future tasks render properly and only displays upcoming tasks (not ones on current date or ones that have passed)
+• Old tasks properly render in modal when button is clicked
+
 File Upload Page/Tags           ___ / 25 pts
-	• Tag creation and assignment is fully functional
-	• Sorting by tags is fully functional and accurate
-	• File list renders properly 
-	• All modals render properly 
+
+• Tag creation and assignment is fully functional
+• Sorting by tags is fully functional and accurate
+• File list renders properly 
+• All modals render properly 
 Flashcard and Note Tool           ___ / 20 pts
-	• Flashcard sets are able to be created through create flashcard set button and are fully functional
-	• Flashcard study mode is fully functional, terms marked incorrect properly are added to missed term set for later review
-	• Notes can be created through create note button on file page
-	• Saving of notes is properly implemented to allow for future access and edits
+
+• Flashcard sets are able to be created through create flashcard set button and are fully functional
+• Flashcard study mode is fully functional, terms marked incorrect properly are added to missed term set for later review
+• Notes can be created through create note button on file page
+• Saving of notes is properly implemented to allow for future access and edits
 Video Presentation and Final.md           ___ / 5 pts
-	• Final video presentation covers all bases defined in specifications and is uploaded to YouTube
-	• Final.md file includes all necessary documentation and write up materials as specified
+
+• Final video presentation covers all bases defined in specifications and is uploaded to YouTube
+• Final.md file includes all necessary documentation and write up materials as specified
 
 
                               Total: ___ / 100 points
