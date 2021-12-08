@@ -1,5 +1,9 @@
 # Course Assistant
 
+<p align="center" width="100%">
+    <img width="33%" src="./HTML Reference/logo.png">
+</p>
+
 Link to application: https://cs326-final-kappa.herokuapp.com/
 
 Our application is titled "Course Assistant" and is an all in one assistant geared towards students of all ages and grade levels. Upon signing up, users are taken to their profile
