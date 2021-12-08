@@ -1,43 +1,39 @@
-'use strict';
+"use strict";
 
-import * as notification from "./notification.js"
+import * as notification from "./notification.js";
 
-const url = window.location.pathname;       // reads url
-const split = url.split('/');
+const url = window.location.pathname; // reads url
+const split = url.split("/");
 
-window.addEventListener('load', function() {
+window.addEventListener("load", function () {
 	// GET request to server: asking for the file
 	fetch(`/api/users/${split[2]}/files/notes/${split[5]}`)
-	.then(response => {
-        return response.json();
-    }).then(obj => {
-        if (obj.status === 0) {
-            document.getElementById('notepad-textarea').value = obj.result;
+		.then(response => {
+			return response.json();
+		}).then(obj => {
+			if (obj.status === 0) {
+				document.getElementById("notepad-textarea").value = obj.result;
 
-			// sets the file name of the notes
-			document.getElementById('notepad-title').innerHTML = split[split.length-2].replace('%20', ' ');
-        } else {
-            throw 'something went wrong with getting the notes from the server: ' + obj.result;
-        }
-
-    }).catch(notification.showDangerToast);
-
+				// sets the file name of the notes
+				document.getElementById("notepad-title").innerHTML = split[split.length - 2].replace("%20", " ");
+			} else {
+				throw "something went wrong with getting the notes from the server: " + obj.result;
+			}
+		}).catch(notification.showDangerToast);
 });
 
-document.getElementById('save-btn').addEventListener('click', () => {
+document.getElementById("save-btn").addEventListener("click", () => {
 	// post to server. tell server to save file
 	fetch(`/api/users/${split[2]}/files/notes/${split[5]}/edit`, {
-		method: 'POST', 
-		body: JSON.stringify({ body: document.getElementById('notepad-textarea').value }), 
+		method: "POST",
+		body: JSON.stringify({ body: document.getElementById("notepad-textarea").value }),
 		headers: {
-			'Content-Type': 'application/json',
+			"Content-Type": "application/json"
 		}
 	}).then(response => response.json())
-	.then(obj => {
-		if(obj.status !== 0) {
-			throw obj.result;
-		}
-	}).catch(notification.showDangerToast);
-
+		.then(obj => {
+			if (obj.status !== 0) {
+				throw obj.result;
+			}
+		}).catch(notification.showDangerToast);
 });
-
