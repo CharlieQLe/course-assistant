@@ -68,10 +68,8 @@ const strategy = new LocalStrategy({
 }, async (email, password, done) => {
 	try {
 		const user = await client.db("final-kappa").collection("users").findOne({ email: email });
-		if (!user) {
-			throw "Wrong email";
-		} else if (!mc.check(password, user.salt, user.hash)) {
-			throw "Wrong password";
+		if (!user || !mc.check(password, user.salt, user.hash)) {
+			throw new Error("Wrong email or password");
 		}
 		return done(null, user.userId);
 	} catch (error) {
@@ -100,16 +98,16 @@ app.post("/signup", async (req, res, next) => {
 	try {
 		const globalData = await client.db("final-kappa").collection("misc").findOne({});
 		if (!globalData) {
-			throw "User data not found!";
+			throw new Error("Global data not found!");
 		}
 		const userId = `${globalData.nextUserId}`;
 		const updateGlobalResult = await client.db("final-kappa").collection("misc").updateMany({ nextUserId: { $exists: true } }, { $inc: { nextUserId: 1 } }, { multi: true });
 		if (!updateGlobalResult.acknowledged) {
-			throw "Could not update global user count!";
+			throw new Error("Could not update global user count!");
 		}
 		const user = await client.db("final-kappa").collection("users").findOne({ email: email });
 		if (user) {
-			throw "User with email already exists!";
+			throw new Error("User with email already exists!");
 		}
 		const [salt, hash] = mc.hash(password);
 		const result = await client.db("final-kappa").collection("users").insertOne({
@@ -120,7 +118,7 @@ app.post("/signup", async (req, res, next) => {
 			userId: userId
 		});
 		if (!result.acknowledged) {
-			throw "Could not create user!";
+			throw new Error("Could not create user!");
 		}
 		next();
 	} catch (error) {
