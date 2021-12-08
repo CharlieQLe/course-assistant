@@ -30,3 +30,8 @@ studying.
 
 "Course Assistant" is a swiss army knife when it comes to course management that stands out from competitors by allowing task management, file management, note creation, and 
 flashcard set creation all in one place.
+
+![homepage](./docs/Final%20Screenshots/homepage.png)
+
+![files page](./docs/Final%20Screenshots/filespage.png)
+
