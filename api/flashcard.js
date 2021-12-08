@@ -16,7 +16,7 @@ function getFlashcards (request, response) {
 		type: "flashcard"
 	}).then(exist => {
 		if (!exist) {
-			throw "Flashcards could not be found";
+			throw new Error("Flashcards could not be found");
 		}
 		response.end(JSON.stringify({ status: 0, result: exist.flashcards }));
 	}).catch(err => {
@@ -37,7 +37,7 @@ function postCreate (request, response) {
 		type: "flashcard"
 	}).then(exist => {
 		if (exist) {
-			throw "Flashcards already exist";
+			throw new Error("Flashcards already exist");
 		}
 		return client.db("final-kappa").collection("files").insertOne({
 			user: request.params.user,
@@ -50,7 +50,7 @@ function postCreate (request, response) {
 		if (inserted.acknowledged) {
 			response.end(JSON.stringify({ status: 0, result: "Create flashcards received!" }));
 		} else {
-			throw "Could not create flashcards";
+			throw new Error("Could not create flashcards");
 		}
 	}).catch(err => response.end(JSON.stringify({ status: -1, result: `Error in flashcardAPI.postCreate: ${err}` })));
 }
@@ -70,7 +70,7 @@ function postRemove (request, response) {
 		if (deleted.acknowledged) {
 			response.end(JSON.stringify({ status: 0, result: "Deleted flashcards received!" }));
 		} else {
-			throw "Could not delete flashcards";
+			throw new Error("Could not delete flashcards");
 		}
 	}).catch(err => response.end(JSON.stringify({ status: -1, result: `Error in flashcardAPI.postRemove: ${err}` })));
 }
@@ -95,7 +95,7 @@ function postAddFlashcard (request, response) {
 		// if there is a flashcard with the same term and definition,
 		// throw an error, else add the flashcard to the set
 		if (exist) {
-			throw "duplicate flashcard term or definition";
+			throw new Error("duplicate flashcard term or definition");
 		}
 		return client.db("final-kappa").collection("files").updateOne({
 			user: request.params.user,
@@ -113,7 +113,7 @@ function postAddFlashcard (request, response) {
 		if (updated.acknowledged) {
 			response.end(JSON.stringify({ status: 0, result: "Added flashcard to the flashcards set received!" }));
 		} else {
-			throw "Could not add flashcard to the flashcards set";
+			throw new Error("Could not add flashcard to the flashcards set");
 		}
 	}).catch(err => response.end(JSON.stringify({ status: -1, result: `Error in flashcardAPI.postAddFlashcard: ${err}` })));
 }
@@ -140,7 +140,7 @@ function postRemoveFlashcard (request, response) {
 		if (updated.acknowledged) {
 			response.end(JSON.stringify({ status: 0, result: "Removed flashcard to the flashcards set received!" }));
 		} else {
-			throw "Could not remove flashcard to the flashcards set";
+			throw new Error("Could not remove flashcard to the flashcards set");
 		}
 	}).catch(err => response.end(JSON.stringify({ status: -1, result: `Error in flashcardAPI.postRemoveFlashcard: ${err}` })));
 }
@@ -159,7 +159,7 @@ function getTags (request, response) {
 		type: "flashcard"
 	}).then(exist => {
 		if (!exist) {
-			throw "Flashcards could not be found";
+			throw new Error("Flashcards could not be found");
 		}
 		response.end(JSON.stringify({ status: 0, result: exist.tags }));
 	}).catch(err => {
@@ -184,7 +184,7 @@ function postAddTag (request, response) {
 		if (updated.acknowledged) {
 			response.end(JSON.stringify({ status: 0, result: "Flashcard set has been updated" }));
 		} else {
-			throw "Flashcard set could not be updated";
+			throw new Error("Flashcard set could not be updated");
 		}
 	}).catch(err => response.end(JSON.stringify({ status: -1, result: `Error in flashcardAPI.postAddTag: ${err}` })));
 }
@@ -206,7 +206,7 @@ function postRemoveTag (request, response) {
 		if (updated.acknowledged) {
 			response.end(JSON.stringify({ status: 0, result: "Flashcard set has been updated" }));
 		} else {
-			throw "Flashcard set could not be updated";
+			throw new Error("Flashcard set could not be updated");
 		}
 	}).catch(err => response.end(JSON.stringify({ status: -1, result: `Error in flashcardAPI.postAddTag: ${err}` })));
 }

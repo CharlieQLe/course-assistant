@@ -19,7 +19,7 @@ window.addEventListener("load", function () {
 				flashcards = obj.result;
 				renderFlashcards(document.getElementById("flashcard"));
 			} else {
-				throw "something went wrong with getting the flashcards from the server: " + obj.result;
+				throw new Error("getting the flashcards from the server failed. " + obj.result.replace('Error:',''));
 			}
 		}).catch(notification.showDangerToast);
 
@@ -234,7 +234,7 @@ function renderFlashcards (element) {
 				return response.json();
 			}).then(obj => {
 				if (obj.status !== 0) {
-					throw obj.result;
+					throw new Error(obj.result.replace('Error:',''));
 				}
 			}).catch(notification.showDangerToast);
 		});
@@ -390,7 +390,7 @@ document.getElementById("add-flashcard-btn").addEventListener("click", () => {
 		return response.json();
 	}).then(obj => {
 		if (obj.status !== 0) {
-			throw obj.result;
+			throw new Error(obj.result.replace('Error:',''));
 		}
 		// clear term and description input box after every added term
 		document.getElementById("term-input").value = "";

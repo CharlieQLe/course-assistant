@@ -17,7 +17,7 @@ window.addEventListener("load", function () {
 				// sets the file name of the notes
 				document.getElementById("notepad-title").innerHTML = split[split.length - 2].replace("%20", " ");
 			} else {
-				throw "something went wrong with getting the notes from the server: " + obj.result;
+				throw new Error("getting the notes from the server failed" + obj.result.replace('Error:',''));
 			}
 		}).catch(notification.showDangerToast);
 });
@@ -33,7 +33,7 @@ document.getElementById("save-btn").addEventListener("click", () => {
 	}).then(response => response.json())
 		.then(obj => {
 			if (obj.status !== 0) {
-				throw obj.result;
+				throw new Error(obj.result.replace('Error:',''));
 			}
 		}).catch(notification.showDangerToast);
 });

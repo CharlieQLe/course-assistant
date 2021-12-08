@@ -46,12 +46,12 @@ window.addEventListener("load", () => {
 				}));
 				// includes all tasks, including the tasks from selected tasks
 
-				//filters out expired tasks
+				// filters out expired tasks
 				renderTask(document.getElementById("futureTasks"), allTasks.filter(day => {
 					return new Date(day.date).getTime() > new Date(today).getTime();
 				}));
 			} else {
-				throw "something went wrong with getting the tasks from the server: " + obj.result;
+				throw new Error("something went wrong with getting the tasks from the server: " + obj.result);
 			}
 		}).catch(notification.showDangerToast);
 });
@@ -397,7 +397,7 @@ document.getElementById("addTaskButton").addEventListener("click", () => {
 		return response.json();
 	}).then(obj => {
 		if (obj.status !== 0) {
-			throw obj.result;
+			throw new Error(obj.result);
 		}
 
 		allTasks.push(temp);
@@ -450,7 +450,7 @@ document.getElementById("submitEditTaskButton").addEventListener("click", () => 
 		return response.json();
 	}).then(obj => {
 		if (obj.status !== 0) {
-			throw obj.result;
+			throw new Error(obj.result);
 		}
 
 		// edit the task in the allTasks array
@@ -489,7 +489,7 @@ document.getElementById("deleteTaskButton").addEventListener("click", () => {
 		return response.json();
 	}).then(obj => {
 		if (obj.status !== 0) {
-			throw obj.result;
+			throw new Error(obj.result);
 		}
 		for (let i = 0; i < allTasks.length; i++) {
 			if (currentlyEditingTask != null && allTasks[i] === currentlyEditingTask) {

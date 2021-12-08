@@ -1,6 +1,5 @@
 "use strict";
 
-import * as bootstrap from "bootstrap";
 
 // Toast
 const dangerToastBody = document.getElementById("dangerToastBody");

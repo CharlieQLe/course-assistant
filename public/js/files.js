@@ -1,7 +1,6 @@
 "use strict";
 
 import * as notification from "./notification.js";
-import * as bootstrap from "bootstrap";
 
 // URL
 const url = window.location.pathname;
