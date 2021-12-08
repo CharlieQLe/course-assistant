@@ -44,7 +44,7 @@ function postEdit (request, response) {
 	client.db("final-kappa").collection("users").findOne({ userId: user })
 		.then(existingUser => {
 			if (!existingUser) {
-				throw "User not found";
+				throw new Error("User not found");
 			}
 			if (nameToChange === "") {
 				nameToChange = existingUser.name;
@@ -84,7 +84,7 @@ function postDelete (request, response) {
 	client.db("final-kappa").collection("users").deleteOne({ userId: user })
 		.then(result => {
 			if (!result.acknowledged) {
-				throw "Could not delete user";
+				throw new Error("Could not delete user");
 			}
 			return Promise.all([
 				client.db("final-kappa").collection("files").deleteMany({ user: user }),
