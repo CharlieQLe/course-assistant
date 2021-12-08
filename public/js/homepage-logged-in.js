@@ -50,7 +50,7 @@ window.addEventListener("load", () => {
 				}));
 				// includes all tasks, including the tasks from selected tasks
 
-				// TODO FIGURE OUT HOW TO FILTER OUT EXPIRED TASKS
+				//filters out expired tasks
 				renderTask(document.getElementById("futureTasks"), allTasks.filter(day => {
 					if (new Date(day.date).getTime() > new Date(today).getTime()) {
 						return day;
