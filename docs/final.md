@@ -34,7 +34,11 @@ clicked.
 
 ![homepage when not logged in](./Final%20Screenshots/homepagenotloggedin.png)
 
+Sign Up Modal
+
 ![sign up modal](./Final%20Screenshots/signupmodal.png)
+
+Log In Modal
 
 ![log in modal](./Final%20Screenshots/loginmodal.png)
 
@@ -51,11 +55,19 @@ the edit button next to a task will also pop up a modal that allows the user to 
 case a date has passed but the user still wants to see their previous scheduled tasks. The calendar can be interacted with and if a day is selected where tasks have been
 assigned, they will render under "Tasks for Selected Day".
 
+Homepage Upon Logging In
+
 ![homepage](./Final%20Screenshots/homepage.png)
+
+Add Task Modal
 
 ![add task modal](./Final%20Screenshots/addtaskmodal.png)
 
+Edit or Delete Task Modal
+
 ![edit delete modal](./Final%20Screenshots/editdeletemodal.png)
+
+Old Tasks Modal
 
 ![old tasks modal](./Final%20Screenshots/oldtasksmodal.png)
 
@@ -64,19 +76,31 @@ assigned, they will render under "Tasks for Selected Day".
 On the files page, the user has the ability to manage all their note and flashcard files and keep them organized with our tag system. Users can create tags when creating a 
 new note or flashcard set or do so separately. They can also create new notes and flashcard sets from this page. They can sort via specific tags to easily locate files.
 
+Files Main Page
+
 ![files page](./Final%20Screenshots/filespage.png)
+
+Create a Tag Modal
 
 ![create tag modal](./Final%20Screenshots/createtagmodal.png)
 
+Add a Tag to a File Modal
+
 ![add tag to file modal](./Final%20Screenshots/addtagtofile.png)
 
+Create a Note Modal
+
 ![create note modal](./Final%20Screenshots/createnotemodal.png)
+
+Create a Flashcard Set Modal
 
 ![create flashcard set modal](./Final%20Screenshots/createflashcardmodal.png)
 
 ### Notepad Tool
 
 The notepad tool allows the user to create and save notes that are then stored in the file page.
+
+Example Notepad
 
 ![notepad tool](./Final%20Screenshots/notepadtool.png)
 
@@ -85,9 +109,15 @@ The notepad tool allows the user to create and save notes that are then stored i
 The flashcard tool allows for the creation of flashcard sets for the user. Here, they can also study sets and mark terms as correct or incorrect. Upon completion of a study
 session, users can review all their missed terms in a single spot.
 
+Add Flashcard Modal
+
 ![add flashcard modal](./Final%20Screenshots/addflashcardmodal.png)
 
+Flashcard Study Mode
+
 ![flashcard study mode](./Final%20Screenshots/flashcardstudymode.png)
+
+Review Missed Terms
 
 ![review missed terms](./Final%20Screenshots/reviewmissedterms.png)
 
