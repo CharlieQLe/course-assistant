@@ -1,5 +1,7 @@
 'use strict'
 
+import * as notification from "./notification.js"
+
 let allTasks = []; // user tasks
 let currentlyEditingTask = null;
 
@@ -58,10 +60,7 @@ window.addEventListener('load', () => {
 			} else {
 				throw 'something went wrong with getting the tasks from the server: ' + obj.result;
 			}
-		}).catch(e => {
-			// set page to error if there is an error
-			document.body.innerHTML = e;
-		});
+		}).catch(notification.showDangerToast);
 });
 
 
@@ -428,10 +427,7 @@ document.getElementById('addTaskButton').addEventListener('click', () => {
 			}
 		}));
 
-	}).catch(e => {
-		// set page to 404 error if there is an error
-		document.body.innerHTML = e;
-	});
+	}).catch(notification.showDangerToast);
 
 	// clear all fields in the add tasks(left side of task modal) 
 	document.getElementById('taskName').value = '';
@@ -495,9 +491,7 @@ document.getElementById('submitEditTaskButton').addEventListener('click', () => 
 				}
 			}));
 
-		}).catch(e => {
-			document.body.innerHTML = e;
-	});
+		}).catch(notification.showDangerToast);
 
 	// after submitting changes, clear all fields in the add tasks(left side of task modal) 
 	document.getElementById('taskName').value = '';
@@ -544,9 +538,7 @@ document.getElementById('deleteTaskButton').addEventListener('click', () => {
 				}
 			}));
 
-		}).catch(e => {
-			document.body.innerHTML = e;
-	});
+		}).catch(notification.showDangerToast);
 
 	// after deleting a task, clear all fields in the add tasks(left side of task modal) 
 	document.getElementById('taskName').value = '';

@@ -12,9 +12,10 @@
 		integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
 	<!-- CSS -->
-	<link rel="stylesheet" href="./css/flashcard.css">
-	<link rel="stylesheet" href="./css/header.css" />
-	<link rel="stylesheet" href="./css/modals.css">
+	<link href="./css/flashcard.css" rel="stylesheet">
+	<link href="./css/header.css" rel="stylesheet">
+	<link href="./css/modals.css" rel="stylesheet">
+	<link href="./css/notification.css" rel="stylesheet">
 
 	<!-- JS -->
 	<script type="module" src="./js/navbar.js" defer></script>
@@ -95,18 +96,20 @@
 				</div>
 			</form>
 		</div>
-
-
-		<!-- REVIEW MISSED TERMS BUTTON -->
-		<!-- <div class="row d-flex justify-content-center flex-nowrap p-2 flashcard-btns" id="review-missed-term">
-			<form id="review-missed-term">
-				<button type="button" class="btn btn-dark" id="reset-btn">Reset</button>
-				<button type="button" class="btn btn-primary" id="review-missed-term-btn">Review Missed Terms</button>
-				<button type="button" class="btn btn-danger" id="edit-btn">Edit</button>
-			</form>
-		</div> -->
+		
 	</div>
 
+	<!-- Error Notification(pop out when there is an error) -->
+	<div class="position-fixed bottom-0 start-50 translate-middle p-3" id="toastContainer">
+        <div id="dangerToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+            <div class="d-flex">
+                <div class="toast-body" id="dangerToastBody"></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+	
 
 	<!-- Option 1: Bootstrap Bundle with Popper -->
 	<!-- <script src="./bootstrap-5.1.3-dist/js/bootstrap.bundle.min.js"></script> -->

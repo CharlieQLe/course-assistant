@@ -1,3 +1,7 @@
+'use strict';
+
+import * as notification from "./notification.js"
+
 /*
 <!-- Page navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -146,7 +150,7 @@ function renderNavbar(element) {
                 userProfileButton.innerHTML = response.result.name;
             }
         })
-        .catch(console.log);
+        .catch(notification.showDangerToast);
     collapse.appendChild(userProfileButton);
 
     // user profile dropdown
@@ -185,6 +189,4 @@ function renderNavbar(element) {
 
     navbar.appendChild(containerFluid);
     element.appendChild(navbar);
-
-
 }

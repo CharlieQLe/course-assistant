@@ -1,3 +1,6 @@
+'use strict';
+
+import * as notification from "./notification.js"
 
 const url = window.location.pathname;       // reads url
 const split = url.split('/');
@@ -17,10 +20,7 @@ window.addEventListener('load', function() {
             throw 'something went wrong with getting the notes from the server: ' + obj.result;
         }
 
-    }).catch(e => {
-		// set page to 404 error if there is an error
-		document.body.innerHTML = e;
-    });
+    }).catch(notification.showDangerToast);
 
 });
 
@@ -37,10 +37,7 @@ document.getElementById('save-btn').addEventListener('click', () => {
 		if(obj.status !== 0) {
 			throw obj.result;
 		}
-	}).catch(e => {
-		// set page to error if server could not save it
-		document.body.innerHTML = e;
-	});
+	}).catch(notification.showDangerToast);
 
 });
 

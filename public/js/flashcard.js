@@ -1,4 +1,6 @@
-'use strict'
+'use strict';
+
+import * as notification from "./notification.js"
 
 let flashcards = [];
 let review = [];
@@ -21,9 +23,7 @@ window.addEventListener('load', function() {
             throw 'something went wrong with getting the flashcards from the server: ' + obj.result;
         }
 
-    }).catch(e => {
-		document.body.innerHTML = e;
-    });
+    }).catch(notification.showDangerToast);
 
     // sets the file name of the flashcard
     document.getElementById('flashcard-title').innerHTML = split[split.length-2].replace('%20', ' ');
@@ -240,9 +240,7 @@ function renderFlashcards(element) {
                 if(obj.status !== 0) {
                     throw obj.result;
                 }
-            }).catch(e => {
-		        document.body.innerHTML = e;
-            });
+            }).catch(notification.showDangerToast);
         });
         
         element.appendChild(main);
@@ -412,9 +410,7 @@ document.getElementById('add-flashcard-btn').addEventListener('click', () => {
         // adding flashcards in the edit screen
         const elem = document.getElementById('flashcard');
         elem.scrollTop = elem.scrollHeight;
-    }).catch(e => {
-		document.body.innerHTML = e;
-    });
+    }).catch(notification.showDangerToast);
 
 });
 

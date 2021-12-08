@@ -1,5 +1,7 @@
 'use strict';
 
+import * as notification from "./notification.js"
+
 let url = null;       // reads url
 let split = null;
 
@@ -21,7 +23,7 @@ window.addEventListener('load', () => {
                 email.appendChild(document.createTextNode(response.result.email));
             }
         })
-        .catch(console.log);
+        .catch(notification.showDangerToast);
 });
 
 
@@ -34,7 +36,7 @@ document.getElementById('save-name-btn').addEventListener('click', () => {
         body: JSON.stringify({ name: document.getElementById('name-change-input').value, email: '', password: '' })
     }).then(response => response.json())
         .then(response => location.reload())
-        .catch(console.log);
+        .catch(notification.showDangerToast);
 });
 
 
@@ -47,7 +49,7 @@ document.getElementById('save-email-btn').addEventListener('click', () => {
         body: JSON.stringify({ name: '', email: document.getElementById('email-change-input').value, password: '' })
     }).then(response => response.json())
         .then(response => location.reload())
-        .catch(console.log);
+        .catch(notification.showDangerToast);
 });
 
 document.getElementById('save-password-btn').addEventListener('click', () => {
@@ -59,7 +61,7 @@ document.getElementById('save-password-btn').addEventListener('click', () => {
         body: JSON.stringify({ name: '', email: '', password: document.getElementById('password-change-input').value })
     }).then(response => response.json())
         .then(response => location.reload())
-        .catch(console.log);
+        .catch(notification.showDangerToast);
 });
 
 document.getElementById('delete-account-btn').addEventListener('click', () => {
@@ -71,5 +73,5 @@ document.getElementById('delete-account-btn').addEventListener('click', () => {
         body: JSON.stringify({})
     }).then(_ => {
         window.location.href = '/logout';
-    }).catch(console.log);
+    }).catch(notification.showDangerToast);
 });

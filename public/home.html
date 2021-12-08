@@ -15,9 +15,11 @@
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
 	<!-- CSS -->
-	<link rel="stylesheet" href="./css/homepage-logged-in.css">
-	<link rel="stylesheet" href="./css/header.css" />
-	<link rel="stylesheet" href="./css/modals.css">
+	<link href="./css/homepage-logged-in.css"rel="stylesheet">
+	<link href="./css/header.css" rel="stylesheet">
+	<link href="./css/modals.css"rel="stylesheet">
+	<link href="./css/notification.css" rel="stylesheet">
+	
 
 	<!-- JS -->
 	<script type="module" src="./js/navbar.js" defer></script>
@@ -208,6 +210,17 @@
 					<div class="col-md-6">hi</div>
 				</div> -->
 
+			</div>
+		</div>
+	</div>
+
+	<!-- Error Notification(pop out when there is an error) -->
+	<div class="position-fixed bottom-0 start-50 translate-middle p-3" id="toastContainer">
+		<div id="dangerToast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="10000">
+			<div class="d-flex">
+				<div class="toast-body" id="dangerToastBody"></div>
+				<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+					aria-label="Close"></button>
 			</div>
 		</div>
 	</div>
