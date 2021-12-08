@@ -20,10 +20,14 @@ events in an organized manner. Tasks can be easily edited by clicking on the "Ed
 autofilled into the modal for easy editing. The user can delete tasks from this modal as well. Additionally, there is a button that displays old tasks when clicked in case a 
 deadline has passed and the user wants to see what was scheduled.
 
+![homepage](./docs/Final%20Screenshots/homepage.png)
+
 On the files page, users have the ability to create notes and flashcard sets. When creating these files, users can also assign tags to allow for easy sorting and organization. There
 is functionality to sort by one or more tags and also sort by excluding one or more tags. Creation of tags can either be done when creating a file, or also by simply clicking
 the "Tags" button in the bottom.  Examples of tags could include class names or lecture topics. This page stands out because it allows the user to store all their notes and 
 flashcards for their classes in one place while still keeping them all organzied and easily sortable.
+
+![files page](./docs/Final%20Screenshots/filespage.png)
 
 The two utility tools we implemented, as mentioned before are notes and flashcards. Notes work as one would expect. Upon clicking the "Create Note" button, users can enter a title
 for their note file and are taken to a page with a text box. From here, they can enter whatever they desire and click the "Save" button when done. Note files appear on the files
@@ -32,10 +36,14 @@ set. They are then taken to a new page where they can add flashcards to a set an
 "Correct" or "Incorrect".  Any terms marked as incorrect can be reviewed by clicking the "Review Missed Terms" button. This allows users to easily mark terms that need futher 
 studying.
 
+![notepad tool](./docs/Final%20Screenshots/notepadtool.png)
+
+![flashcard study mode](./docs/Final%20Screenshots/flashcardstudymode.png)
+
 "Course Assistant" is a swiss army knife when it comes to course management that stands out from competitors by allowing task management, file management, note creation, and 
 flashcard set creation all in one place.
 
-![homepage](./docs/Final%20Screenshots/homepage.png)
 
-![files page](./docs/Final%20Screenshots/filespage.png)
+
+
 
