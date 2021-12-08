@@ -783,7 +783,7 @@ function modifyFiles(files) {
                             tagCreateTagInput.value = "";
                             updateTagSearch(tags);
                             updateTagsDropdown(tags);
-                            return updateTagDropdown();
+                            return updateTagList().then(() => updateTagDropdown());
                         }));
                     })
                     .catch(showDangerToast);
