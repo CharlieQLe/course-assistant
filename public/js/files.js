@@ -1,6 +1,7 @@
 "use strict";
 
 import * as notification from "./notification.js";
+import * as bootstrap from "bootstrap";
 
 // URL
 const url = window.location.pathname;
@@ -30,13 +31,11 @@ const tagCreateTagInput = document.getElementById("tagCreateTagInput");
 // Delete elements
 const deleteTitle = document.getElementById("deleteTitle");
 const deleteMessage = document.getElementById("deleteMessage");
-const confirmDeleteButton = document.getElementById("confirmDeleteButton");
 
 // File display
 const fileList = document.getElementById("fileList");
 
 // Cache
-const foundTags = [];
 let newFileTags = [];
 
 // Events
@@ -175,7 +174,7 @@ function getAllFiles () {
 				modifyFiles(response.result);
 				return Promise.resolve(response.result);
 			}
-			throw response.result;
+			throw new Error(response.result);
 		});
 }
 
@@ -231,7 +230,7 @@ function getAllTags () {
 function createTag (tagName) {
 	const tag = tagName.trim();
 	if (tag === "") {
-		throw "Tag name is empty!";
+		throw new Error("Tag name is empty!");
 	}
 	return fetch(`${apiPrefix}/tags/${tag}/create`, {
 		method: "POST",
@@ -258,7 +257,7 @@ function createTag (tagName) {
 function deleteTag (tagName) {
 	const tag = tagName.trim();
 	if (tag === "") {
-		throw "Tag name is empty!";
+		throw new Error("Tag name is empty!");
 	}
 	return fetch(`${apiPrefix}/tags/${tag}/remove`, {
 		method: "POST",
@@ -285,7 +284,7 @@ function deleteTag (tagName) {
 function createNote (fileName) {
 	fileName = fileName.trim();
 	if (fileName === "") {
-		return Promise.resolve().then(() => { throw "File name is empty!"; });
+		return Promise.resolve().then(() => { throw new Error("File name is empty!"); });
 	}
 	return fetch(`${apiPrefix}/files/notes/${fileName}/create`, {
 		method: "POST",
@@ -315,7 +314,7 @@ function createNote (fileName) {
 function createFlashcards (fileName) {
 	fileName = fileName.trim();
 	if (fileName === "") {
-		return Promise.resolve(() => { throw "File name is empty!"; });
+		return Promise.resolve(() => { throw new Error("File name is empty!"); });
 	}
 	return fetch(`${apiPrefix}/files/flashcards/${fileName}/create`, {
 		method: "POST",
@@ -652,7 +651,7 @@ function modifyNewFileTagsList () {
 	removeChildren(createAddedTagList);
 	newFileTags.forEach(tag => {
 		createAddedTagList.appendChild(createTagListItem(tag, () => {
-			newFileTags = newFileTags.filter(x => x != tag);
+			newFileTags = newFileTags.filter(x => x !== tag);
 			modifyNewFileTagsList();
 		}));
 	});
@@ -743,7 +742,7 @@ function modifyFiles (files) {
 							});
 						});
 				}
-				return Promise.resolve(() => { throw "Unknown file type!"; });
+				return Promise.resolve(() => { throw new Error("Unknown file type!"); });
 			}
 
 			function updateTagDropdown () {
@@ -758,7 +757,7 @@ function modifyFiles (files) {
 						tags.forEach(tag => tagAddTagList.appendChild(createDropdownItem(tag, () => addTagToFlashcards(file.name, tag).then(_ => updateTagList()).catch(notification.showDangerToast))));
 					});
 				}
-				return Promise.resolve().then(() => { throw "Unknown file type!"; });
+				return Promise.resolve().then(() => { throw new Error("Unknown file type!"); });
 			};
 
 			updateTagList().catch(notification.showDangerToast);
@@ -775,7 +774,7 @@ function modifyFiles (files) {
 						} else if (file.type === "flashcard") {
 							promise = addTagToFlashcards(file.name, tagCreateTagInput.value);
 						} else {
-							promise = Promise.resolve().then(() => { throw "Unknown file type!"; });
+							promise = Promise.resolve().then(() => { throw new Error("Unknown file type!"); });
 						}
 						return promise.then(_ => getAllTags().then(tags => {
 							tagCreateTagInput.value = "";
