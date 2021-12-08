@@ -441,3 +441,29 @@ document.getElementById("reset-btn").addEventListener("click", () => {
 document.getElementById("review-missed-term-btn").addEventListener("click", () => {
 	renderReview(document.getElementById("flashcard"));
 });
+
+
+// TODO MODAL
+// TODO EXPORT BUTTON
+
+// export review flashcards
+document.getElementById("export-btn").addEventListener("click", () => {
+	fetch(`${apiPrefix}/files/flashcards/${fileName}/create`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify({ 
+			flashcards: review,
+			tags: []						// todo
+		})
+	}).then(obj => {
+		// if we get a status code of 0, set the client-side flashcard set
+		if (obj.status === 0) {
+			flashcards = obj.result;
+			renderFlashcards(document.getElementById("flashcard"));
+		} else {
+			throw new Error("getting the flashcards from the server failed. " + obj.result.replace('Error:',''));
+		}
+	}).catch(notification.showDangerToast);
+});

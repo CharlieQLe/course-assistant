@@ -44,7 +44,7 @@ function postCreate (request, response) {
 			name: request.params.flashcard,
 			type: "flashcard",
 			tags: request.body.tags,
-			flashcards: []
+			flashcards: request.body.flashcards
 		});
 	}).then(inserted => {
 		if (inserted.acknowledged) {
