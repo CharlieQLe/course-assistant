@@ -189,7 +189,7 @@ function getFileSearch () {
 			"Content-Type": "application/json"
 		},
 		body: JSON.stringify({
-			fileName: fileNameInput.value,
+			name: fileNameInput.value,
 			includeTags: getSelected(includeTagInput),
 			excludeTags: getSelected(excludeTagInput)
 		})

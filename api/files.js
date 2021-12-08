@@ -37,7 +37,7 @@ function postSearch (request, response) {
 	client.db("final-kappa").collection("files").find({
 		user: request.params.user,
 		name: {
-			$regex: `.*${request.body.fileName}.*`,
+			$regex: `.*${request.body.name}.*`,
 			$options: "i"
 		}
 	})
