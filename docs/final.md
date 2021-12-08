@@ -27,6 +27,100 @@ Our team consists of Charlie Le (CharlieQLe), Jia Hui Yu (jerryy19), and Matt Fe
 
 ## User Interface
 
+### Log In / Sign Up Page
+
+Upon entering the URL of our application, users are presented with this page where they can choose to either log in or sign up. The respective modals appear when buttons are 
+clicked.
+
+![homepage when not logged in](./Final%20Screenshots/homepagenotloggedin.png)
+
+Sign Up Modal
+
+![sign up modal](./Final%20Screenshots/signupmodal.png)
+
+Log In Modal
+
+![log in modal](./Final%20Screenshots/loginmodal.png)
+
+### User Profile Edit Page
+
+This page is for editing the user's profile fields. Here they can change their name, email, or password.
+
+![user profile edit page](./Final%20Screenshots/userprofileedit.png)
+
+### Homepage
+
+This page is used to manage and schedule tasks for the user. The user can add a task by clicking the respective button which pops up the add class modal. Similarly, clicking
+the edit button next to a task will also pop up a modal that allows the user to either edit fields or delete the task entirely. There is also a button to view old tasks in
+case a date has passed but the user still wants to see their previous scheduled tasks. The calendar can be interacted with and if a day is selected where tasks have been
+assigned, they will render under "Tasks for Selected Day".
+
+Homepage Upon Logging In
+
+![homepage](./Final%20Screenshots/homepage.png)
+
+Add Task Modal
+
+![add task modal](./Final%20Screenshots/addtaskmodal.png)
+
+Edit or Delete Task Modal
+
+![edit delete modal](./Final%20Screenshots/editdeletemodal.png)
+
+Old Tasks Modal
+
+![old tasks modal](./Final%20Screenshots/oldtasksmodal.png)
+
+### Files Page
+
+On the files page, the user has the ability to manage all their note and flashcard files and keep them organized with our tag system. Users can create tags when creating a 
+new note or flashcard set or do so separately. They can also create new notes and flashcard sets from this page. They can sort via specific tags to easily locate files.
+
+Files Main Page
+
+![files page](./Final%20Screenshots/filespage.png)
+
+Create a Tag Modal
+
+![create tag modal](./Final%20Screenshots/createtagmodal.png)
+
+Add a Tag to a File Modal
+
+![add tag to file modal](./Final%20Screenshots/addtagtofile.png)
+
+Create a Note Modal
+
+![create note modal](./Final%20Screenshots/createnotemodal.png)
+
+Create a Flashcard Set Modal
+
+![create flashcard set modal](./Final%20Screenshots/createflashcardmodal.png)
+
+### Notepad Tool
+
+The notepad tool allows the user to create and save notes that are then stored in the file page.
+
+Example Notepad
+
+![notepad tool](./Final%20Screenshots/notepadtool.png)
+
+### Flashcard Tool
+
+The flashcard tool allows for the creation of flashcard sets for the user. Here, they can also study sets and mark terms as correct or incorrect. Upon completion of a study
+session, users can review all their missed terms in a single spot.
+
+Add Flashcard Modal
+
+![add flashcard modal](./Final%20Screenshots/addflashcardmodal.png)
+
+Flashcard Study Mode
+
+![flashcard study mode](./Final%20Screenshots/flashcardstudymode.png)
+
+Review Missed Terms
+
+![review missed terms](./Final%20Screenshots/reviewmissedterms.png)
+
 ## Project API (Finalize This)
 
 The user can send get/post requests to manipulate data on the server.
@@ -289,6 +383,15 @@ Remove a term and definition to the set of flashcards.
 
 				time: String // Time associated with specific task
 
+			}
+
+		MISCELLANEOUS('misc') // Another collection holds information needed to assign user IDs
+
+			Misc 1 { // Miscellaneous items have a unique id, and a nextUserId
+
+				_id: String // Unique id assigned to every item in the database
+ 
+				nextUserId: Integer // ID assigned to next user that signs up
 			}
 
 ## URL Routes / Mappings
