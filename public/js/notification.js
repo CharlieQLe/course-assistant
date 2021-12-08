@@ -25,7 +25,6 @@ function showDangerToast (message) {
 	removeChildren(dangerToastBody);
 	dangerToastBody.appendChild(document.createTextNode(message));
 	dangerToast.show();
-	setTimeout(() => dangerToast.hide(), 3500);
 }
 
 export {

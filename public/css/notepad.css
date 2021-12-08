@@ -1,19 +1,16 @@
-body {
+body, html {
 	background: linear-gradient(to bottom, #e7e7e7 0%, #BABAC0 100%);
-	overflow: hidden;	
+	height: 100vh;
 }
 
 .container {
 	background-color: white;
-	margin-top: 2em;
+	margin-top: 20px;
 	overflow-y: scroll;
 	width: 80%;
-	height: 600px;
 }
 
 #notepad-textarea {
 	background-color: white;
 	white-space: pre-wrap;
 }
-
-
