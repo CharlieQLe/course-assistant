@@ -341,14 +341,14 @@ Authentication           ___ / 15 pts
 
 Overall Polish           ___ / 10 pts
 
-• Application is user friendly, appears professional, and functions well without bugs for optimal user experience 
-• Application accomplishes most of what it set out to do in the design phase 
+• Application is user friendly, appears professional, and functions well without bugs for optimal user experience
+• Application accomplishes most of what it set out to do in the design phase
 • Navbar is functional to allow for easy navigation
 • File names make sense, code is easy to follow, linted, and commented
 
 Homepage           ___ / 25 pts
 
-• Add task modal accurately allows for the creation of tasks 
+• Add task modal accurately allows for the creation of tasks
 • Editing and deleting tasks is fully functional
 • Calendar renders properly, defaults to current date, and is functional without bugs
 • Tasks for currently selected day render properly when specified day is clicked
@@ -359,14 +359,16 @@ File Upload Page/Tags           ___ / 25 pts
 
 • Tag creation and assignment is fully functional
 • Sorting by tags is fully functional and accurate
-• File list renders properly 
+• File list renders properly
 • All modals render properly 
+
 Flashcard and Note Tool           ___ / 20 pts
 
 • Flashcard sets are able to be created through create flashcard set button and are fully functional
 • Flashcard study mode is fully functional, terms marked incorrect properly are added to missed term set for later review
 • Notes can be created through create note button on file page
 • Saving of notes is properly implemented to allow for future access and edits
+
 Video Presentation and Final.md           ___ / 5 pts
 
 • Final video presentation covers all bases defined in specifications and is uploaded to YouTube
