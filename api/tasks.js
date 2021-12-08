@@ -62,7 +62,7 @@ function postCreate (request, response) {
  */
 function postEdit (request, response) {
 	client.db("final-kappa").collection("tasks").updateOne({ // seach through database and update task based on name
-		name: request.body.name,
+		name: request.params.task,
 		user: request.params.user
 	}, {
 		$set: { // set the new values for each field

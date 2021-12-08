@@ -3,7 +3,7 @@
 import * as notification from "./notification.js";
 
 let allTasks = []; // user tasks
-let currentlyEditingTask = null; //for use later in edit and delete
+let currentlyEditingTask = null; // for use later in edit and delete
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 let clickedDay = new Date().getDate();
@@ -37,24 +37,18 @@ window.addEventListener("load", () => {
 
 				// render today's tasks
 				renderTask(document.getElementById("selectedDayTasks"), allTasks.filter(day => {
-					if (new Date(day.date).getTime() === new Date(today).getTime()) {
-						return day;
-					}
+					return new Date(day.date).getTime() === new Date(today).getTime();
 				}));
 
 				// renders the tasks in modal
 				renderModalTasks(document.getElementById("modalTasksBody"), allTasks.filter(task => {
-					if (new Date(task.date).getTime() >= new Date(today).getTime()) {
-						return task;
-					}
+					return new Date(task.date).getTime() >= new Date(today).getTime();
 				}));
 				// includes all tasks, including the tasks from selected tasks
 
 				// TODO FIGURE OUT HOW TO FILTER OUT EXPIRED TASKS
 				renderTask(document.getElementById("futureTasks"), allTasks.filter(day => {
-					if (new Date(day.date).getTime() > new Date(today).getTime()) {
-						return day;
-					}
+					return new Date(day.date).getTime() > new Date(today).getTime();
 				}));
 			} else {
 				throw "something went wrong with getting the tasks from the server: " + obj.result;
@@ -407,20 +401,15 @@ document.getElementById("addTaskButton").addEventListener("click", () => {
 		}
 
 		allTasks.push(temp);
-		renderModalTasks(document.getElementById("modalTasksBody"), allTasks.filter(task => {
-			if (new Date(task.date).getTime() >= new Date(today).getTime()) {
-				return task;
-			}
-		})); // re render task modal
+		renderModalTasks(document.getElementById("modalTasksBody"), allTasks.filter(task => { // re render task modal
+			return new Date(task.date).getTime() >= new Date(today).getTime();
+		}));
+
 		renderTask(document.getElementById("futureTasks"), allTasks.filter(task => { // re render future tasks
-			if (new Date(task.date).getTime() > new Date(today).getTime()) {
-				return task;
-			}
+			return new Date(task.date).getTime() > new Date(today).getTime();
 		}));
 		renderTask(document.getElementById("selectedDayTasks"), allTasks.filter(task => { // re render selected days tasks
-			if (task.date === `${clickedYear}-${(clickedMonth + 1).toString().padStart(2, "0")}-${(clickedDay).toString().padStart(2, "0")}`) {
-				return task;
-			}
+			return task.date === `${clickedYear}-${(clickedMonth + 1).toString().padStart(2, "0")}-${(clickedDay).toString().padStart(2, "0")}`;
 		}));
 	}).catch(notification.showDangerToast);
 
@@ -451,7 +440,7 @@ document.getElementById("submitEditTaskButton").addEventListener("click", () => 
 	};
 
 	// POST the server with the edited values
-	fetch(`/api/users/${split[2]}/tasks/edit`, {
+	fetch(`/api/users/${split[2]}/tasks/${currentlyEditingTask.name}/edit`, {
 		method: "POST",
 		body: JSON.stringify(temp),
 		headers: {
@@ -471,19 +460,13 @@ document.getElementById("submitEditTaskButton").addEventListener("click", () => 
 		currentlyEditingTask.description = taskDescription;
 
 		renderModalTasks(document.getElementById("modalTasksBody"), allTasks.filter(task => { // re render tasks
-			if (new Date(task.date).getTime() >= new Date(today).getTime()) {
-				return task;
-			}
+			return new Date(task.date).getTime() >= new Date(today).getTime();
 		}));
 		renderTask(document.getElementById("futureTasks"), allTasks.filter(task => { // re render future tasks
-			if (new Date(task.date).getTime() > new Date(today).getTime()) {
-				return task;
-			}
+			return new Date(task.date).getTime() > new Date(today).getTime();
 		}));
 		renderTask(document.getElementById("selectedDayTasks"), allTasks.filter(task => { // re render selected days tasks
-			if (task.date === `${clickedYear}-${(clickedMonth + 1).toString().padStart(2, "0")}-${(clickedDay).toString().padStart(2, "0")}`) {
-				return task;
-			}
+			return task.date === `${clickedYear}-${(clickedMonth + 1).toString().padStart(2, "0")}-${(clickedDay).toString().padStart(2, "0")}`;
 		}));
 	}).catch(notification.showDangerToast);
 
@@ -517,19 +500,13 @@ document.getElementById("deleteTaskButton").addEventListener("click", () => {
 			}
 		}
 		renderModalTasks(document.getElementById("modalTasksBody"), allTasks.filter(task => { // re render task modal
-			if (new Date(task.date).getTime() >= new Date(today).getTime()) {
-				return task;
-			}
+			return new Date(task.date).getTime() >= new Date(today).getTime();
 		}));
 		renderTask(document.getElementById("futureTasks"), allTasks.filter(task => { // re render future tasks
-			if (new Date(task.date).getTime() > new Date(today).getTime()) {
-				return task;
-			}
+			return new Date(task.date).getTime() > new Date(today).getTime();
 		}));
 		renderTask(document.getElementById("selectedDayTasks"), allTasks.filter(task => { // re render selected days tasks
-			if (task.date === `${clickedYear}-${(clickedMonth + 1).toString().padStart(2, "0")}-${(clickedDay).toString().padStart(2, "0")}`) {
-				return task;
-			}
+			return task.date === `${clickedYear}-${(clickedMonth + 1).toString().padStart(2, "0")}-${(clickedDay).toString().padStart(2, "0")}`;
 		}));
 	}).catch(notification.showDangerToast);
 
@@ -543,8 +520,6 @@ document.getElementById("deleteTaskButton").addEventListener("click", () => {
 // renders previous tasks(not todays tasks or future tasks)
 document.getElementById("oldTasksButton").addEventListener("click", () => {
 	renderModalTasks(document.getElementById("oldTasks"), allTasks.filter(task => {
-		if (new Date(task.date).getTime() < new Date(today).getTime()) {
-			return task;
-		}
+		return new Date(task.date).getTime() < new Date(today).getTime();
 	}));
 });

@@ -151,7 +151,7 @@ app.post("/api/users/:user/delete", apiCheckLoggedIn, userAPI.postDelete);
 // Set the task endpoints
 app.get("/api/users/:user/tasks", apiCheckLoggedIn, taskAPI.getAll);
 app.post("/api/users/:user/tasks/create", apiCheckLoggedIn, taskAPI.postCreate);
-app.post("/api/users/:user/tasks/edit", apiCheckLoggedIn, taskAPI.postEdit);
+app.post("/api/users/:user/tasks/:task/edit", apiCheckLoggedIn, taskAPI.postEdit);
 app.post("/api/users/:user/tasks/remove", apiCheckLoggedIn, taskAPI.postRemove);
 
 // Set the file endpoints
