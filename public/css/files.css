@@ -22,3 +22,14 @@
     margin-bottom: 2em;
     z-index: 7000;
 }
+
+.page-content {
+    margin-top: 5em;
+    min-width: 100%;
+}
+
+#searchColumn {
+    margin-left: 10em;
+    margin-right: 3em;
+    margin-top: 3em;
+}
