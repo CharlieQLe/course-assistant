@@ -385,6 +385,15 @@ Remove a term and definition to the set of flashcards.
 
 			}
 
+		MISCELLANEOUS('misc') // Another collection holds information needed to assign user IDs
+
+			Misc 1 { // Miscellaneous items have a unique id, and a nextUserId
+
+				_id: String // Unique id assigned to every item in the database
+ 
+				nextUserId: Integer // ID assigned to next user that signs up
+			}
+
 ## URL Routes / Mappings
 
 ## Authentication/Authorization
