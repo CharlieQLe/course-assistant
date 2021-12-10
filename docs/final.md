@@ -122,9 +122,15 @@ Review Missed Terms
 
 ## Project API (Finalize This)
 
-The user can send get/post requests to manipulate data on the server.
+The user sends GET/POST requests to our database when interacting with our application. 
 
-For manipulating the profile, a post sends the action the user wants to perform, with the corresponding data.
+The server will respond with a JSON object of the following:
+```
+{
+	status: <Number> 0 for success, -1 for failure
+	result: <any>
+}
+```
 
 ### JSON Objects
 ```
@@ -153,149 +159,161 @@ flashcard {
 
 ### User
 
-```
-curl https://cs326-final-kappa.herokuapp.com/api/users/USER
-```
-Running the above will retrieve the data of the specified user "USER" if the user exists. USER will likely end up as an identifier of some sort for uniqueness. This will return a JSON object that has the fields "name", "email", and other data that does not exist at the moment. 
-
+Send a post request for signing up with a name, email, and password if and only if the email is not in use. 
 ```
 curl -X POST -d '{ "name": "John Doe", "email": "example@email.com", "password": "password" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/signup
 ```
-Running the above sends a post request for signing up with a name, email, and password. In the final product, this will create a user if one with the same email does not exist.
 
+Send a post request for logging in with an email and password.
 ```
-curl -X POST -d '{ "email": "example@email.com", "password": "password" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/login
+curl -X POST -d '{ "email": "example@email.com", "password": "password" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/login
 ```
-Running the above sends a post request for logging in with an email and password.
 
+Sends a get request for retrieving the data of the "USER" if the user exists. This will return the USER's name and the USER's email in the results field of the JSON object.
+```
+curl https://cs326-final-kappa.herokuapp.com/api/users/USER
+```
+
+Sends a post request to edit the data of the "USER". It can change names, emails, and passwords.
 ```
 curl -X POST -d '{ "name": "John Doe", "email": "example@email.com", "password": "password" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/edit
 ```
-Running the above sends a post request to edit the data of the specified user. It can change names, emails, and passwords.
 
+Sends a post request to remove the specified user.
 ```
 curl -X POST https://cs326-final-kappa.herokuapp.com/api/users/USER/remove
 ```
-Running the above sends a post request to remove the specified user.
 
 ### Tasks
 
+Sends a get request to retrieve all of the tasks of the "USER".
 ```
 curl https://cs326-final-kappa.herokuapp.com/api/users/USER/tasks
 ```
-Running the above retrieves all of the tasks the specified user has as a stringified array.
 
+Sends a post request to create a task with the specified name and description, scheduled for some time and date for the "USER" if and only of the task name is unique.
 ```
-curl -X POST -d '{ "name": "Task Name", "description": "Do something", "class": "Some class", "date": "Some date", "time": "Some time" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/tasks/create
+curl -X POST -d '{ "name": "Task Name", "description": "Do something", "date": "Some date", "time": "Some time" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/tasks/create
 ```
-Running the above sends a post request to create a task with the specified name and description, scheduled for some time and date for the specified user.
 
+Sends a post request to edit the "TASK" for the "USER".
 ```
 curl -X POST -d '{ "name": "Task Name", "description": "Do something", "date": "Some date", "time": "Some time" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/tasks/TASK/edit
 ```
-Running the above sends a post request to edit a task for the specified user.
 
+Sends a post request to remove a task for the "USER".
 ```
 curl -X POST -d '{ "name": "Task Name", "description": "Do something", "date": "Some date", "time": "Some time" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/tasks/remove
 ```
-Running the above sends a post request to remove a task with the specified name.
 
 ### Files
 
+Sends a get request to retrieve a list of the files the "USER" has.
 ```
 curl https://cs326-final-kappa.herokuapp.com/api/users/USER/files
 ```
-Running the above retrieves a list of the files the user has.
 
+Sends a post request to retrieve all files belonging to the "USER" whose name contains the name search, and filtering the documents that contain ALL of the included tags and NONE of the excluded tags
 ```
 curl '{ "name": "File name", "includeTags": ["tag1"], "excludeTags": ["tag2"] }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/files/search
 ```
-Running the above sends a post request to retrieve all files belonging to a user whose name contains the name search, and filtering the documents that contain ALL of the included tags and NONE of the excluded tags
 
 ### Tags
+
+Sends a get request to retrieve all of the tags the "USER" has created.
 ```
 curl https://cs326-final-kappa.herokuapp.com/api/users/USER/tags
 ```
-Running the above retrieves all of the tags the user has created.
 
+Sends a post request to create a "TAG" for the "USER".
 ```
 curl -X POST https://cs326-final-kappa.herokuapp.com/api/users/USER/tags/TAG/create
 ```
-Running the above sends a post request to create a tag.
 
+Sends a post request to remove a "TAG" for the "USER.
 ```
 curl -X POST https://cs326-final-kappa.herokuapp.com/api/users/USER/tags/TAG/remove
 ```
-Running the above sends a post request to remove a tag.
 
 ### Notes
+
+Sends a get request to retrieve the data of a "NOTE" for the user.
 ```
 curl https://cs326-final-kappa.herokuapp.com/api/users/USER/files/notes/NOTE
 ```
-Retrieve the data of a note.
 
+Sends a post request to create a "NOTE for the "USER" if it does not exist.
 ```
 curl -X POST -d '{ "tags": ["tag1", "tag2"], "body": "some text" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/files/notes/NOTE/create
 ```
-Create a note.
 
+Sends a post request to edit the "NOTE" of the "USER".
 ```
 curl -X POST -d '{ "body": "This is a note!" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/files/notes/NOTE/edit
 ```
-Edit a note.
 
+Sends a post request to remove the "NOTE" of the "USER".
 ```
 curl -X POST https://cs326-final-kappa.herokuapp.com/api/users/USER/files/notes/NOTE/remove
 ```
-Remove a note.
 
-TODO
-app.post("/api/users/:user/files/notes/:note/tags", apiCheckLoggedIn, noteAPI.getTags);
-Retrieve tags of the note
+Sends a get request to get the tags of the "NOTE" of the "USER".
+```
+curl https://cs326-final-kappa.herokuapp.com/api/users/USER/files/notes/NOTE/tags
+```
 
-app.post("/api/users/:user/files/notes/:note/tags/:tag/add", apiCheckLoggedIn, noteAPI.postAddTag);
-Edit tags of the note
+Sends a post request to add a "TAG" to the "NOTE" of the "USER".
+```
+curl -X POST https://cs326-final-kappa.herokuapp.com/api/users/USER/files/notes/NOTE/tags/TAG/add
+```
 
-app.post("/api/users/:user/files/notes/:note/tags/:tag/remove", apiCheckLoggedIn, noteAPI.postRemoveTag);
-Remove tags from the note
+Sends a post request to remove a "TAG" to the "NOTE" of the "USER".
+```
+curl -X POST https://cs326-final-kappa.herokuapp.com/api/users/USER/files/notes/NOTE/tags/TAG/remove
+```
 
 ### Flashcards
 
+Sends a get request to get the set of flashcards of the "USER".
 ```
 curl https://cs326-final-kappa.herokuapp.com/api/users/USER/files/flashcards/FLASHCARD
 ```
-Get the set of flashcards.
 
+Sends a post request to create a set of flashcards for the "USER" if it does not exist.
 ```
-curl -X POST -d '{ "tags": ["tag1", "tag2"], "flashcards": [{"term":"t1","definition":"d1"}] }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/create
+curl -X POST -d '{ "tags": ["tag1", "tag2"], "flashcards": [ {"term": "t1", "definition": "d1"} ] }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/class/CLASS/flashcards/FLASHCARD/create
 ```
-Create a set of flashcards.
 
+Sends a post request to remove a set of flashcards of the "USER".
 ```
 curl -x POST https://cs326-final-kappa.herokuapp.com/api/users/USER/files/flashcards/FLASHCARD/remove
 ```
-Remove a set of flashcards.
 
+Sends a post request to add a term and definition to the set of flashcards of the "USER".
 ```
 curl -X POST -d '{ "term: "", "definition": "" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/files/flashcards/FLASHCARD/addFlashcard
 ```
-Add a term and definition from the set of flashcards.
 
+Sends a post request to remove a term and definition from the set of flashcards of the "USER".
 ```
 curl -X POST -d '{ "term: "", "definition": "" }' -H 'Content-Type: application/json' https://cs326-final-kappa.herokuapp.com/api/users/USER/files/flashcards/FLASHCARD/removeFlashcard
 ```
-Remove a term and definition from the set of flashcards.
 
+Sends a get request to get the tags of the "FLASHCARD" of the "USER".
+```
+curl https://cs326-final-kappa.herokuapp.com/api/users/USER/files/flashcards/FLASHCARD/tags
+```
 
-TODO
-app.post("/api/users/:user/files/flashcards/:flashcard/tags", apiCheckLoggedIn, flashcardAPI.getTags);
-Retrieve tags of the flashcards
+Sends a post request to add a "TAG" to the "FLASHCARD" of the "USER".
+```
+curl -X POST https://cs326-final-kappa.herokuapp.com/api/users/USER/files/flashcards/FLASHCARD/tags/TAG/add
+```
 
-app.post("/api/users/:user/files/flashcards/:flashcard/tags/:tag/add", apiCheckLoggedIn, flashcardAPI.postAddTag);
-Edit tags of the flashcards
+Sends a post request to remove a "TAG" to the "FLASHCARD" of the "USER".
+```
+curl -X POST https://cs326-final-kappa.herokuapp.com/api/users/USER/files/flashcards/FLASHCARD/tags/TAG/remove
+```
 
-app.post("/api/users/:user/files/flashcards/:flashcard/tags/:tag/remove", apiCheckLoggedIn, flashcardAPI.postRemoveTag);
-Remove tags from the flashcards
 
 ## Database Documentation
 
