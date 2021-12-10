@@ -29,7 +29,7 @@ window.addEventListener("load", () => {
 
 /**
  * make a bootstrap row with some additional classes
- * 
+ *
  * @returns an HTML element
  * */
 function makeRow () {
@@ -41,7 +41,7 @@ function makeRow () {
 /**
  * make column with a certain size
  * make a bootstrap col with some additional classes
- * 
+ *
  * @param {Number} size
  * @returns an HTML element
  */
@@ -53,8 +53,8 @@ function makeCol (size) {
 
 /**
  * Makes an edit flashcard
- * 
- * @param {Object<flashcard>} flashcardObj 
+ *
+ * @param {Object<flashcard>} flashcardObj
  * @returns an HTML element
  */
 function makeEditFlashcard (flashcardObj) {
@@ -80,8 +80,8 @@ function makeEditFlashcard (flashcardObj) {
 
 /**
  * Make a flashcard in study section
- * 
- * @param {String} text the text on the flashcard in study 
+ *
+ * @param {String} text the text on the flashcard in study
  * @returns an HTML element
  */
 function makeCard (text) {
@@ -103,7 +103,7 @@ function makeCard (text) {
 
 /**
  * Makes the buttons in the study section
- * 
+ *
  * @returns an HTML element
  */
 function makeButtons () {
@@ -131,7 +131,7 @@ function makeButtons () {
 
 /**
  * Makes the Term and Flashcard Header for edit section and review section
- * 
+ *
  * @returns an HTML element
  */
 function makeFlashcardHeader () {
@@ -201,7 +201,7 @@ function renderFlashcards (element) {
 
 /**
  * Renders the flashcards in review section
- * 
+ *
  * @param {HTMLElement} element
  */
 function renderReview (element) {
@@ -223,7 +223,7 @@ function renderReview (element) {
 
 /**
  * Renders the flashcards in the study section
- * 
+ *
  * @param {HTMLElement} element
  */
 function renderStudyFlashcards (element) {
@@ -307,7 +307,7 @@ function renderStudyFlashcards (element) {
 
 /**
  * Shuffles any array
- * @param {Array<any>} array 
+ * @param {Array<any>} array
  * @returns the array shuffled
  */
 function shuffle (array) {
