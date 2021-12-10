@@ -57,19 +57,13 @@ window.addEventListener("load", () => {
 });
 
 // ================ CALENDAR =======================
-/* DOM SURGERY
-<div class="row text-center">
-	<div class="d-flex justify-content-between">
-		<div class="col" id="days">1</div>
-		<div class="col" id="days">2</div>
-		<div class="col" id="days">3</div>
-		<div class="col" id="days">4</div>
-		<div class="col" id="days">5</div>
-		<div class="col" id="days">6</div>
-		<div class="col" id="days">7</div>
-	</div>
-</div>
-*/
+/**
+ * Render days on the calandar
+ *
+ * @param {HTMLElement} element
+ * @param {Number} month the month to render(off by 1; according to Calandar class)
+ * @param {Number} year the year to render
+ */
 function renderDays (element, month, year) {
 	element.innerHTML = "";
 
@@ -164,18 +158,8 @@ document.getElementById("next").addEventListener("click", () => {
 // ==============================================
 // ================ TASKS =======================
 
-/* DOM SURGERY to create tasks
-<div class="form-check">
-	<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-	<label class="form-check-label" for="flexCheckDefault">
-		Task 1
-		<button class="btn btn-outline-light btn-sm rounded-0" type="button" data-bs-toggle="modal" data-bs-target = "#editTasks" data-placement="top" title="Add"><i class="fa fa-table"></i>Edit</button>
-	</label>
-</div>
-*/
-
 /**
- * Note: only tasks in the selected day's tasks or future tasks(not modals)
+ * Create only tasks in the selected day's tasks or future tasks(not modals)
  * @param {obj} task task obj{name, description, class, date, time}
  * @returns a task(in selected day/future task) element
  */
@@ -268,14 +252,6 @@ function createTask (userTask) {
 	return taskHolder;
 }
 
-/* DOM SURGERY on the tasks in tasks modal
-<tr>
-    <th scope="row">Class 1</th>
-    <td>Project Milestone Due</td>
-    <td>3/4/4</td>
-    <td>yyyy-MM-dd</td>
-</tr>
-*/
 /**
  * Create tasks in tasks modal
  * @param {string} name name of task
@@ -304,17 +280,9 @@ function createModalTasks (name, description, date, time) {
 	return row;
 }
 
-/* DOM SURGERY for the options inside the select
-<select class="form-select" id="taskClass">
-	<option selected>Select Class</option>
-	<option value="One">One</option>
-	<option value="Two">Two</option>
-	<option value="Three">Three</option>
-</select>
-*/
 /**
  * either renders the selected day's tasks or future tasks(not tasks in modal)
- * @param {element} element DOM element
+ * @param {HTMLElement} element
  * @param {array} taskArray the array to render at the element
  */
 function renderTask (element, taskArray) {
@@ -327,8 +295,8 @@ function renderTask (element, taskArray) {
 
 /**
  * renders all tasks in modals
- * @param {element} element DOM element
- * @param {array} tasks the tasks to render
+ * @param {HTMLElement} element
+ * @param {Array<Object>} tasks the tasks to render
  */
 function renderModalTasks (element, tasks) {
 	element.innerHTML = "";

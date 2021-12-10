@@ -1,6 +1,5 @@
 "use strict";
 
-
 // Toast
 const dangerToastBody = document.getElementById("dangerToastBody");
 const dangerToast = new bootstrap.Toast(document.getElementById("dangerToast"));

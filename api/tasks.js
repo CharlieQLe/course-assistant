@@ -61,7 +61,7 @@ function postCreate (request, response) {
  * @param {Response<any, Record<string, any>, number>} response
  */
 function postEdit (request, response) {
-	client.db("final-kappa").collection("tasks").updateOne({ // seach through database and update task based on name
+	client.db("final-kappa").collection("tasks").updateOne({ // search through database and update task based on name
 		name: request.params.task,
 		user: request.params.user
 	}, {

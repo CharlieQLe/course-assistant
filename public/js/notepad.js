@@ -5,7 +5,7 @@ import * as notification from "./notification.js";
 const url = window.location.pathname; // reads url
 const split = url.split("/");
 
-window.addEventListener("load", function () {
+window.addEventListener("load", () => {
 	// GET request to server: asking for the file
 	fetch(`/api/users/${split[2]}/files/notes/${split[5]}`)
 		.then(response => {
@@ -17,7 +17,7 @@ window.addEventListener("load", function () {
 				// sets the file name of the notes
 				document.getElementById("notepad-title").innerHTML = split[split.length - 2].replace("%20", " ");
 			} else {
-				throw new Error("getting the notes from the server failed" + obj.result.replace('Error:',''));
+				throw new Error("getting the notes from the server failed" + obj.result.replace("Error:", ""));
 			}
 		}).catch(notification.showDangerToast);
 });
@@ -33,7 +33,7 @@ document.getElementById("save-btn").addEventListener("click", () => {
 	}).then(response => response.json())
 		.then(obj => {
 			if (obj.status !== 0) {
-				throw new Error(obj.result.replace('Error:',''));
+				throw new Error(obj.result.replace("Error:", ""));
 			}
 		}).catch(notification.showDangerToast);
 });

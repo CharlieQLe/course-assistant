@@ -8,7 +8,7 @@ let review = [];
 const url = window.location.pathname; // reads url
 const split = url.split("/");
 
-window.addEventListener("load", function () {
+window.addEventListener("load", () => {
 	// grab flashcards from server
 	fetch(`/api/users/${split[2]}/files/flashcards/${split[5]}`)
 		.then(response => {
@@ -19,7 +19,7 @@ window.addEventListener("load", function () {
 				flashcards = obj.result;
 				renderFlashcards(document.getElementById("flashcard"));
 			} else {
-				throw new Error("getting the flashcards from the server failed. " + obj.result.replace('Error:',''));
+				throw new Error("getting the flashcards from the server failed. " + obj.result.replace("Error:", ""));
 			}
 		}).catch(notification.showDangerToast);
 
@@ -29,6 +29,8 @@ window.addEventListener("load", function () {
 
 /**
  * make a bootstrap row with some additional classes
+ * 
+ * @returns an HTML element
  * */
 function makeRow () {
 	const row = document.createElement("div");
@@ -39,7 +41,8 @@ function makeRow () {
 /**
  * make column with a certain size
  * make a bootstrap col with some additional classes
- * @param {int} size
+ * 
+ * @param {Number} size
  * @returns an HTML element
  */
 function makeCol (size) {
@@ -48,22 +51,12 @@ function makeCol (size) {
 	return col;
 }
 
-/* DOM SURGERY
-<div class="row d-flex justify-content-center flex-nowrap p-4">
-	<div class="col-3 text-center">
-		1 of 3
-	</div>
-	<div class="col-3 text-center">
-		2 of 3
-	</div>
-	<div class="col-1 text-center">
-		<i class="bi bi-x hov"></i>
-	</div>
-</div>
-*/
 /**
-* renders the flashcards in the edit screen
-*/
+ * Makes an edit flashcard
+ * 
+ * @param {Object<flashcard>} flashcardObj 
+ * @returns an HTML element
+ */
 function makeEditFlashcard (flashcardObj) {
 	const main = makeRow();
 
@@ -85,61 +78,12 @@ function makeEditFlashcard (flashcardObj) {
 	return main;
 }
 
-/* DOM SURGERY
-<div id="study-flashcard">
-<div class="row d-flex justify-content-center flex-nowrap p-4">
-	<div class="col box text-center">
-		<!-- CARD + BUTTONS -->
-		<div class="row d-flex justify-content-center flex-nowrap p-4">
-			<!-- CARD ON THE LEFT SIDE -->
-			<div class="col box text-center">
-				<div class="card" id="study-flashcard-card">
-					<div class="card-body">
-						<p class="card-text">Some quick example text to build on the card title and make up
-							the bulk of the card's content.</p>
-					</div>
-				</div>
-			</div>
-			<!-- 2 BUTTONS ON THE LEFT SIDE -->
-			<div class="col box text-center align-self-center">
-				<div class="d-grid gap-2">
-					<button class="btn btn-success" type="button">Button</button>
-					<button class="btn btn-danger" type="button">Button</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="col box text-center">
-		<!-- CARD + BUTTONS -->
-		<div class="row d-flex justify-content-center flex-nowrap p-4">
-			<!-- CARD ON THE RIGHT SIDE -->
-			<div class="col box text-center">
-				<div class="card" id="study-flashcard-card">
-					<div class="card-body">
-						<p class="card-text">Some quick example text to build on the card title and make up
-							the bulk of the card's content.
-							Some quick example text to build on the card title and make up
-							the bulk of the card's content
-							Some quick example text to build on the card title and make up
-							the bulk of the card's content</p>
-						Some quick example text to build on the card title and make up
-						the bulk of the card's content
-					</div>
-				</div>
-			</div>
-			<!-- 2 BUTTONS ON THE RIGHT SIDE -->
-			<div class="col box text-center align-self-center">
-				<div class="d-grid gap-2">
-					<button class="btn btn-success" type="button">Button</button>
-					<button class="btn btn-danger" type="button">Button</button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-</div>
-*/
+/**
+ * Make a flashcard in study section
+ * 
+ * @param {String} text the text on the flashcard in study 
+ * @returns an HTML element
+ */
 function makeCard (text) {
 	const cardCol = makeCol(0);
 	const card = document.createElement("div");
@@ -157,6 +101,11 @@ function makeCard (text) {
 	return cardCol;
 }
 
+/**
+ * Makes the buttons in the study section
+ * 
+ * @returns an HTML element
+ */
 function makeButtons () {
 	const colButton = document.createElement("div");
 	colButton.classList.add("col", "text-center", "align-self-center");
@@ -180,6 +129,11 @@ function makeButtons () {
 	return colButton;
 }
 
+/**
+ * Makes the Term and Flashcard Header for edit section and review section
+ * 
+ * @returns an HTML element
+ */
 function makeFlashcardHeader () {
 	const main = document.createElement("div");
 	main.classList.add("row", "d-flex", "justify-content-center", "flex-nowrap", "p");
@@ -203,6 +157,8 @@ function makeFlashcardHeader () {
 
 /**
  * renders the flashcards in the edit screen
+ *
+ * @param {HTMLElement} element
  */
 function renderFlashcards (element) {
 	element.innerHTML = "";
@@ -234,7 +190,7 @@ function renderFlashcards (element) {
 				return response.json();
 			}).then(obj => {
 				if (obj.status !== 0) {
-					throw new Error(obj.result.replace('Error:',''));
+					throw new Error(obj.result.replace("Error:", ""));
 				}
 			}).catch(notification.showDangerToast);
 		});
@@ -243,6 +199,11 @@ function renderFlashcards (element) {
 	}
 }
 
+/**
+ * Renders the flashcards in review section
+ * 
+ * @param {HTMLElement} element
+ */
 function renderReview (element) {
 	element.innerHTML = "";
 	const header = makeFlashcardHeader();
@@ -260,6 +221,11 @@ function renderReview (element) {
 	}
 }
 
+/**
+ * Renders the flashcards in the study section
+ * 
+ * @param {HTMLElement} element
+ */
 function renderStudyFlashcards (element) {
 	element.innerHTML = "";
 
@@ -339,6 +305,11 @@ function renderStudyFlashcards (element) {
 	}
 }
 
+/**
+ * Shuffles any array
+ * @param {Array<any>} array 
+ * @returns the array shuffled
+ */
 function shuffle (array) {
 	// Fisher-Yates shuffle, used for random decoder cipher below
 	let m = array.length;
@@ -359,7 +330,7 @@ function shuffle (array) {
 
 // when client clicks on the initial add flashcard button, it adds an attribute
 // to the modal button. Adding the attribute will close the modal
-document.getElementById("add-flashcard-modal").addEventListener("shown.bs.modal", function (event) {
+document.getElementById("add-flashcard-modal").addEventListener("shown.bs.modal", () => {
 	document.getElementById("add-flashcard-btn").setAttribute("data-bs-dismiss", "modal");
 });
 
@@ -390,7 +361,7 @@ document.getElementById("add-flashcard-btn").addEventListener("click", () => {
 		return response.json();
 	}).then(obj => {
 		if (obj.status !== 0) {
-			throw new Error(obj.result.replace('Error:',''));
+			throw new Error(obj.result.replace("Error:", ""));
 		}
 		// clear term and description input box after every added term
 		document.getElementById("term-input").value = "";
@@ -440,30 +411,4 @@ document.getElementById("reset-btn").addEventListener("click", () => {
 
 document.getElementById("review-missed-term-btn").addEventListener("click", () => {
 	renderReview(document.getElementById("flashcard"));
-});
-
-
-// TODO MODAL
-// TODO EXPORT BUTTON
-
-// export review flashcards
-document.getElementById("export-btn").addEventListener("click", () => {
-	fetch(`${apiPrefix}/files/flashcards/${fileName}/create`, {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json"
-		},
-		body: JSON.stringify({ 
-			flashcards: review,
-			tags: []						// todo
-		})
-	}).then(obj => {
-		// if we get a status code of 0, set the client-side flashcard set
-		if (obj.status === 0) {
-			flashcards = obj.result;
-			renderFlashcards(document.getElementById("flashcard"));
-		} else {
-			throw new Error("getting the flashcards from the server failed. " + obj.result.replace('Error:',''));
-		}
-	}).catch(notification.showDangerToast);
 });

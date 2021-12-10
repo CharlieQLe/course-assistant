@@ -2,48 +2,6 @@
 
 import * as notification from "./notification.js";
 
-/*
-<!-- Page navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-
-        <div class="logo-icon-padded">
-        <img src="./images/logo.png" alt="" width="24" height="24" class="logo-icon-padded">
-        </div>
-        <div class="navbar-brand">Course Assistant</div>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav" id="classNavList">
-
-                <li class="nav-item">
-                    <a class="nav-link" href="">Home</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="">files</a>
-                </li>
-            </ul>
-
-            <!-- user profile buttons -->
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                Name
-            </button>
-            <ul class="ms-auto dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
-                <li><a class="dropdown-item" href="./user-profile.html">Edit Profile</a></li>
-                <li><a class="dropdown-item" href="#">Log Out</a></li>
-            </ul>
-        </div>
-
-    </div>
-</nav>
-*/
-
 const url = window.location.pathname; // reads url
 const split = url.split("/");
 

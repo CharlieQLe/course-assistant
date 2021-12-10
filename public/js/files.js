@@ -320,9 +320,9 @@ function createFlashcards (fileName) {
 		headers: {
 			"Content-Type": "application/json"
 		},
-		body: JSON.stringify({ 
+		body: JSON.stringify({
 			flashcards: [],
-			tags: newFileTags 
+			tags: newFileTags
 		})
 	})
 		.then(response => response.json())

@@ -75,75 +75,6 @@
 		</div>
 	</div>
 
-	<!-- export review flashcard modal -->
-	<div id="export-review-flashcard-modal" class="modal fade" tabindex="-1" role="dialog">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-
-				<!-- Header -->
-				<div class="modal-header">
-					<!-- Title -->
-					<h5 class="modal-title" id="createTitle">Export Flashcards</h5>
-
-					<!-- Close button -->
-					<button type="button" id="modalClose" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
-				</div>
-
-				<!-- Body -->
-				<div class="modal-body">
-					<form>
-						<!-- flashcards name -->
-						<input type="text" class="form-control" id="createLabelInput" placeholder="name">
-						<br>
-
-						<!-- Add tags group -->
-						<div>
-							<h5>Add Tags</h5>
-							<ul class="list-group" id="createAddedTagList"></ul>
-							<br>
-
-							<!-- Create/add tag inputs -->
-							<div class="row">
-
-								<!-- Add tag dropdown -->
-								<div class="dropdown col-auto">
-									<button class="btn btn-primary dropdown-toggle" type="button"
-										id="createAddTagDropdown" data-bs-toggle="dropdown" aria-expanded="false">Add
-										tag</button>
-
-									<!-- Dropdown of all tags -->
-									<ul class="dropdown-menu" aria-labelledby="addTagDropdown" id="createAddTagList">
-									</ul>
-								</div>
-
-								<!-- Create tag text field -->
-								<div class="col">
-									<input type="text" id="createCreateTagInput" class="form-control">
-								</div>
-
-								<!-- Create tag button -->
-								<div class="col-auto">
-									<input type="button" class="btn btn-primary" id="create-tag-button"
-										value="Create Tag">
-								</div>
-							</div>
-						</div>
-						<br>
-					</form>
-				</div>
-
-				<div class="modal-footer">
-					<form>
-						<!-- Upload button -->
-						<button type="button" class="btn btn-primary" id="export-btn">Export</button>
-					</form>
-				</div>
-
-			</div>
-		</div>
-	</div>
-
 	<!-- flashcards webapge -->
 	<div class="container rounded-3">
 		<p id="flashcard-title">TITLE</p>
@@ -162,8 +93,6 @@
 					<button type="button" class="btn btn-primary" id="review-missed-term-btn">Review Missed
 						Terms</button>
 					<button type="button" class="btn btn-danger" id="edit-btn">Edit</button>
-					<button type="button" class="btn btn-light" id="export-flashcard-btn-outer" data-bs-toggle="modal"
-						data-bs-target="#export-review-flashcard-modal">Export</button>
 				</div>
 			</form>
 		</div>

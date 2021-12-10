@@ -26,7 +26,6 @@ app.use(express.urlencoded({ extended: true })); // allow URLencoded data
  * @param {*} next
  */
 function checkLoggedIn (req, res, next) {
-	//  console.log(req.isAuthenticated())
 	if (req.isAuthenticated()) {
 		if (req.user === req.params.user) {
 			next();
