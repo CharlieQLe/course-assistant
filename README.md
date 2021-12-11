@@ -6,6 +6,12 @@
 
 Link to application: https://cs326-final-kappa.herokuapp.com/
 
+## Team Members
+
+Our team consists of Charlie Le (https://github.com/CharlieQLe), Jia Hui Yu (https://github.com/jerryy19), and Matt Ferrara (https://github.com/mferrara63).
+
+## Application Description 
+
 Our application is titled "Course Assistant" and is an all in one assistant geared towards students of all ages and grade levels. Upon signing up, users are taken to their profile
 homepage where they have the ability to create and manage upcoming tasks to ensure deadlines are met. From the navbar, users can also navigate to their files page where they have
 the ability to create new notes and flashcards and easily sort them with our tag system.
@@ -43,7 +49,65 @@ studying.
 "Course Assistant" is a swiss army knife when it comes to course management that stands out from competitors by allowing task management, file management, note creation, and 
 flashcard set creation all in one place.
 
+## Installation Guide
 
+### Prerequities: 
+- git
+- node
+- mongodb
+- hosting service(Host our application on a website, not required)
+
+
+### Git Installation
+- https://github.com/git-guides/install-git
+
+### Node Installation
+- https://nodejs.org/en/download/
+- https://nodejs.org/en/download/package-manager/
+
+### MongoDB Installation
+##### MongoDB is the required NoSQL Database to manage our application. 
+- https://www.mongodb.com/
+- create an account.
+- create a database. 
+- click on connect and add connection IP address and create a Database user
+- after doing so, select the driver to be Node.js
+
+### Build
+- Clone this repo 
+```
+git clone https://github.com/CharlieQLe/cs326-final-kappa
+```
+
+- go into the folder 
+```
+cd cs326-final-kappa
+```
+
+- create a file called `secrets.json` and add the following
+```
+{
+    "uri": "mongodb+srv://<username>:<password>@cluster0.gofjz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+}
+```
+
+- change `<username>` to the username of the user you created and change `<password>` to the password of the user you have created 
+```
+eg. I created a user with the name 'John' and made the password 'Doe'. Then, 
+
+{
+    "uri": "mongodb+srv://John:Doe@cluster0.gofjz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+}
+```
+
+- finally, run our application in terminal
+```
+node index.js
+```
+
+### Hosting
+To host our application, add an environment variable to your hosting service platform
+with the key as `uri` and value as `mongodb+srv://<username>:<password>@cluster0.gofjz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority` with respect to the user you have created on MongoDB. 
 
 
 
