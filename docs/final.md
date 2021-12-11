@@ -11,14 +11,10 @@ tools. Upon log in, the user is presented with the home page consisting of a cal
 its designated date, they will no longer appear in the Future Tasks section. Overdue Tasks can once again be viewed through the old task button. Additionally, the section titled 
 "Tasks for Selected Day" displays all tasks for whatever day the user selects on the calendar. By default, the current date is selected. There is also, of course, the ability to 
 edit and delete tasks as desired. The next part of our application is our file system. From this page, the user is able to create notes and flashcards. They
-also have the
-ability to tag files for their respective purposes. This way, if looking for a file for a specific class or type of file, the user can simply sort by the desired tags and find 
-their files quickly. As mentioned previously, the users can create notes and flashcards. They function as their name implies and flashcards also include a study mode. Any
+also have the ability to tag files for their respective purposes. This way, if looking for a file for a specific class or type of file, the user can simply sort by the desired tags and find their files quickly. As mentioned previously, the users can create notes and flashcards. They function as their name implies and flashcards also include a study mode. Any
 mistakes made to a flashcard can be reviewed and restudied. What makes our application so innovative is that it really is an all-in-one 
-assistant. In 
-the past, there have been applications for creating notes and flashcards and keeping track of tasks. However, the ability to have all these
-tools in one spot
-is extremely helpful in our opinion and streamlines the organization of school courses. 
+assistant. In the past, there have been applications for creating notes and flashcards and keeping track of tasks. However, the ability to have all these
+tools in one spot is extremely helpful in our opinion and streamlines the organization of school courses. 
 
 ## Team Members
 
